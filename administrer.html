@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <meta charset="UTF-8">  
+  <meta name="keywords" content="HTML, CSS, JavaScript">
+  <meta name="description" content="Gestion des Moules ARBL">
+  <meta name="author" content="Jean Fruitet">
+  <!-- base href="http://localhost/robonav/" target="_blank" -->
+  <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+  <title>Gestion des moules ARBL</title>
+  <!-- Feuilles de style -->
+<link rel="stylesheet" href="./css/style.css"> 
+<link rel="stylesheet" href="./css/style1.css">
+<!-- link rel="stylesheet" href="./css/w3docs.css" -->
+</head>
+<body>
+<h2> <img src="./images/logo_arbl.png" alt="logo ARBL" title="logo ARBL">Gestion des moules de l'ARBL</h2>
+<p><a href="mailto:jean.fruitet@free.fr?subject=Moules ARBL">jean.fruitet@free.fr</a></p>
+
+<table>
+<tr><th>Documentation</th><th>Consulter</th><th>Administrer</th></tr>
+<tr><td><a href="./documentation.html">Documentation</a></td>
+<td><a href="./consulter.html">Rechercher / Réserver</a></td>
+<td><a href="./administrer.html">Créer / Modifier</a></td>
+</tr>
+</table>
+<h3>Administration de la base de données</h3>
+<p>Identifiez-vous pour accéder à l'enregistrement des moules. Complétez chaque enregistrement par une photo et un numéro d'inventaire unique.</p>
+
+<h3>Editer des modèles</h3>
+<p><span id="consigne">Sélectionnez un modèle.<span></p>
+<div class="scrolldown"><p id="infomoules"></p></div>
+<div class="scrollleft">
+    <p id="myListModeles"></p>
+</div>
+<div class="scrollright">
+<p>Pour chaque modèle enregistrez au moins une photo de 800 pixels de large et une vignette de 400 pixels de large au format .JPG.
+<br />Les noms des photos doivent contenir le nom du modèle, par exemple "<i>Excalibur.jpg</i>", "<i>Excalibur_moules_fuseau.jpg</i>" et "<i>Excalibur_moules_verriere.jpg</i>".</p>
+<p id="myImage"></p>
+</div>
+<div id="myInfo"></div>
+<div id="basdepage">(<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>) <a href="mailto:jean.fruitet@.free.fr?subject=Moules ARBL">JF</a></div>
+</body>
+
+<script src="js/config.js"></script>
+<script src="js/myscript.js"></script>
+<script src="js/ajax.js"></script>
+<script src="js/ajax2.js"></script>
+<script>
+// Chargement de la liste des fichiers de données vérifiées
+ window.onload = function(){
+    // Cookies
+    checkCookies(); 
+    if (okadmin) {
+        // 
+        console.debug("Admin reconnu. Afficher les modeles");
+        getModelesMoulesAdmin();
+    }
+    else{    
+        if (oklogin()){
+            getModelesMoulesAdmin();
+        }
+        else{
+            // renvoyer ?
+        }        
+    }
+ }   
+</script>
+</html>
+

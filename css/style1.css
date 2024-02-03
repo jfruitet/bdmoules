@@ -1,0 +1,133 @@
+/* CSS Document */
+
+.button {
+  background-color: lightyellow; 
+  color: navy;
+  text-align: center;
+}
+
+.input {
+  float: none;
+  background-color: navy; 
+  color: white;
+  text-align: center;
+}
+
+
+.attention {
+  float: none;
+  background-color: #aa0077; 
+  color: white;
+  text-align: center;
+}
+
+
+#entete {
+  background-color: navy;
+  color: yellow;
+  border: 1px solid orange;
+  margin: 2px;
+  padding: 2px;
+   width:100%;
+}
+
+.menu {
+  background-color: navy;
+  color: yellow;
+  border: 2px solid orange;
+  margin: 2px;
+  padding: 2px;
+  width:100%;
+}
+
+.corpstexte {
+  background-color: #def;
+  color: black;
+  border: 1px solid black;
+  margin: 2px;
+  padding: 2px;
+  clear: right;
+  overflow: auto;
+  display: none;
+  width:100%;
+  height: 230px;
+}
+
+#gauche {
+  float: left;
+  border: 1px solid black;
+  background-color: #def;
+  color: black;
+  margin: 2px;
+  padding: 2px;
+  right: 0;
+  top: 0;
+  clear: right;
+  overflow: auto;
+  position : relative;
+}
+
+
+#droite {
+  border: 1px solid black;
+  color: black;
+  margin: 2px;
+  padding: 2px;
+  right: 8px;
+  top: 42px;
+  width: 300px;
+  height: 225px;
+  clear: right;
+  position : absolute;
+}
+
+
+.scrollleft {
+    height:500px;
+    width:65%;
+    margin:2px;
+    padding:2px;
+    border:1px solid black;
+    float:left;
+    overflow:auto;
+    clear: right;
+    position : relative;
+}
+  
+
+.scrollright {
+    height:500px;
+    margin:2px;
+    padding:2px;
+    border:1px solid black;
+    overflow:auto;
+    clear:right;
+    position:relative;
+}
+
+
+.scrolldown {
+    height:100px;
+    width:100%;
+    margin:2px;
+    padding:2px;
+    border:1px solid black;
+    float:left;
+    overflow:auto;
+    clear:right;
+    position:relative;
+}
+    
+
+#myinfo {
+    right:0;
+    position:relative;
+}
+
+#basdepage {
+    left:0;
+    float:right;
+    clear:right;
+    position:relative;
+}
+

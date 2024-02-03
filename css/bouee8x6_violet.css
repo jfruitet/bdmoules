@@ -1,0 +1,94 @@
+/* CSS Document *//* bouee8x6_violet_vert_rouge */
+
+position: relative;
+width: 8.74px;
+height: 13.52px;
+
+
+
+/* Ellipse 4 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 0%;
+right: 8.45%;
+top: 81.36%;
+bottom: 0%;
+
+background: #A825F8;
+border: 0.2px solid #D2BCA8;
+
+
+/* Rectangle 2 */
+
+position: absolute;
+left: 0%;
+right: 8.45%;
+top: 59.17%;
+bottom: 11.24%;
+
+background: #A825F8;
+
+
+/* Line 5 */
+
+position: absolute;
+left: 91.55%;
+right: -37.33%;
+top: 59.17%;
+bottom: 40.83%;
+
+border: 0.2px solid #D2BCA8;
+transform: rotate(90deg);
+
+
+/* Line 6 */
+
+position: absolute;
+left: 0%;
+right: 54.22%;
+top: 59.17%;
+bottom: 40.83%;
+
+border: 0.2px solid #D2BCA8;
+transform: rotate(90deg);
+
+
+/* Ellipse 5 */
+
+box-sizing: border-box;
+
+position: absolute;
+left: 0%;
+right: 8.45%;
+top: 51.78%;
+bottom: 29.59%;
+
+background: #A825F8;
+border: 0.2px solid #D2BCA8;
+
+
+/* Polygon 1 */
+
+position: absolute;
+left: 34.66%;
+right: 6.55%;
+top: 9.56%;
+bottom: 69.49%;
+
+background: #F71616;
+transform: rotate(-14.58deg);
+
+
+/* Vector 2 */
+
+position: absolute;
+left: 22.89%;
+right: 19.83%;
+top: 10.6%;
+bottom: 39.22%;
+
+border: 0.4px solid #916740;
+transform: rotate(-16.63deg);
+

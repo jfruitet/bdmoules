@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <meta charset="UTF-8">  
+  <meta name="keywords" content="HTML, CSS, JavaScript">
+  <meta name="description" content="Gestion des Moules ARBL">
+  <meta name="author" content="Jean Fruitet">
+  <!-- base href="http://localhost/robonav/" target="_blank" -->
+  <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+  <title>Gestion des moules ARBL</title>
+  <!-- Feuilles de style -->
+<link rel="stylesheet" href="./css/style.css"> 
+<link rel="stylesheet" href="./css/style1.css">
+<link rel="stylesheet" href="./css/w3docs.css">
+<script src="js/config.js"></script>
+</head>
+<body>
+  <h2>Envoyer un formulaire de réservation</h2>
+  <p><span id="consigne"><span></p>
+  <div id="myImage"></div>
+  
+<script>
+    var idmodele=15;
+    var idmoule=25;
+    if ((idmoule !== undefined) && (idmoule>0)){
+        let str='';
+        // Creer un formulaire de réservation
+        str+='<h4>Complétez ce formulaire de réservation</h4>';
+        str+='<form name="RegForm" action="" onsubmit="return validationReservation()" method="post" class="w3docs">';
+        str+='<div><label for="Nom">NOM Prénom:</label><input type="text" id="Nom" size="50" name="Nom" autocomplete="on" /></div>';
+        str+='<br /><div><label for="Adresse">Adresse:</label><input type="text" id="Adresse" size="50" name="Adresse" autocomplete="on" /></div>';
+        str+='<br /><div><label for="Email" l>Adresse électronique:</label><input type="text" id="Email" size="50" name="Email" autocomplete="on" /></div>';
+        str+='<br /><div><label for="Telephone">Téléphone: </label><input type="text" id="Telephone" size="50" name="Telephone" autocomplete="on" /></div>';
+        str+='<br /><div><label for="Commentaire">Commentaires: (<i><span class="small">Motivez votre demande...</span></i>) </label><textarea cols="50" id="Commentaire" rows="5" name="Commentaire" autocomplete="on"></textarea></div>';
+        str+='<div class="buttons"><input type="submit" value="Envoyer" name="Envoyer" /><input type="reset" value="Réinitialiser" name="Reset" /></div>';
+        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'">';
+        str+='<input type="hidden" id="idmoule" name="idmoule" value="'+idmoule+'">';
+        str+='</form>';
+        
+        document.getElementById("myImage").innerHTML = str;
+    }
+
+
+//--------------------------------
+function validationReservation()  {                                  
+
+    var name = document.forms["RegForm"]["Nom"];               
+    var email = document.forms["RegForm"]["Email"];    
+    var phone = document.forms["RegForm"]["Telephone"];   
+    var address = document.forms["RegForm"]["Adresse"];  
+    var comment = document.forms["RegForm"]["Commentaire"];  
+
+    if (name.value == "")                                  
+    { 
+        alert("Mettez votre nom."); 
+        name.focus(); 
+        return false; 
+    }    
+    if (address.value == "")                               
+    { 
+        alert("Mettez votre adresse."); 
+        address.focus(); 
+        return false; 
+    }        
+    if (email.value == "")                                   
+    { 
+        alert("Mettez une adresse email valide."); 
+        email.focus(); 
+        return false; 
+    }    
+    if (email.value.indexOf("@", 0) < 0)                 
+    { 
+        alert("Mettez une adresse email valide."); 
+        email.focus(); 
+        return false; 
+    }    
+    if (email.value.indexOf(".", 0) < 0)                 
+    { 
+        alert("Mettez une adresse email valide."); 
+        email.focus(); 
+        return false; 
+    }    
+    if (phone.value == "")                           
+    { 
+        alert("Mettez votre numéro de téléphone."); 
+        phone.focus(); 
+        return false; 
+    }    
+    if (comment.value == "")                  
+    { 
+        alert("Complétez le commentaire en précisant l'objet de votre réservation."); 
+        comment.focus(); 
+        return false; 
+    } 
+    envoiReservation();
+    return true; 
+}
+
+
+// ----------------------- 
+function envoiReservation(){
+// envoie le contenu JSON de la demande de réservation au serveur
+    console.debug("envoiReservation()");
+    
+    var mystrjson='';
+    //var mystr='';
+
+    var name = document.forms["RegForm"]["Nom"].value;               
+    var email = document.forms["RegForm"]["Email"].value;    
+    var phone = document.forms["RegForm"]["Telephone"].value;   
+    var address = document.forms["RegForm"]["Adresse"].value;  
+    var comment = document.forms["RegForm"]["Commentaire"].value; 
+    var idmodele = document.forms["RegForm"]["idmodele"].value;               
+    var idmoule = document.forms["RegForm"]["idmoule"].value;               
+
+    mystrjson+='{"idmodele":"'+idmodele+'", "idmoule":"'+idmoule+'", Nom":"'+name+'", "Email":"'+email+'", "Telephone":"'+phone+'", "Adresse":"'+address+'", "Commentaire":"'+comment+'"}';
+    //mystr+='idmodele='+idmodele+'&idmoule='+idmoule+'&Nom='+name+'&Email='+email+'&Telephone='+phone+'&Adresse='+address+'&Commentaire='+comment;
+        
+    console.debug("JSON: "+mystrjson+"\n");
+    //console.debug("STR: "+mystr+"\n");
+        
+    //var url= url_serveur+'reservation.php';
+    var url= url_serveur+'reservation_json.php';
+    console.debug("URL: "+ url);
+    //ajax_post(url, mystrjson);
+    ajax_get(url, mystrjson);
+ }
+ 
+// Requête par GET
+ 
+// Lance l'appel Ajax et transmet les données du formulaire
+// -----------------------
+function ajax_get(url, mystrjson){  
+     if ((url !== undefined) && (url.length>0) && (mystr !== undefined) && (mystr.length>0) ){        
+        // GET avec fetch()
+        fetch(url+'?data='+encodeURI(mystr), {
+            method: "GET",
+            headers: {"Content-type": "application/json;charset=UTF-8"}
+        })
+        .then(response => response.json())  // Le retour est aussi une chaîne JSON
+        .then(json => {
+                console.debug(json);                
+                if (json.ok==1){    // ça s'est ma cuisine interne                    
+                    document.getElementById("consigne").innerHTML="Transfert vers le serveur <span class=\"surligne\"><i>"+url_serveur+"</i></span> effectué. ";
+                }         
+            })               
+        .catch(error => console.debug("Erreur : "+error));
+    }
+
+
+// Envoi d'un formulaire avec Ajax en Post
+// ----------------------- 
+function ajax_post(url, mystrjson){    
+    console.debug("Ajax Post "+ url+" "+mystrjson);
+    if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){ 
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                document.getElementById("consigne").innerHTML = this.responseText;
+            }
+        };
+        xhttp.open("POST", url, true);
+        xhttp.setRequestHeader("Content-type", "application/json;charset=UTF-8");
+        xhttp.send(mystrjson);             
+    }
+}
+
+// Envois de formulaires par Fetch et POST
+// En erreur sur Firefox et sur Google Chrome
+// ----------------------- 
+function ajax_post_fetch(url, mystrjson){    
+    console.debug("Ajax Post "+ url+"\n"+mystrjson);
+    if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){ 
+        
+        // POST avec fetch()
+        fetch(url, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            //body: JSON.stringify(myjson), // turn the JS object literal into a JSON string
+         
+            body: mystrjson, // mystrjson est déjà une chaîne
+            referrer: "about:client", //ou "" (pas de réferanr) ou une url de l'origine
+            referrerPolicy: "no-referrer-when-downgrade", //ou no-referrer, origin, same-origin...
+            //mode: "cors", //ou same-origin, no-cors
+            mode: "same-origin",
+            credentials: "include", //ou same-origin ou omit, include
+            cache: "default", //ou no-store, reload, no-cache, force-cache, ou only-if-cached
+            redirect: "follow", //ou manual ou error
+            integrity: "", //ou un hash comme "sha256-abcdef1234567890"
+            keepalive: false, //ou true pour que la requête survive à la page
+            signal: undefined //ou AbortController pour annuler la requête     
+                 
+        })
+        .then(response => response.json())  // Le retour est aussi une chaîne
+        .then(response => {
+                console.debug(response);
+                if (response.ok==1){    // ça s'est ma cuisine interne                    
+                    document.getElementById("consigne").innerHTML="Transfert vers le serveur <span class=\"surligne\"><i>"+url_serveur+"</i></span> effectué. ";
+                }
+            })
+        .catch(error => console.debug("Erreur : "+error));
+        }
+    }        
+}
+
+
+</script>
+
+  </body>
+</html>

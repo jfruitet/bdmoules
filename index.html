@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <meta charset="UTF-8">  
+  <meta name="keywords" content="HTML, CSS, JavaScript">
+  <meta name="description" content="Gestion des Moules ARBL">
+  <meta name="author" content="Jean Fruitet">
+  <!-- base href="http://localhost/robonav/" target="_blank" -->
+  <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+  <title>Gestion des moules ARBL</title>
+  <!-- Feuilles de style -->
+<link rel="stylesheet" href="./css/style.css"> 
+<link rel="stylesheet" href="./css/style1.css">
+<!-- link rel="stylesheet" href="./css/w3docs.css" -->
+</head>
+<body>
+<h2> <img src="./images/logo_arbl.png" alt="logo ARBL" title="logo ARBL">Gestion des moules de l'ARBL</h2>
+<p><a href="mailto:jean.fruitet@free.fr?subject=Moules ARBL">jean.fruitet@free.fr</a></p>
+
+<table>
+<tr><th>Documentation</th><th>Consulter</th><th>Administrer</th></tr>
+<tr><td><a href="./documentation.html">Documentation</a></td>
+<td><a href="./consulter.html">Rechercher / Réserver</a></td>
+<td><a href="./administrer.html">Créer / Modifier</a></td>
+</tr>
+</table>
+<h3>Présentation</h3>
+<p>L'ARBL (Association Radiomodéliste des Bords de Loire) met à disposition de ses membres une collection de moules en résine pour la réalisation d'aéromodèles et de voiliers
+<br />
+Quand vous avez sélectionné un modèle faites sa <a href="reservation.html">réservation</a> auprès du bureau de l'association.
+</p>
+
+<h3>Liste des modèles et de leurs moules associés</h3>
+<p><span id="consigne">Sélectionnez un modèle.<span></p>
+<div class="scrolldown"><p id="infomoules"></p></div>
+<div class="scrollleft">
+    <p id="myListModeles"></p>
+</div>
+<div class="scrollright">
+    <p id="myImage"></p>
+</div>
+<div id="myInfo"></div>
+<div id="basdepage">(<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>) <a href="mailto:jean.fruitet@.free.fr?subject=Moules ARBL">JF</a></div>
+</body>
+
+<script src="js/config.js"></script>
+<script src="js/myscript.js"></script>
+<script src="js/ajax.js"></script>
+<script>
+// Chargement de la liste des fichiers de données vérifiées
+ window.onload = function(){
+    // Cookies
+    checkCookies(); 
+    // getModeles();
+    // getMoules();
+    getModelesMoules();   
+ }   
+</script>
+</html>
+

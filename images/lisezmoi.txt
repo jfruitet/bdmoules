@@ -1,0 +1,12 @@
+Dossier des photos de moules et de modèles.
+
+Taille des images du dossier "images" : 800 pixels de large.
+
+Le sous dossier "images/vignettes/" doit contenir des images identiques mais réduites à 400 pixels de large
+et conservant les même noms de fichier que celles du dossier images.
+
+Concernant l'enregistrement des prises de vues, on veillera à bien distinguer les photos concernant le modèle 
+terminé et/ou en vol des photos de chaque moule pour ledit modèle.
+
+La table bdmodeles.bdm_photo doit conserver cette distinctions
+

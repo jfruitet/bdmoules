@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <meta charset="UTF-8">  
+  <meta name="keywords" content="HTML, CSS, JavaScript">
+  <meta name="description" content="Gestion des Moules ARBL">
+  <meta name="author" content="Jean Fruitet">
+  <!-- base href="http://localhost/robonav/" target="_blank" -->
+  <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+  <title>Gestion des moules ARBL</title>
+  <!-- Feuilles de style -->
+<link rel="stylesheet" href="./css/style.css"> 
+<link rel="stylesheet" href="./css/style1.css">
+<link rel="stylesheet" href="./css/w3docs.css">
+<script src="js/config.js"></script>
+<script src="js/ajax_reservation.js"></script>
+</head>
+<body>
+  <h2>Envoyer un formulaire de réservation</h2>
+  <p><span id="consigne"><span></p>
+  <div id="myImage"></div>
+  <div id="myInfo"></div>
+  <script>
+    if ((idmodele !== undefined) && (idmodele>0) && (tidmoules!==undefined) && (tidmoules.length>0)){ // idmodele=37; tidmoules=[46,47];
+        let str='';
+        // Creer un formulaire de réservation
+        str+='<h4>Complétez ce formulaire de réservation</h4>';
+        str+='<form name="RegForm" action="" onsubmit="return validationReservation()" method="post" class="w3docs">';
+        str+='<div><label for="Nom">NOM Prénom:</label><input type="text" id="Nom" size="50" name="Nom" autocomplete="on" /></div>';
+        str+='<br /><div><label for="Adresse">Adresse:</label><input type="text" id="Adresse" size="50" name="Adresse" autocomplete="on" /></div>';
+        str+='<br /><div><label for="Email" l>Adresse électronique:</label><input type="text" id="Email" size="50" name="Email" autocomplete="on" /></div>';
+        str+='<br /><div><label for="Telephone">Téléphone: </label><input type="text" id="Telephone" size="50" name="Telephone" autocomplete="on" /></div>';
+        str+='<br /><div><label for="Commentaire">Commentaires: (<i><span class="small">Motivez votre demande...</span></i>) </label><textarea cols="50" id="Commentaire" rows="5" name="Commentaire" autocomplete="on"></textarea></div>';
+        str+='<b>Cochez les moules à réserver</b>';
+        for (let i=0; i<tidmoules.length; i++){
+            str+='<label for="idmoule'+tidmoules[i]+'">Moule ID'+tidmoules[i]+'</label> ';
+            str+='<input type="checkbox" id="idmoule'+tidmoules[i]+'" name="idmoule'+tidmoules[i]+'" value="'+tidmoules[i]+'" checked />';
+        }
+        str+='<div class="buttons"><input type="submit" value="Envoyer" name="Envoyer" /><input type="reset" value="Réinitialiser" name="Reset" /></div>';
+        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'">';
+        
+        str+='</form>';
+        
+        document.getElementById("myImage").innerHTML = str;
+    }
+
+  </script>  
+</body>
+</html>

@@ -1,0 +1,43 @@
+[
+{"type":"header","version":"5.2.1","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"bdmoules"},
+{"type":"table","name":"bdm_modele","database":"bdmoules","data":
+[
+{"id":"1","nom":"Piper Cub J3 Squelette Bois","descriptif":"Maquette de démonstration","dimension":"","categorie":"avion","timestamp":"2024-01-19"},
+{"id":"2","nom":"Orca","descriptif":"Orca","dimension":"","categorie":"avion","timestamp":"2024-01-19"},
+{"id":"3","nom":"Asw 15","descriptif":"Asw 15 3m.\r\nMoule fuseau","dimension":"? x 300 x ?","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"4","nom":"Modèle N°1","descriptif":"Moule capot moteur, destination inconnue à compléter","dimension":"","categorie":"autre","timestamp":"2024-01-19"},
+{"id":"5","nom":"Fox 2m","descriptif":"Moule fuseau","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"6","nom":"Moule N°2","descriptif":"Master verrière en plâtre","dimension":"","categorie":"autre","timestamp":"2024-01-19"},
+{"id":"7","nom":"LS3","descriptif":"LS3 de 3 mètres, moule fuseau, MPX","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"8","nom":"Le Pointu","descriptif":"Moule à fuseau de planeur \"Le Pointu\" (petit)","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"9","nom":"Modèle N°3","descriptif":"Moule de bateau, descriptif à compléter","dimension":"","categorie":"bateau","timestamp":"2024-01-19"},
+{"id":"10","nom":"Alpha 27","descriptif":"Moule fuseau, Mpx 3 axes","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"11","nom":"Flamingo 1980","descriptif":"Planeur F3b, moule fuseau, Mpx 3 axes","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"12","nom":"Moule N°4","descriptif":"Modèle non décrit, moule fuseau, à compléter","dimension":"","categorie":"autre","timestamp":"2024-01-19"},
+{"id":"13","nom":"Ka6 4 mètres","descriptif":"Moule fuseau planeur Ka6 de 4 mètres, Mpx 3 axes","dimension":"? x 400 x ?","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"14","nom":"Planeur B4","descriptif":"Moule fuseau de planeur B4","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"15","nom":"Aile volante Corback","descriptif":"Moule fuseau Corback 140 cm","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"16","nom":"Moule N°5 planeur F3i","descriptif":"Moule fuseau ","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"17","nom":"ASW 27","descriptif":"Moule fuseau de planeur Asw 27 de 4,5 mètres, S2g","dimension":"? x 450 x ?","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"18","nom":"Modèle n°6","descriptif":"Planeur moule bulle","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"19","nom":"Modèle n°7","descriptif":"Planeur moule Bulle","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"20","nom":"Modèle n°8","descriptif":"Avion, moule capot moteur","dimension":"","categorie":"avion","timestamp":"2024-01-19"},
+{"id":"21","nom":"Asw 24 4m","descriptif":"Moule Bacquet Cokpit","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"22","nom":"Mini Twister","descriptif":"Master Bulle","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"23","nom":"Ventus","descriptif":"Master Bulle","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"24","nom":"Modèle N°11","descriptif":"Moule et contre moule Bacquet","dimension":"","categorie":"autre","timestamp":"2024-01-19"},
+{"id":"25","nom":"Modèle N°12","descriptif":"Master Bulle","dimension":"","categorie":"autre","timestamp":"2024-01-19"},
+{"id":"26","nom":"T6","descriptif":"Avion T6, master Bulle","dimension":"","categorie":"avion","timestamp":"2024-01-19"},
+{"id":"27","nom":"Modèle N°13","descriptif":"Planeur, master bois","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"28","nom":"Modèle N°14","descriptif":"Moule bulle en résine","dimension":"","categorie":"autre","timestamp":"2024-01-19"},
+{"id":"30","nom":"Modèle N°15","descriptif":"Moule capot moteur","dimension":"","categorie":"autre","timestamp":"2024-01-19"},
+{"id":"31","nom":"Modèle N°16","descriptif":"Moule capot moteur","dimension":"","categorie":"autre","timestamp":"2024-01-19"},
+{"id":"32","nom":"Modèle N°17","descriptif":"Moule capot moteur","dimension":"","categorie":"autre","timestamp":"2024-01-19"},
+{"id":"33","nom":"Genesis","descriptif":"Moule fuselage","dimension":"","categorie":"planeur","timestamp":"2024-01-19"},
+{"id":"34","nom":"Modèle N°18, voilier","descriptif":"Moule de pont de voilier, modèle inconnu","dimension":"","categorie":"voilier","timestamp":"2024-01-19"},
+{"id":"35","nom":"Modèle N°19 Catamaran","descriptif":"Moules des flotteurs de catamaran","dimension":"","categorie":"voilier","timestamp":"2024-01-19"},
+{"id":"36","nom":"Le Pointu (grand)","descriptif":"Moule bulle planeur Le Pointu grand modèle","dimension":"","categorie":"planeur","timestamp":"2024-01-19"}
+]
+}
+]
