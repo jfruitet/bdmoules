@@ -17,10 +17,11 @@
 <p><a href="mailto:jean.fruitet@free.fr?subject=Moules ARBL">jean.fruitet@free.fr</a></p>
 
 <table>
-<tr><th>Documentation</th><th>Consulter</th><th>Administrer</th></tr>
+<tr><th>Documentation</th><th>Consulter</th><th>Administrer</th><th>Administrateur</th></tr>
 <tr><td><a href="./documentation.html">Documentation</a></td>
 <td><a href="./consulter.html">Rechercher / Réserver</a></td>
 <td><a href="./administrer.html">Créer / Modifier</a></td>
+<td><span id="login">&nbsp;<span></td>
 </tr>
 </table>
 <h3>Administration de la base de données</h3>
@@ -51,17 +52,15 @@
     // Cookies
     checkCookies(); 
     if (okadmin) {
-        // 
-        console.debug("Admin reconnu. Afficher les modeles");
+        document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+        //console.debug("Admin reconnu. Afficher les modeles");
         getModelesMoulesAdmin();
     }
-    else{    
-        if (oklogin()){
+    else if (oklogin()){
             getModelesMoulesAdmin();
-        }
-        else{
-            // renvoyer ?
-        }        
+    }
+    else{
+        document.getElementById("login").innerHTML = '<span class="surligne">Vous ne pouvez pas accéder à cette page</span>';  
     }
  }   
 </script>

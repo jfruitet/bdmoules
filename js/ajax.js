@@ -1,5 +1,5 @@
 // JavaScript Document
-
+// ajax.js inclus dans index.html, administrer.html
 // Appels Ajax sur la BD 
 // Pas mal de fonctions supprimées par rapport à la version initiales
 

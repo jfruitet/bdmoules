@@ -1,6 +1,15 @@
 // JavaScript Document
-
+// ajax2.js inclus dans administrer.html
 // Gestion des accès et modification de la BD
+
+let mdescription = '';   
+let mlieu = '';
+let matiere = '';
+let metat = '';
+let mlongueur = '';
+let mpoids = '';
+let mcommentaire = '';
+let refmodele = 0;
 
 /** 
  * 
@@ -8,7 +17,6 @@
  *  A remplacer par un appel à la BD et une session
  * 
  */
-
 // --------------------------------
 function oklogin(){
     // A améliorer car ceci n'est absolument pas sûr.
@@ -17,32 +25,19 @@ function oklogin(){
             okadmin=true;
             admin=Email;
             setCookie("sadmin", admin, 1); // 1 jour
+            document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
             return true;
         }   
-        else{   // L'user n'est pas logé comme admin. On lui demande de s'identifier
-            if (saisieLogin()){
-                okadmin=true;
-                admin=Email;
-                setCookie("sadmin", admin, 1); // 1 jour
-                return true;
-            } 
-            else{
-                return false;
-            }
-        }
     }        
-    else{   // Pas de cookies
-        // On lui demande de se loger 
-        if (saisieLogin()){
-            okadmin=true;
-            admin=Email;
-            setCookie("sadmin", admin, 1); // 1 jour
-            return true;
-        } 
-        else{
-            return false;
-        }        
+    // On lui demande de se loger 
+    if (saisieLogin()){
+        okadmin=true;
+        admin=Email;
+        setCookie("sadmin", admin, 1); // 1 jour
+        document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+        return true;
     }
+    return false;
 }
 
 // --------------------------------
@@ -75,7 +70,7 @@ function saisieLogin(){
     str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
     str+='<button id="btnlogin">Valider</button>';
 
-    document.getElementById("consigne").innerHTML = str;
+    document.getElementById("login").innerHTML = str;
  
     // Collecte des ID des moules sélectionnés
     const btnlogin = document.querySelector('#btnlogin');
@@ -100,13 +95,16 @@ function saisieLogin(){
       
 }
 
-/** **********************************
- * 
- * Administration de la BD
- * 
- * 
- * 
- ** **********************************/
+/**************************************** 
+ *                                      *
+ * Administration de la BD              *
+ *                                      *
+ * Ajout de moules                      *
+ * Edition de moules                    *
+ * Ajout de modèles                     *
+ * Edition de modèles                   *
+ *                                      *
+ ****************************************/
 
  
 // Récupère et affiche tous les modèles et leurs moules associés
@@ -180,7 +178,7 @@ function selectModelesMoulesAdmin(tModelesMoules){
                 var idmodele=tModelesMoules[i][1];
                 var idmoule=tModelesMoules[i][6];
                 if (j==1) { // idmodele
-                    str+='<td><button name="modele'+tModelesMoules[i][j]+'" onclick="getModeleMoulesImages('+idmodele+'); editerThatModele('+idmodele+');">'+idmodele+'</button></td>';                    
+                    str+='<td><button name="modele'+tModelesMoules[i][j]+'" onclick="getModeleMoulesImages('+idmodele+'); editerThatModeleMoules('+idmodele+');">'+idmodele+'</button></td>';                    
                 }
                 else if (j==4) { // descriptif
                     str+='<td>';
@@ -209,16 +207,23 @@ function selectModelesMoulesAdmin(tModelesMoules){
     return str;        
 }
 
-
 // -----------------------------------
+// Edite un moule associé à un modèle particulier
 function editerThatMoule(idmodele, idmoule){
     console.debug ("Editer ce moule: "+idmoule);
-    console.debug ("A TERMINER");   
-     
+    console.debug ("A TERMINER");
 }
 
 // -----------------------------------
+// Edite le modele associé à un modèle particulier
 function editerThatModele(idmodele){
+    console.debug ("Editer ce moule: "+idmoule);
+    console.debug ("A TERMINER");        
+}
+
+// -----------------------------------
+// Edite les moules associés à un modèle particulier
+function editerThatModeleMoules(idmodele){
     // console.debug ("Editer ce modèle: "+idmodele);
     //console.debug("Chargement des moules");
     var url= url_serveur+'getmodelemoules.php?idmodele='+idmodele;
@@ -244,10 +249,7 @@ function ajax_GetThatModeleMoulesAdmin(url, idmodele){
 
 // Appelé par ajax_GetThatModeleMoulesAdmin();
 // Modifie idmodeleglobal
-// Modifie modeledescription
-// Remplit le tableau tidmoules
-// Remplit le tableau tdescription
-// Appelle editerThatMoulesAdmin();
+// Appelle editerThatMoules();
 // ----------------------- 
 function selectThatModeleMoulesAdmin(response, idmodele) {
     // console.debug("Affichage des modeles et des moules associés\n"+ response);
@@ -267,8 +269,8 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
     }; 
     
     let str='';
-    //str+='<p>Sélectionnez les moules à réserver</p>';
-    str+='<button id="btnedit">Editer</button>';
+    str+='<p>Moules';
+    str+='<button id="btnedit">Editer</button> <button id="btnadd">Ajouter</button></p>';
     str+='<table><tr><th>Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
     
     if ((tThatModeleMoules !== undefined) && (tThatModeleMoules.length>0)){ 
@@ -316,7 +318,6 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
             for (let j in tidmoules){
                 for (let i in tThatModeleMoules){    
                     if (tidmoules[j]==tThatModeleMoules[i][1]){                       
-                        //idmouleglobal=tidmoules[j];
                         tEditionMoules.push(tThatModeleMoules[i]);
                     }           
                 }
@@ -324,15 +325,20 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
         }    
         editerThatMoules(tEditionMoules, idmodele);
     });    
+
+    // Nouveau moule
+    const btnadd = document.querySelector('#btnadd');       
+    btnadd.addEventListener('click', (event) => {
+        newMoule(idmodele);
+    });    
 } 
  
+
 //-----------------------------------------
 // Affiche un formulaire d'édition
 function editerThatMoules(tEditionMoules, idmodele){
     console.debug("editerThatMoules()");
-    console.debug("idmodele: "+idmodeleglobal);
-    console.debug("modeledescription: "+modeledescription);
-    console.debug("tidmoules: "+tidmoules);
+    console.debug("idmodele: "+idmodele);
     console.debug("tEditionMoules: "+tEditionMoules);
     
     if ((idmodele !== undefined) && (idmodele>0) && (tEditionMoules!==undefined) && (tEditionMoules.length>0)){ // idmodele=37; tidmoules=[46,47];
@@ -340,8 +346,7 @@ function editerThatMoules(tEditionMoules, idmodele){
         // Creer un formulaire de réservation
         str+='<h4>Complétez ce formulaire d\'édition</h4>';
         str+='<form name="EditForm" action="" onsubmit="return saisieEditionMultiple()" method="post">';
-
-        str+='</div><div class="button"><input type="submit" value="Envoyer" name="Envoyer" /><input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" /><input type="reset" value="Réinitialiser" name="Reset" /></div>';        
         str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'">';
         
         for (let i=0; i<tEditionMoules.length; i++){
@@ -363,86 +368,91 @@ function saisieEditionMultiple(){
 console.debug("saisieEditionMultiple: A TERMINER...");
 }
 
-/********************************
-    nom = document.forms["Form"]["Nom"];               
-    email = document.forms["RegForm"]["Email"];    
-    phone = document.forms["RegForm"]["Telephone"];   
-    address = document.forms["RegForm"]["Adresse"];  
-    comment = document.forms["RegForm"]["Commentaire"];      
 
-    if (nom.value == "")                                  
+ 
+// ---------------------------------------
+// création d'un moule rattaché à ce modèle
+function newMoule(idmodele){
+    console.debug("newMoule()");
+    console.debug("idmodele: "+idmodele);
+    
+    if ((idmodele !== undefined) && (idmodele>0)){
+        let str='';
+        // Creer un formulaire de création
+        str+='<h4>Complétez ce formulaire</h4>';
+        str+='<form name="AddForm" action="" method="post"  onsubmit="return addMoule();">';
+        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+
+        // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
+        str+='<div><label for="mdescription">Description: </label><br /><input type="text" id="mdescription" size="50" name="mdescription" value="" autocomplete="on" />';
+        str+='<br /><label for="mlieu">Lieu de dépôt: </label> <input type="text" id="mlieu" size="20" name="mlieu" value="La Minais" autocomplete="on" />';
+        str+='<br /><label for="matiere">Matière: </label> <input type="text" id="matiere" size="20" name="matiere" value="Composite" autocomplete="on" />';
+        str+='<br /><label for="etatmoule">Etat: </label> <input type="text" id="etatmoule" size="20" name="etatmoule" value="?" autocomplete="on" />';
+        str+='<br /><label for="longueur">Longueur: </label> <input type="text" id="longueur" size="10" name="longueur" value="" autocomplete="on" />';
+        str+='<br /><label for="poids">Poids: </label> <input type="text" id="poids" size="10" name="poids" value="" autocomplete="on" />';
+        str+='<br /><label for="commentaire">Remarques: (<i><span class="small">Indiquez la disponibilité, les conditions de prêt, etc.</span></i>)</label>';
+        str+='<br /><textarea cols="50" id="commentairemoule" rows="3" name="commentairemoule" autocomplete="on"></textarea>';
+        str+='</div>';        
+        str+='<input type="hidden" id="refmodele" name="refmodele" value="'+idmodele+'">';
+        str+='</form>';      
+        document.getElementById("myImage").innerHTML = str;
+    }
+}
+
+
+// ----------------------------------
+function addMoule(){
+    mdescription = document.forms["AddForm"]["mdescription"];               
+    mlieu = document.forms["AddForm"]["mlieu"];    
+    matiere = document.forms["AddForm"]["matiere"];   
+    metat = document.forms["AddForm"]["etatmoule"];  
+    mlongueur = document.forms["AddForm"]["longueur"];      
+    mpoids = document.forms["AddForm"]["poids"];      
+    mcommentaire = document.forms["AddForm"]["commentairemoule"];      
+    refmodele = document.forms["AddForm"]["refmodele"];
+          
+    if (mdescription.value == "")                                  
     { 
-        alert("Mettez votre nom."); 
-        nom.focus(); 
+        alert("Complétez la description."); 
+        mdescription.focus(); 
         return false; 
     }    
-    if (address.value == "")                               
+    if (mlieu.value == "")                               
     { 
-        alert("Mettez votre adresse."); 
-        address.focus(); 
+        alert("Complétez l'adresse du dépôt"); 
+        mlieu.focus(); 
         return false; 
     }        
-    if (email.value == "")                                   
+    if (mcommentaire.value == "")                  
     { 
-        alert("Mettez une adresse email valide."); 
-        email.focus(); 
+        alert("Complétez le commentaire en précisant les conditions de prêt."); 
+        mcommentaire.focus(); 
         return false; 
-    }    
-    if (email.value.indexOf("@", 0) < 0)                 
-    { 
-        alert("Mettez une adresse email valide."); 
-        email.focus(); 
-        return false; 
-    }    
-    if (email.value.indexOf(".", 0) < 0)                 
-    { 
-        alert("Mettez une adresse email valide."); 
-        email.focus(); 
-        return false; 
-    }    
-    if (phone.value == "")                           
-    { 
-        alert("Mettez votre numéro de téléphone."); 
-        phone.focus(); 
-        return false; 
-    }    
-    if (comment.value == "")                  
-    { 
-        alert("Complétez le commentaire en précisant l'objet de votre réservation."); 
-        comment.focus(); 
-        return false; 
-    } 
-    // Variables globales et Cookies
-    Nom = document.forms["RegForm"]["Nom"].value;               
-    Email = document.forms["RegForm"]["Email"].value;    
-    Telephone = document.forms["RegForm"]["Telephone"].value;   
-    Adresse = document.forms["RegForm"]["Adresse"].value;  
-    Commentaire = document.forms["RegForm"]["Commentaire"].value;
-    setCookies();      
+    }     
+    console.debug("Envoi du formulaire.") 
+    setNewMoule(refmodele.value);
     
-    redigeReservationMultiple();
-    return true; 
+    return true;
 }
 
 // ----------------------------------
-function redigeReservationMultiple(){
-// Redige un courriel envoyé par <a href="mailto: etc.
-    console.debug("redigeReservationMultiple()");
-    console.debug("idmodele: "+idmodeleglobal);
-    console.debug("modeledescription: "+modeledescription);
-    console.debug("tidmoules: "+tidmoules);
-    console.debug("tdescription: "+tdescription);
+function setNewMoule(refmodele){
+// Mise à jour de la BD
+    console.debug("setNewMoule()");
+    console.debug("refmodele: "+refmodele);
 
-    if ((tdescription!==undefined) && (tdescription.length>0)){        
-        let str='';
-        let strmsg='';
-        console.debug("Rédaction du courriel de réservation");        
-        str+='<b>Moules réservés</b><ul><li>'+modeledescription+'<ol>';
-        strmsg+='Moules réservés'+"\n"+modeledescription+"\n";
-        for (let i=0; i<tdescription.length; i++){
-            str+='<li>Moule ID:'+tdescription[i][0]+' Inventaire: '+tdescription[i][1]+' Description: '+tdescription[i][2]+', '+tdescription[i][3]+'</li>';
-            strmsg+='Moule ID:'+tdescription[i][0]+' Inventaire: '+tdescription[i][1]+' Description: '+tdescription[i][2]+', '+tdescription[i][3]+"\n";
-        }
+    let str='';
+    let strmsg='';
+    // INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescription`, `mlieu`, `matiere`, `etat`, `longueur`, `poids`, `commentaire`)
+    str+='?ref_modele='+refmodele+'&mdescription='+mdescription.value+'&mlieu='+mlieu.value+'&matiere='+matiere.value+'&etat='+metat.value+'&longueur='+mlongueur.value+'&poids='+mpoids.value+'&commentaire='+mcommentaire.value;
+    strmsg+='Nouveau moule pour le modèle '+refmodele+"\n";
+    strmsg+=str;
+    console.debug(strmsg);
+    /*
+    for (let i=0; i<tdescription.length; i++){
+        str+='<li>Moule ID:'+tdescription[i][0]+' Inventaire: '+tdescription[i][1]+' Description: '+tdescription[i][2]+', '+tdescription[i][3]+'</li>';
+        strmsg+='Moule ID:'+tdescription[i][0]+' Inventaire: '+tdescription[i][1]+' Description: '+tdescription[i][2]+', '+tdescription[i][3]+"\n";
+    }
         str+='</ol></li></ul>';
         
         console.debug(str);        
@@ -454,7 +464,8 @@ function redigeReservationMultiple(){
         // document.getElementById("myImage").innerHTML +='<br /><a href="mailto:bureau-arbl@laposte.net?cc=jean.fruitet@free.fr&subject=RéservationMoules&body='+thatbody+'">Envoyer</a></p>';
         // Version de test
         document.getElementById("myImage").innerHTML +='<br /><a href="mailto:jean.fruitet@laposte.net?cc=jean.fruitet@free.fr&subject='+encodeURIComponent("Réservation Moules")+'&body='+thatbody+'">Envoyer</a></p>';                      
-    }           
+    
+    */
+     
 }
 
-*/
