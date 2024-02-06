@@ -17,26 +17,28 @@
 <p><a href="mailto:jean.fruitet@free.fr?subject=Moules ARBL">jean.fruitet@free.fr</a></p>
 
 <table>
-<tr><th>Documentation</th><th>Consulter</th><th>Administrer</th><th>Administrateur</th></tr>
+<tr><th>Documentation</th><th>Consulter</th><th>Administrer</th><th colspan="2">Administrateur</th></tr>
 <tr><td><a href="./documentation.html">Documentation</a></td>
-<td><a href="./consulter.html">Rechercher / Réserver</a></td>
+<td><a href="./index.html">Rechercher / Réserver</a></td>
 <td><a href="./administrer.html">Créer / Modifier</a></td>
 <td><span id="login">&nbsp;<span></td>
+<td><span id="logout">&nbsp;<span></td>
 </tr>
 </table>
 <h3>Administration de la base de données</h3>
-<p>Identifiez-vous pour accéder à l'enregistrement des moules. Complétez chaque enregistrement par une photo et un numéro d'inventaire unique.</p>
+<p><span id="msg">Identifiez-vous pour accéder à l'enregistrement des moules...</span>
+<span id="loginform"><span></p>
 
-<h3>Editer des modèles</h3>
-<p><span id="consigne">Sélectionnez un modèle.<span></p>
-<div class="scrolldown"><p id="infomoules"></p></div>
+<h3>Modèles</h3>
+<p><span id="consigne">Sélectionnez un modèle.</span></p>
+<div class="scrolldown"><span id="infomoules"></span></div>
 <div class="scrollleft">
-    <p id="myListModeles"></p>
+    <span id="myListModeles"></span>
 </div>
 <div class="scrollright">
 <p>Pour chaque modèle enregistrez au moins une photo de 800 pixels de large et une vignette de 400 pixels de large au format .JPG.
 <br />Les noms des photos doivent contenir le nom du modèle, par exemple "<i>Excalibur.jpg</i>", "<i>Excalibur_moules_fuseau.jpg</i>" et "<i>Excalibur_moules_verriere.jpg</i>".</p>
-<p id="myImage"></p>
+<span id="myImage"></span>
 </div>
 <div id="myInfo"></div>
 <div id="basdepage">(<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>) <a href="mailto:jean.fruitet@.free.fr?subject=Moules ARBL">JF</a></div>
@@ -50,17 +52,43 @@
 // Chargement de la liste des fichiers de données vérifiées
  window.onload = function(){
     // Cookies
-    checkCookies(); 
+    checkCookies();
+    // Paramètres
+    let msg = ''; 
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.has('msg')){
+        msg = urlParams.get('msg');
+    }
+    document.getElementById("msg").innerHTML = '<span class="surligne">'+msg+'</span> ';        
+
     if (okadmin) {
         document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+        formlogout();
+        document.getElementById("msg").innerHTML += 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
+
         //console.debug("Admin reconnu. Afficher les modeles");
         getModelesMoulesAdmin();
+        if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+            // Affiche le moule sélectionné 
+            getModeleMoulesImages(idmodeleglobal); 
+            editerThatModeleMoules(idmodeleglobal);
+        }         
     }
-    else if (oklogin()){
-            getModelesMoulesAdmin();
-    }
-    else{
-        document.getElementById("login").innerHTML = '<span class="surligne">Vous ne pouvez pas accéder à cette page</span>';  
+    else { 
+        if (!oklogin()) {
+            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>'; 
+            document.getElementById("msg").innerHTML += 'Pour administrer la base de données identifiez-vous avec votre compte administrateur.';
+            getModelesMoules(); 
+            if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+                // Affiche le moule sélectionné 
+                getModeleMoulesImages(idmodeleglobal); 
+                reserverModeleMoules(idmodeleglobal);
+            }
+        }
+        else{
+            formlogout();
+        }
     }
  }   
 </script>

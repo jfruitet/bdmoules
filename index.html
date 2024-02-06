@@ -19,7 +19,7 @@
 <table>
 <tr><th>Documentation</th><th>Consulter</th><th>Administrer</th></tr>
 <tr><td><a href="./documentation.html">Documentation</a></td>
-<td><a href="./consulter.html">Rechercher / Réserver</a></td>
+<td><a href="./index.html">Rechercher / Réserver</a></td>
 <td><a href="./administrer.html">Créer / Modifier</a></td>
 </tr>
 </table>
@@ -31,12 +31,12 @@ Quand vous avez sélectionné un modèle faites sa <a href="reservation.html">r�
 
 <h3>Liste des modèles et de leurs moules associés</h3>
 <p><span id="consigne">Sélectionnez un modèle.<span></p>
-<div class="scrolldown"><p id="infomoules"></p></div>
+<div class="scrolldown"><span id="infomoules"></span></div>
 <div class="scrollleft">
-    <p id="myListModeles"></p>
+    <span id="myListModeles"></span>
 </div>
 <div class="scrollright">
-    <p id="myImage"></p>
+    <span id="myImage"></span>
 </div>
 <div id="myInfo"></div>
 <div id="basdepage">(<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>) <a href="mailto:jean.fruitet@.free.fr?subject=Moules ARBL">JF</a></div>
@@ -53,6 +53,11 @@ Quand vous avez sélectionné un modèle faites sa <a href="reservation.html">r�
     // getModeles();
     // getMoules();
     getModelesMoules();   
+    if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+        // Affiche le moule sélectionné 
+        getModeleMoulesImages(idmodeleglobal); 
+        reserverModeleMoules(idmodeleglobal);
+    }
  }   
 </script>
 </html>

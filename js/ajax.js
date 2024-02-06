@@ -37,7 +37,8 @@ let myInitGet = {
     headers: {"Content-Type": "application/json;charset=UTF-8",  "Access-Control-Allow-Origin" : "*"},
     referrer: "about:client", //ou "" (pas de réferant) ou une url de l'origine
     referrerPolicy: "no-referrer-when-downgrade", //ou no-referrer, origin, same-origin...
-    mode: "cors", //ou same-origin, no-cors
+    //mode: "cors", //ou same-origin, no-cors
+    mode: "same-origin", //ou same-origin, no-cors
     credentials: "include", //same-origin, ou omit, ou include
     cache: "default", //ou no-store, reload, no-cache, force-cache, ou only-if-cached
     redirect: "follow", //ou manual ou error
@@ -54,7 +55,7 @@ function ajax_post(url, mystrjson){
         // POST avec fetch()
         fetch(url, { // let url_serveur = 'http://localhost/bdmoules/php/script.php';
             method: 'POST',
-            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            headers: {'Content-Type': 'application/json;charset=UTF-8',  'Access-Control-Allow-Origin' : '*'},
             //body: JSON.stringify(myjson), // turn the JS object literal into a JSON string
             body: mystrjson, // mystrjson est déjà une chaîne
             referrer: "about:client", //ou "" (pas de réferanr) ou une url de l'origine
@@ -517,7 +518,7 @@ function selectThatModeleMoules(response) {
          
 
     document.getElementById("infomoules").innerHTML = str;
-    document.getElementById("consigne").innerHTML = 'Sélectionnez les moules';
+    document.getElementById("consigne").innerHTML = 'Modèle sélectionné: '+idmodeleglobal+'. Sélectionnez les moules à réserver';
  
     // Collecte des ID des moules sélectionnés
     const btn = document.querySelector('#btn');
@@ -562,11 +563,11 @@ function reserverThatMoules(){
         // Creer un formulaire de réservation
         str+='<h4>Complétez ce formulaire de réservation</h4>';
         str+='<form name="RegForm" action="" onsubmit="return validationReservationMultiple()" method="post">';
-        str+='<div><label for="Nom">NOM Prénom:</label><br /><input type="text" id="Nom" size="50" name="Nom" value="'+Nom+'" autocomplete="on" />';
-        str+='<br /><label for="Adresse">Adresse:</label><br /><input type="text" id="Adresse" size="50" name="Adresse" value="'+Adresse+'" autocomplete="on" />';
-        str+='<br /><label for="Email">Adresse électronique:</label><br /><input type="text" id="Email" size="50" name="Email" value="'+Email+'" autocomplete="on" />';
+        str+='<div><label for="Nom">NOM Prénom: </label><br /><input type="text" id="Nom" size="50" name="Nom" value="'+Nom+'" autocomplete="on" />';
+        str+='<br /><label for="Adresse">Adresse: </label><br /><input type="text" id="Adresse" size="50" name="Adresse" value="'+Adresse+'" autocomplete="on" />';
+        str+='<br /><label for="Courriel">Adresse électronique:</label><br /><input type="text" id="Courriel" size="50" name="Courriel" value="'+Courriel+'" autocomplete="on" />';
         str+='<br /><label for="Telephone">Téléphone: </label><br /><input type="text" id="Telephone" size="50" name="Telephone" value="'+Telephone+'" autocomplete="on" />';
-        str+='<br /><label for="Commentaire">Commentaires: (<i><span class="small">Motivez votre demande...</span></i>) </label><textarea cols="50" id="Commentaire" rows="3" name="Commentaire" autocomplete="on">'+Commentaire+'</textarea>';
+        str+='<br /><label for="Commentaire">Commentaires: </label><br />(<i><span class="small">Motivez votre demande...</span></i>)<textarea cols="50" id="Commentaire" rows="3" name="Commentaire" autocomplete="on">'+Commentaire+'</textarea>';
         str+='</div><div class="button"><input type="submit" value="Envoyer" name="Envoyer" /><input type="reset" value="Réinitialiser" name="Reset" /></div>';        
         str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
         /*
@@ -594,7 +595,7 @@ function reserverThatMoules(){
 function validationReservationMultiple(){
 // Verifie que les champs du formualaire sont remplis
     nom = document.forms["RegForm"]["Nom"];               
-    email = document.forms["RegForm"]["Email"];    
+    email = document.forms["RegForm"]["Courriel"];    
     phone = document.forms["RegForm"]["Telephone"];   
     address = document.forms["RegForm"]["Adresse"];  
     comment = document.forms["RegForm"]["Commentaire"];      
@@ -643,7 +644,7 @@ function validationReservationMultiple(){
     } 
     // Variables globales et Cookies
     Nom = document.forms["RegForm"]["Nom"].value;               
-    Email = document.forms["RegForm"]["Email"].value;    
+    Courriel = document.forms["RegForm"]["Courriel"].value;    
     Telephone = document.forms["RegForm"]["Telephone"].value;   
     Adresse = document.forms["RegForm"]["Adresse"].value;  
     Commentaire = document.forms["RegForm"]["Commentaire"].value;
@@ -675,8 +676,8 @@ function redigeReservationMultiple(){
         str+='</ol></li></ul>';
         
         console.debug(str);        
-        //let thatbody= 'Nom: '+Nom+'%0A%0AEmail: '+Email+'%0A%0ATéléphone: '+Telephone+'%0A%0AAdresse: '+Adresse+'%0A%0ACommentaire '+Commentaire+'%0A%0A'+strmsg;
-        let thatbody= encodeURIComponent("Demande de réservation effectuée par \n\nNom: "+Nom+"\nEmail: "+Email+"\nTéléphone: "+Telephone+"\nAdresse: "+Adresse+"\nCommentaire: "+Commentaire+"\n\n"+strmsg);
+        //let thatbody= 'Nom: '+Nom+'%0A%0ACourriel: '+Courriel+'%0A%0ATéléphone: '+Telephone+'%0A%0AAdresse: '+Adresse+'%0A%0ACommentaire '+Commentaire+'%0A%0A'+strmsg;
+        let thatbody= encodeURIComponent("Demande de réservation effectuée par \n\nNom: "+Nom+"\nCourriel: "+Courriel+"\nTéléphone: "+Telephone+"\nAdresse: "+Adresse+"\nCommentaire: "+Commentaire+"\n\n"+strmsg);
         console.debug("Message body\n"+thatbody);
         document.getElementById("myImage").innerHTML = '<h4>Cliquez sur le lien pour envoyer cette demande de réservation</h4><p>'+str;
         // Version opérationnelle
@@ -846,7 +847,7 @@ function affFichersImages(response){
 function validationReservation()  {                                  
 
     var nom = document.forms["RegForm"]["Nom"];               
-    var email = document.forms["RegForm"]["Email"];    
+    var email = document.forms["RegForm"]["Courriel"];    
     var phone = document.forms["RegForm"]["Telephone"];   
     var address = document.forms["RegForm"]["Adresse"];  
     var comment = document.forms["RegForm"]["Commentaire"];  
@@ -907,14 +908,14 @@ function envoiReservation(){
     var mystrjson='';
 
     var nom = document.forms["RegForm"]["Nom"].value;               
-    var email = document.forms["RegForm"]["Email"].value;    
+    var email = document.forms["RegForm"]["Courriel"].value;    
     var phone = document.forms["RegForm"]["Telephone"].value;   
     var address = document.forms["RegForm"]["Adresse"].value;  
     var comment = document.forms["RegForm"]["Commentaire"].value; 
     var idmodele = document.forms["RegForm"]["idmodele"].value;               
     var idmoule = document.forms["RegForm"]["idmoule"].value;               
 
-    mystrjson+='{"idmodele":"'+idmodele+'", "idmoule":"'+idmoule+'", Nom":"'+nom+'", "Email":"'+email+'", "Telephone":"'+phone+'", "Adresse":"'+address+'", "Commentaire":"'+comment+'"}';
+    mystrjson+='{"idmodele":"'+idmodele+'", "idmoule":"'+idmoule+'", Nom":"'+nom+'", "Courriel":"'+email+'", "Telephone":"'+phone+'", "Adresse":"'+address+'", "Commentaire":"'+comment+'"}';
     console.debug("JSON:"+mystrjson+"\n");
         
     var url= url_serveur+'reservation.php';
@@ -924,27 +925,6 @@ function envoiReservation(){
  }
  
 
-//-----------------------------------------
-function reserverMoule(idmodele, idmoule){
-    if ((idmoule !== undefined) && (idmoule>0)){
-        let str='';
-        // Creer un formulaire de réservation
-        str+='<h4>Complétez ce formulaire de réservation</h4>';
-        str+='<form name="RegForm" onsubmit="return validationReservation()" method="post" class="w3docs">';
-        str+='<div><label for="Nom">Nom:</label><input type="text" id="Nom" size="50" name="Nom" /></div>';
-        str+='<br /><div><label for="adresse">Adresse:</label><input type="text" id="adresse" size="50" name="Adresse" /></div>';
-        str+='<br /><div><label for="E-mail" l>Adresse électronique:</label><input type="text" id="E-mail" size="50" name="Email" /></div>';
-        str+='<br /><div><label for="Téléphone">Téléphone: </label><input type="text" id="Telephone" size="50" name="Telephone" /></div>';
-        str+='<br /><div><label for="commentaire">Commentaires: (<i><span class="small">Motivez votre demande...</span></i>) </label><textarea cols="50" id="commentaire" rows="5" name="Commentaire"></textarea></div>';
-        str+='<div class="buttons"><input type="submit" value="Envoyer" name="Envoyer" /><input type="reset" value="Réinitialiser" name="Reset" /></div>';
-        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'">';
-        str+='<input type="hidden" id="idmoule" name="idmoule" value="'+idmoule+'">';
-        str+='</form>';
-        
-        document.getElementById("myImage").innerHTML = str;
-    }
-}
-
 
 
 
@@ -952,7 +932,7 @@ function reserverMoule(idmodele, idmoule){
 function validationReservation()  {                                  
 
     nom = document.forms["RegForm"]["Nom"];               
-    email = document.forms["RegForm"]["Email"];    
+    email = document.forms["RegForm"]["Courriel"];    
     phone = document.forms["RegForm"]["Telephone"];   
     address = document.forms["RegForm"]["Adresse"];  
     comment = document.forms["RegForm"]["Commentaire"];  
@@ -1053,7 +1033,7 @@ function reserverMoule(idmodele, tidmoule){
         str+='<form name="RegForm" action="" onsubmit="return validationReservation()" method="post" class="w3docs">';
         str+='<div><label for="Nom">NOM Prénom:</label><input type="text" id="Nom" size="50" name="Nom" autocomplete="on" /></div>';
         str+='<br /><div><label for="Adresse">Adresse:</label><input type="text" id="Adresse" size="50" name="Adresse" autocomplete="on" /></div>';
-        str+='<br /><div><label for="Email" l>Adresse électronique:</label><input type="text" id="Email" size="50" name="Email" autocomplete="on" /></div>';
+        str+='<br /><div><label for="Courriel" l>Adresse électronique:</label><input type="text" id="Courriel" size="50" name="Courriel" autocomplete="on" /></div>';
         str+='<br /><div><label for="Telephone">Téléphone: </label><input type="text" id="Telephone" size="50" name="Telephone" autocomplete="on" /></div>';
         str+='<br /><div><label for="Commentaire">Commentaires: (<i><span class="small">Motivez votre demande...</span></i>) </label><textarea cols="50" id="Commentaire" rows="5" name="Commentaire" autocomplete="on"></textarea></div>';
         str+='<b>Cochez les moules à réserver</b>';
@@ -1077,11 +1057,11 @@ function redigeReservation(){
 // 
     console.debug("redigeReservation()");
     
-    let body='%0A%0ANom: '+nom.value+'%0A%0AEmail: '+email.value+'%0A%0ATéléphone: '+phone.value+'%0A%0AAdresse: '+address.value+'%0A%0ACommentaire '+comment.value;
+    let body='%0A%0ANom: '+nom.value+'%0A%0ACourriel: '+email.value+'%0A%0ATéléphone: '+phone.value+'%0A%0AAdresse: '+address.value+'%0A%0ACommentaire '+comment.value;
     body+='%0A%0A'+JSON.stringify(response);
     
     console.debug("body\n");
-    document.getElementById("consigne").innerHTML = '<a href="mailto:bureau-arbl@laposte.net?cc=jean.fruitet@free.fr&subject=Réservation moules&body='+body+'>Envoyer Email</a>';
+    document.getElementById("consigne").innerHTML = '<a href="mailto:bureau-arbl@laposte.net?cc=jean.fruitet@free.fr&subject=Réservation moules&body='+body+'>Envoyer Courriel</a>';
       
 }      
 

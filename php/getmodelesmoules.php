@@ -18,9 +18,11 @@ $mysqli=NULL; // BD class data
 if (isset($_SERVER['REQUEST_METHOD']) && (strtoupper($_SERVER['REQUEST_METHOD']) !== 'GET')) {
   throw new Exception('Only GET requests are allowed');
 }
+/*
 if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'application/json') === false)) {
   throw new Exception('Content-Type must be application/json');
 }
+*/
 
 // Charger le fichier pour récupérer l'info demandée
 connexion_db();

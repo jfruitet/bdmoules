@@ -19,13 +19,13 @@ let tVignettes=[]; // Tableau des fichiers vignettes
 // User mail
     // Objets DOM
     var nom = null;               
-    var email = null;    
+    var courriel = null;    
     var phone = null;   
     var address = null;  
     var comment = null;     
     // String
     var Nom = '';               
-    var Email = '';    
+    var Courriel = '';    
     var Telephone = '';   
     var Adresse = '';  
     var Commentaire = '';
@@ -38,7 +38,7 @@ let tVignettes=[]; // Tableau des fichiers vignettes
 /************************
  * Cookies
  * **********************/
- 
+// ---------------------------------- 
 function setCookie(cname, cvalue, exdays) {
   const d = new Date();
   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
@@ -46,7 +46,13 @@ function setCookie(cname, cvalue, exdays) {
   document.cookie = cname + "=" + cvalue + "; SameSite=Strict; " + expires + ";path=/";
 }
 
- 
+// supprime un cookie
+// ---------------------------------
+function dellCookie(cname) {
+    document.cookie = cname + "=; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+}
+
+// --------------------------------- 
 // retourne la valeur du cookie spécifié
 function getCookie(cname) {
   let name = cname + "=";
@@ -96,17 +102,17 @@ function checkCookies() {
     }
      
     // User
-    let snomuser = getCookie("snomuser");
-    if (snomuser!="" && snomuser!=null) {
-        Nom=snomuser;
+    let snom = getCookie("snom");
+    if (snom!="" && snom!=null) {
+        Nom=snom;
     }
     let sadresse = getCookie("sadresse");
     if (sadresse!="" && sadresse!=null) {
         Adresse=sadresse;
     }
-    let semail = getCookie("semail");
-    if (semail!="" && semail!=null) {
-        Email=semail;
+    let scourriel = getCookie("scourriel");
+    if (scourriel!="" && scourriel!=null) {
+        Courriel=scourriel;
     }
     let stelephone = getCookie("stelephone");
     if (stelephone!="" && stelephone!=null) {
@@ -131,14 +137,14 @@ function setCookies(){
     if (Telephone.length>0) {
         setCookie("stelephone", Telephone, 30); // 30 jours
     }                   
-    if (Email.length>0) {
-        setCookie("semail", Email, 30); // 30 jours
+    if (Courriel.length>0) {
+        setCookie("scourriel", Courriel, 30); // 30 jours
     }   
     if (Adresse.length>0) {
         setCookie("sadresse", Adresse, 30); // 30 jours
     }     
     if (Nom.length>0) {
-        setCookie("snomuser", Nom, 30); // 30 jours
+        setCookie("snom", Nom, 30); // 30 jours
     } 
 } 
 

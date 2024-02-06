@@ -1,7 +1,7 @@
 <?php
 // Script à ne pas supprimer
-// Lecture des photos associées à un id de modele dans la Base de données
-// Id du modele en paramètre GET et chaîne JSON en sortie
+// Lecture du moule idmoule dans la Base de données
+// Id du modèle en paramètre GET et chaîne JSON en sortie
 
 include ("./include/config.php");
 include ("./include/mysql.php");
@@ -11,7 +11,7 @@ $debug = false;
 $reponse_ok = '{"ok":1}';
 $reponse_not_ok = '{"ok":0}';
 $reponse=$reponse_not_ok;
-$idmodele=0;
+$idmoule=0;
 
 $mysqli=NULL; // BD class data
 
@@ -19,30 +19,28 @@ $mysqli=NULL; // BD class data
 if (isset($_SERVER['REQUEST_METHOD']) && (strtoupper($_SERVER['REQUEST_METHOD']) !== 'GET')) {
   throw new Exception('Only GET requests are allowed');
 }
-/*
 if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'application/json') === false)) {
   throw new Exception('Content-Type must be application/json');
 }
-*/
-if (!empty($_GET['idmodele'])) {
-    $idmodele = $_GET['idmodele'];  
+if (!empty($_GET['idmoule'])) {
+    $idmoule = $_GET['idmoule'];  
 }
 
-if (!empty($idmodele))
+if (!empty($idmoule))
 {
     connexion_db();
-    $reponse = mysql_get_images_modele($idmodele);
+    $reponse = mysql_get_moule($idmoule);
     $mysqli -> close();
 }
 echo $reponse;
 
 //--------------------------
-function mysql_get_images_modele($idmodele){ 
+function mysql_get_moule($idmoule){ 
 global $debug;
 global $mysqli;
 $data = array();
-    if (!empty($idmodele)){
-        $result = $mysqli->query("SELECT * FROM bdm_photo WHERE bdm_photo.refmodele=".$idmodele);
+    if (!empty($idmoule)){
+        $result = $mysqli->query("SELECT * FROM bdm_moule WHERE bdm_moule.idmoule=".$idmoule);
         // Récupérer les lignes de la table 
         while ( $row = $result->fetch_assoc())  {
             $data[] = $row;
