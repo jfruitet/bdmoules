@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<head>
+</head>
+<body>
+<script>
+  window.onbeforeunload = function (event) {
+    console.log("navigating away")
+
+  };
+  console.log("starting")
+  fetch("/").then(x => {
+    console.log("fetched")
+  }).catch(e => {
+    console.log("caught", e)
+  })
+  window.location = "/";
+</script>
+</body>
+</html>

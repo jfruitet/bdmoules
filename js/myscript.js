@@ -33,7 +33,30 @@ let tVignettes=[]; // Tableau des fichiers vignettes
 // Admin
     let admin = '';
     let okadmin = false;     
-    
+    let iduser=0;
+    /*  $appel='';  // Page appelante
+$userid=0;
+$usernom='';
+$userlogin='';
+$statut=0;
+$pass='';
+$telephone='';
+$club='';
+*/
+    var usernom = null;               
+    var userlogin = null;    
+    var userphone = null;   
+    var userpass = null;  
+    var userstatut = null;
+    var userclub = null;     
+    // String
+    var Editeur = '';   // NOM + Prénom               
+    var Login = '';    // Courriel
+    var Pass = '';  // crypté MD5 dans la base
+    var Contact = '';   // Telephone
+    var Club = '';      // Club + ville
+    var Statut = 0;     // 0:visiteur, 1:admin, 2:auteur, 3:lecteur
+          
 
 /************************
  * Cookies
@@ -81,6 +104,7 @@ function checkCookies() {
         }    
     }
     
+    // Compte utilisateur permettant l'accès à la gestion des données
     // Admin
     let sadmin = getCookie("sadmin");
     if (sadmin!="" && sadmin!=null) {
@@ -100,7 +124,22 @@ function checkCookies() {
     else{
         okadmin=false;     
     }
-     
+
+    // Utilisateur pour lequel on veut créer / modifier le compte d'accès
+    let siduser = getCookie("siduser");
+    if (siduser!="" && siduser!=null) {
+            if (!isNaN(iduser=parseInt(sadmin,10))){
+                console.debug("Cookie siduser valide");
+                console.debug("iduser: "+iduser);
+            }
+        }                               
+    }
+    else{
+        okadmin=false;     
+    }     
+    
+    // Données des personnes voulant réserver un moule
+    // Ces données ne sont pas stockées dans la base de données
     // User
     let snom = getCookie("snom");
     if (snom!="" && snom!=null) {
@@ -148,4 +187,71 @@ function setCookies(){
     } 
 } 
 
+/********************************************
+ * 
+ * INITIALISATION DES APPELS AJAX
+ * 
+ * 
+ * *****************************************/
+
+
+// Requête par GET
+// ---------------------------------
+let myInitGet = {
+    method: "GET",
+    // headers: {"Content-Type": "application/json;charset=UTF-8"},
+    headers: {"Content-Type": "application/json;charset=UTF-8",  "Access-Control-Allow-Origin" : "*"},
+    referrer: "about:client", //ou "" (pas de réferant) ou une url de l'origine
+    referrerPolicy: "no-referrer-when-downgrade", //ou no-referrer, origin, same-origin...
+    //mode: "cors", //ou same-origin, no-cors
+    mode: "same-origin", //ou same-origin, no-cors
+    credentials: "include", //same-origin, ou omit, ou include
+    cache: "default", //ou no-store, reload, no-cache, force-cache, ou only-if-cached
+    redirect: "follow", //ou manual ou error
+    integrity: "", //ou un hash comme "sha256-abcdef1234567890"
+    keepalive: false, //ou true pour que la requête survive à la page
+    signal: undefined //ou AbortController pour annuler la requête            
+};
+    
+
+// Envois de formulaires par POST
+// Pour des raisons de sécurité qui m'échappent Firefox ne semble pas accepter certains envois par POST
+// et retourne une erreur réseau assez cryptique
+// Alors que Google Chrome les accepte
+// Pour contourner cette difficulté je n'utilise plus d'appel AJAX POST 
+// Mes formulaires basiques POST fournissent une page de redirection aux scripts PHP gérant des appels POST
+// Voir le script ./php/adddmoulebypost.php
+
+let myInitPost = {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json;charset=UTF-8',  'Access-Control-Allow-Origin' : '*'},
+    body:"",
+    referrer: "about:client", //ou "" (pas de réferanr) ou une url de l'origine
+    referrerPolicy: "no-referrer-when-downgrade", //ou no-referrer, origin, same-origin...
+    mode: "cors", //ou same-origin, no-cors
+    credentials: "include", //ou same-origin ou omit, include
+    cache: "default", //ou no-store, reload, no-cache, force-cache, ou only-if-cached
+    redirect: "follow", //ou manual ou error
+    integrity: "", //ou un hash comme "sha256-abcdef1234567890"
+    keepalive: false, //ou true pour que la requête survive à la page
+    signal: undefined //ou AbortController pour annuler la requête            
+}
+// ----------------------- 
+function ajax_post(url, mystrjson){    
+    if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){        
+        // POST avec fetch()
+        // myInitPost.body: JSON.stringify(myjson), // turn the JS object literal into a JSON string
+        myInitPost.body: mystrjson, // mystrjson est déjà une chaîne
+        fetch(url, myInitPost)
+        .then(response => response.json())  // Le retour est aussi une chaîne
+        .then(response => {
+                console.debug(response);
+                if (response.ok==1){    // ça s'est ma cuisine interne                    
+                    document.getElementById("consigne").innerHTML="Transfert vers le serveur <span class=\"surligne\"><i>"+url_serveur+"</i></span> effectué. ";
+                }
+            })
+        .catch(error => console.debug("Erreur : "+error));
+    }
+}
+    
 

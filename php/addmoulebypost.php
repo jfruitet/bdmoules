@@ -96,7 +96,7 @@ else{
         echo "Nouveau moule enregistré. ".$reponse;
     }
     else{
-        echo "Erreur à lenregistrement du moule. "; 
+        echo "Erreur à l'enregistrement du moule. "; 
     }    
 }    
 die();   
