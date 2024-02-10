@@ -327,7 +327,7 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
                 var idmodele=tThatModeleMoules[i][0];
                 var idmoule=tThatModeleMoules[i][1];
                 if (j==0) { // checkbox
-                    str+='<td><button onclick="editMoule('+idmodele+','+idmoule+')">Editer</button> <button onclick="deleteMoule('+idmodele+','+idmoule+')">Supprimer</button></td>';
+                    str+='<td><button onclick="editMoule('+idmodele+','+idmoule+')">Edit</button> <button onclick="deleteMoule('+idmodele+','+idmoule+')">Supp</button></td>';
                     //str+='<td><button onclick="editMoule('+idmodele+','+idmoule+','+tMoule+')">Editer</button> <button onclick="deleteMoule('+idmodele+','+idmoule+')">Supprimer</button></td>';                               
                 }
                 else
@@ -372,7 +372,7 @@ function editMoule(idmodele, idmoule){
         str+='<h4>Complétez ce formulaire</h4>';
 
         str+='<form name="EditForm" action="'+url+'" method="post">';
-        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieEdit();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+        str+='<div class="button"><input type="submit" value="Envoyer" onclick="return verifSaisieEdit();" /> <input type="reset" value="Réinitialiser"  /></div>';        
 
         // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
         str+='<div><label for="mdescription">Description: </label><br /><input type="text" id="mdescription" size="50" name="mdescription" value="'+tMoule[3]+'" autocomplete="on" />';
@@ -435,7 +435,31 @@ function deleteMoule(idmodele, idmoule){
     console.debug("deleteMoule()");
     console.debug("idmodele: "+idmodele);
     console.debug("idmoule: "+idmoule);
+    
+    if ((idmoule !== undefined) && (idmoule>0) 
+        && (tMoule !== undefined) && (tMoule !== null) && (tMoule.length>0)){
 
+        let str='';
+        let url= url_serveur+'deletemoulebypost.php';
+        // Formulaire de création
+        str+='<h4>Confirmez la suppression de ce moule</h4>';
+
+        str+='<form name="DelForm" action="'+url+'" method="post">';
+        str+='<div class="button"><input type="submit" name="delete" value="Confirmer" /> <input type="submit" name="delete" value="Annuler" /></div>';        
+
+        // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
+        str+='<div><b>Description:</b> '+tMoule[3];
+        str+='<br /><b>Lieu de dépôt:</b> '+tMoule[4];
+        str+='<br /><b>Matière:</b> '+tMoule[5];
+        str+='<br /><b>Etat:</b> '+tMoule[6];
+        str+='<br /><b>Remarques:</b><br />'+tMoule[9];
+        str+='</div>';        
+        str+='<input type="hidden" id="idmoule" name="idmoule" value="'+idmoule+'" />';
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
+        str+='</form>';
+           
+        document.getElementById("myImage").innerHTML = str;
+    }
 }    
     
 /**********************************************

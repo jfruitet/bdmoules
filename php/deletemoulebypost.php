@@ -8,6 +8,7 @@ include ("./include/config.php");
 include ("./include/mysql.php");
 
 $debug = false;
+$delete='';
 $appel='';  // Page appelante
 $reponse='';
 $idmodele=0;
@@ -36,6 +37,10 @@ if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'appli
 //    mydata+='?ref_modele='+refmodele+'&mdescription='+mdescription.value+'&mlieu='+mlieu.value+'&matiere='+matiere.value
 // +'&etat='+metat.value+'&longueur='+mlongueur.value+'&poids='+mpoids.value+'&mcommentaire='+mcommentaire.value;
 
+if (!empty($_POST['delete'])) {
+    $delete = $_POST['delete'];  
+}
+
 if (!empty($_POST['appel'])) {
     $appel = $_POST['appel'];  
 }
@@ -48,106 +53,53 @@ if (!empty($_POST['idmoule'])) {
     $idmoule = $_POST['idmoule'];  
 }
 
-if (!empty($_POST['numinventaire'])) {
-    $numinventaire = $_POST['numinventaire'];  
-}
-
-if (!empty($_POST['mdescription'])) {
-    $mdescription = $_POST['mdescription'];  
-}
-
-if (!empty($_POST['mlieu'])) {
-    $mlieu = $_POST['mlieu'];  
-}
-
-if (!empty($_POST['matiere'])) {
-    $matiere = $_POST['matiere'];  
-}
-
-if (!empty($_POST['etatmoule'])) {
-    $etat = $_POST['etatmoule'];  
-}
-
-if (!empty($_POST['longueur'])) {
-    $longueur = $_POST['longueur'];  
-}
-
-if (!empty($_POST['poids'])) {
-    $poids = $_POST['poids'];  
-}
-
-if (!empty($_POST['mcommentaire'])) {
-    $commentaire = $_POST['mcommentaire'];  
-}
-
-if (!empty($idmodele)){
-     if (!empty($idmoule)){
+     if (!empty($idmoule) && ($delete=="Confirmer")){
         // Debug
         if ($debug){
-            echo "Edition<br />\nId moule: $idmoule, ref_modele: $idmodele, Num inventaire: $numinventaire, Description: $mdescription, Lieu: $mlieu, Matière: $matiere, Etat: $etat, Longueur: $longueur, Poids: $poids, Commentaire: $commentaire <br />\n";                
+            echo "Suppression<br />\nId moule: $idmoule <br />\n";                
         }           
         connexion_db();
-        $reponse = mysql_edit_moule();
+        $reponse = mysql_delete_moule($idmoule);
         $mysqli -> close();
         if (!$debug){
             if (!empty($reponse)){ 
-                header("Location: ".$appel."?msg=Moule ré-enregistré. ".$reponse);
+                header("Location: ".$appel."?msg=Moule supprimé. ".$reponse);
             }
             else{
-                header("Location: ".$appel."?msg=Erreur à l'enregistrement du moule ".$idmoule);   
+                header("Location: ".$appel."?msg=Erreur à la suppression d'un moule. ");
             }                 
+        }
+        else{
+            if (!empty($reponse)){ 
+                echo ("Moule supprimé. ".$reponse);
+            }
+            else{
+                echo("Erreur à la suppression d'un moule. ");
+            }                         
         }
     }        
     else{
-        // Debug
-        if ($debug){
-            echo "Création<br />\nref_modele: $idmodele, Description: $mdescription, Lieu: $mlieu, Matière: $matiere, Etat: $etat, Longueur: $longueur, Poids: $poids, Commentaire: $commentaire <br />\n";                
-        }           
-        connexion_db();
-        $reponse = mysql_add_moule();
-        $mysqli -> close();
         if (!$debug){
-            if (!empty($reponse)){ 
-                header("Location: ".$appel."?msg=Nouveau moule enregistré. ".$reponse);
-            }
-            else{
-                header("Location: ".$appel."?msg=Erreur à l'enregistrement du moule.");   
-            }         
+            header("Location: ".$appel."?msg=Suppression d'un moule annulée.");
+        }
+        else{
+            echo ("Suppression d'un moule annulée.");        
         }
     }
-}
-else{
-    if (!$debug){
-        header("Location: ".$appel."?msg=Erreur: Numéro de modèle inconnu...");
-    }
-    else{
-        echo "Erreur : IdModele inconnu.";   
-    }         
-}
 die();   
 
 //--------------------------
-function mysql_edit_moule(){ 
+function mysql_delete_moule(){ 
 global $debug;
 global $reponse;
 global $mysqli;
-global $idmodele;
 global $idmoule;
-global $numinventaire;
-global $mdescription;
-global $mlieu;
-global $matiere;
-global $etat;
-global $longueur;
-global $poids;
-global $commentaire;
-// INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescription`, `mlieu`, `matiere`, `etat`, `longueur`, `poids`, `commentaire`) VALUES
 
 $sql='';
 $numeromax=0;
 
-    if (!empty($idmodele)){
-        $sql="UPDATE `bdm_moule` SET `mdescription`='".addslashes($mdescription)."', `mlieu`='".addslashes($mlieu)."', `matiere`='".addslashes($matiere)."', `etat`='".addslashes($etat)."', `longueur`=".(double)$longueur.", `poids`=".(double)$poids.", `commentaire`='".addslashes($commentaire)."' WHERE `idmoule`=".$idmoule." ;";
+    if (!empty($idmoule)){
+        $sql="DELETE FROM `bdm_moule` WHERE `idmoule`=".$idmoule." ;";
         // Debug
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                

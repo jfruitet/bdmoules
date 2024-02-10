@@ -6,7 +6,7 @@
 include ("./include/config.php");
 include ("./include/mysql.php");
 
-$debug = true;
+$debug = false;
 $reponse_ok = '{"ok":1}';
 $reponse_not_ok = '{"ok":0}';
 $reponse=$reponse_not_ok;

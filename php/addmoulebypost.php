@@ -55,8 +55,8 @@ if (!empty($_POST['matiere'])) {
     $matiere = $_POST['matiere'];  
 }
 
-if (!empty($_POST['etat'])) {
-    $etat = $_POST['etat'];  
+if (!empty($_POST['etatmoule'])) {
+    $etat = $_POST['etatmoule'];  
 }
 
 if (!empty($_POST['longueur'])) {
@@ -121,7 +121,7 @@ $sql='';
 $numeromax=0;
 
     if (!empty($idmodele)){
-        $sql="INSERT INTO `bdm_moule` (`ref_modele`, `mdescription`, `mlieu`, `matiere`, `etat`, `longueur`, `poids`, `commentaire`) VALUES ($idmodele, '".addslashes($mdescription)."', '".addslashes($mlieu)."', '$matiere', '$etat', ".(double)$longueur.", ".(double)$poids.", '".addslashes($commentaire)."')";
+        $sql="INSERT INTO `bdm_moule` (`ref_modele`, `mdescription`, `mlieu`, `matiere`, `etat`, `longueur`, `poids`, `commentaire`) VALUES ($idmodele, '".addslashes($mdescription)."', '".addslashes($mlieu)."', '$matiere', '".addslashes($etat)."', ".(double)$longueur.", ".(double)$poids.", '".addslashes($commentaire)."')";
         // Debug
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                
