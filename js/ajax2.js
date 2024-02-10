@@ -311,18 +311,24 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
     
     let str='';
     str+='<p>Moules';
-    str+='<button id="btnedit">Editer</button> <button id="btnadd">Ajouter</button></p>';
+    str+='<button id="btnadd">Ajouter</button></p>';
     str+='<table><tr><th>Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
     
     if ((tThatModeleMoules !== undefined) && (tThatModeleMoules.length>0)){ 
         for (let i in tThatModeleMoules){
             str+='<tr>';
-            for (let j in tThatModeleMoules[i]) {  
+            for (let j in tThatModeleMoules[i]) {             
                 //console.debug(tThatModeleMoules[i]+"\n");
+                tMoule = []; // Global
+                for (let k in tThatModeleMoules[i]){
+                    tMoule.push(tThatModeleMoules[i][k]);
+                }
+                //console.debug(tMoule);
                 var idmodele=tThatModeleMoules[i][0];
                 var idmoule=tThatModeleMoules[i][1];
                 if (j==0) { // checkbox
-                    str+='<td><label for '+idmoule+'><input type="checkbox" id="'+idmoule+'" name="idmoule" value="'+idmoule+'" checked />'+idmoule+'</label></td>';
+                    str+='<td><button onclick="editMoule('+idmodele+','+idmoule+')">Editer</button> <button onclick="deleteMoule('+idmodele+','+idmoule+')">Supprimer</button></td>';
+                    //str+='<td><button onclick="editMoule('+idmodele+','+idmoule+','+tMoule+')">Editer</button> <button onclick="deleteMoule('+idmodele+','+idmoule+')">Supprimer</button></td>';                               
                 }
                 else
                 if (tThatModeleMoules[i][j] != null){
@@ -340,31 +346,6 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
          
     document.getElementById("infomoules").innerHTML = str;
     document.getElementById("consigne").innerHTML = 'Modèle sélectionné: '+idmodeleglobal+'. Sélectionnez les moules à éditer';
- 
-    // Collecte des ID des moules sélectionnés
-    const btnedit = document.querySelector('#btnedit');
-        
-    btnedit.addEventListener('click', (event) => {
-        let checkboxes = document.querySelectorAll('input[name="idmoule"]:checked');
-        let tidmoules = [];        
-        checkboxes.forEach((checkbox) => {
-                tidmoules.push(checkbox.value);
-        });
-        //console.debug("idmoules\n"+idmoulesvalues);
-        
-        // Collecte des descriptions de moules sélectionnés
-        let tEditionMoules = [];
-        if (tidmoules.length>0){
-            for (let j in tidmoules){
-                for (let i in tThatModeleMoules){    
-                    if (tidmoules[j]==tThatModeleMoules[i][1]){                       
-                        tEditionMoules.push(tThatModeleMoules[i]);
-                    }           
-                }
-            }        
-        }    
-        editerThatMoules(tEditionMoules, idmodele);
-    });    
 
     // Nouveau moule
     const btnadd = document.querySelector('#btnadd');       
@@ -376,44 +357,96 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
 
 //-----------------------------------------
 // Affiche un formulaire d'édition
-function editerThatMoules(tEditionMoules, idmodele){
-    console.debug("editerThatMoules()");
+function editMoule(idmodele, idmoule){
+    console.debug("ediThatMoule()");
     console.debug("idmodele: "+idmodele);
-    console.debug("tEditionMoules: "+tEditionMoules);
+    console.debug("idmoule: "+idmoule);
+    console.debug("tMmoule: "+tMoule);
     
-    if ((idmodele !== undefined) && (idmodele>0) && (tEditionMoules!==undefined) && (tEditionMoules.length>0)){ // idmodele=37; tidmoules=[46,47];
+    if ((idmodele !== undefined) && (idmodele>0) && (idmoule !== undefined) && (idmoule>0) 
+        && (tMoule !== undefined) && (tMoule !== null) && (tMoule.length>0)){
+
         let str='';
-        // Creer un formulaire de réservation
-        str+='<h4>Complétez ce formulaire d\'édition</h4>';
-        str+='<form name="EditForm" action="">';
-        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer"  onclick="return saisieEditionMultiple();" />';
-        str+='<input type="reset" value="Réinitialiser" name="Reset" /></div>';        
-        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'">';
-        
-        for (let i=0; i<tEditionMoules.length; i++){
-            str+='<type="hidden" id="idmoule'+tidmoules[i]+' name="idmoule'+tidmoules[i]+'" value="'+tidmoules[i]+'">';
-        }     
-        // Pour tester
-        let thatdata= tEditionMoules.join();
-        str+='<br /><label for="Commentaire">Data: </label><br /> (<i><span class="small">A modifier...</span></i>)<textarea cols="50" id="editdata" rows="3" name="editdata" autocomplete="on">'+thatdata+'</textarea>';
-        
-        str+='</form>';      
+        let url= url_serveur+'editmoulebypost.php';
+        // Formulaire de création
+        str+='<h4>Complétez ce formulaire</h4>';
+
+        str+='<form name="EditForm" action="'+url+'" method="post">';
+        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieEdit();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+
+        // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
+        str+='<div><label for="mdescription">Description: </label><br /><input type="text" id="mdescription" size="50" name="mdescription" value="'+tMoule[3]+'" autocomplete="on" />';
+        str+='<br /><label for="mlieu">Lieu de dépôt: </label> <input type="text" id="mlieu" size="20" name="mlieu" value="'+tMoule[4]+'" autocomplete="on" />';
+        str+='<br /><label for="matiere">Matière: </label> <input type="text" id="matiere" size="20" name="matiere" value="'+tMoule[5]+'" autocomplete="on" />';
+        str+='<br /><label for="etatmoule">Etat: </label> <input type="text" id="etatmoule" size="20" name="etatmoule" value="'+tMoule[6]+'" autocomplete="on" />';
+        str+='<br /><label for="longueur">Longueur: </label> <input type="text" id="longueur" size="10" name="longueur" value="'+tMoule[7]+'" autocomplete="on" />';
+        str+='<br /><label for="poids">Poids: </label> <input type="text" id="poids" size="10" name="poids" value="'+tMoule[8]+'" autocomplete="on" />';
+        str+='<br /><label for="mcommentaire">Remarques: </label><br />(<i><span class="small">Indiquez la disponibilité, les conditions de prêt, etc.</span></i>)';
+        str+='<br /><textarea cols="50" id="mcommentaire" rows="3" name="mcommentaire" autocomplete="on">'+tMoule[9]+'</textarea>';
+        str+='</div>';        
+
+        str+='<input type="hidden" id="refmodele" name="refmodele" value="'+idmodele+'" />';
+        str+='<input type="hidden" id="idmoule" name="idmoule" value="'+idmoule+'" />';
+        str+='<input type="hidden" id="numinventaire" name="numinventaire" value="'+tMoule[2]+'" />';
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
+        str+='</form>';
+           
         document.getElementById("myImage").innerHTML = str;
     }
 
 }
 
-// ----------------------------------
-function saisieEditionMultiple(){
-// Affiche le formulaire de mise à jour de plusieurs moules
-console.debug("saisieEditionMultiple: A TERMINER...");
+// -----------------------------------------
+// Vérification des données
+function verifSaisieEdit(){
+    mdescription = document.forms["EditForm"]["mdescription"];               
+    mlieu = document.forms["EditForm"]["mlieu"];    
+    matiere = document.forms["EditForm"]["matiere"];   
+    metat = document.forms["EditForm"]["etatmoule"];  
+    mlongueur = document.forms["EditForm"]["longueur"];      
+    mpoids = document.forms["EditForm"]["poids"];      
+    mcommentaire = document.forms["EditForm"]["mcommentaire"];      
+    refmodele = document.forms["EditForm"]["refmodele"];
+          
+    if (mdescription.value == "")                                  
+    { 
+        alert("Complétez la description."); 
+        mdescription.focus(); 
+        return false; 
+    }    
+    if (mlieu.value == "")                               
+    { 
+        alert("Complétez l'adresse du dépôt"); 
+        mlieu.focus(); 
+        return false; 
+    }        
+    if (mcommentaire.value == "")                  
+    { 
+        alert("Complétez le commentaire en précisant les conditions de prêt."); 
+        mcommentaire.focus(); 
+        return false; 
+    }     
+
+    return true;
 }
 
+// ----------------------------------
+function deleteMoule(idmodele, idmoule){
+    console.debug("deleteMoule()");
+    console.debug("idmodele: "+idmodele);
+    console.debug("idmoule: "+idmoule);
 
+}    
+    
+/**********************************************
+ * 
+ * AJOUT DE MOULES A LA BD
+ * 
+ * ********************************************/
  
 // ---------------------------------------
-// création d'un moule rattaché à ce modèle
-// Version par formulaire vers serveur PHP sans appel Ajax
+// Formulaire de création d'un moule rattaché à ce modèle
+// Envoi du formulaire vers serveur PHP sans appel Ajax
 // Compatible Firefox
 function newMoule(idmodele){
     console.debug("newMoule()");
@@ -478,6 +511,7 @@ function verifSaisieAdd(){
     return true;
 }
 
+/*******************************************************************************************************************
 // Version avec appel Ajax Get
 // Sur Firefox
 // Provoque un message "Bloqué par les outils de développement" et une erreur TypeError: NetworkError when attempting to fetch resource.
@@ -493,7 +527,7 @@ function newMouleAjax(idmodele){
         let str='';
         // Creer un formulaire de création
         str+='<h4>Complétez ce formulaire</h4>';
-        str+='<form name="AddForm" action="" method="get" onsubmit="return addMoule();">';
+        str+='<form name="AddForm" action="" method="get" onsubmit="return addMouleAjax();">';
         str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
 
         // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
@@ -514,7 +548,7 @@ function newMouleAjax(idmodele){
 
 
 // ----------------------------------
-function addMoule(){
+function addMouleAjax(){
     mdescription = document.forms["AddForm"]["mdescription"];               
     mlieu = document.forms["AddForm"]["mlieu"];    
     matiere = document.forms["AddForm"]["matiere"];   
@@ -543,13 +577,13 @@ function addMoule(){
         return false; 
     }     
     console.debug("Envoi du formulaire.") 
-    setNewMoule(refmodele.value);
+    setNewMouleAjax(refmodele.value);
     
     return true;
 }
 
 // ----------------------------------
-function setNewMoule(refmodele){
+function setNewMouleAjax(refmodele){
 // Mise à jour de la BD
     console.debug("setNewMoule()");
     console.debug("refmodele: "+refmodele);
@@ -582,3 +616,4 @@ function ajax_SetNewMoule(url, mydata){
     }
 }
 
+*********************************************************************************************************/

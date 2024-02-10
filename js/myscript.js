@@ -4,6 +4,7 @@ var fichieracharger='';
 
 let tModele = []; // Tableau du modele sélectionné
 let tMoules = []; // Tableau des moules associés à ce modèle
+let tMoule =[]; // Tableau des valeurs associés à un moule
 
 let tImages=[]; // Tableau des fichiers images
 let tVignettes=[]; // Tableau des fichiers vignettes
@@ -128,11 +129,10 @@ function checkCookies() {
     // Utilisateur pour lequel on veut créer / modifier le compte d'accès
     let siduser = getCookie("siduser");
     if (siduser!="" && siduser!=null) {
-            if (!isNaN(iduser=parseInt(sadmin,10))){
-                console.debug("Cookie siduser valide");
-                console.debug("iduser: "+iduser);
-            }
-        }                               
+        if (!isNaN(iduser=parseInt(sadmin,10))){
+            console.debug("Cookie siduser valide");
+            console.debug("iduser: "+iduser);
+        }                              
     }
     else{
         okadmin=false;     
@@ -235,13 +235,14 @@ let myInitPost = {
     integrity: "", //ou un hash comme "sha256-abcdef1234567890"
     keepalive: false, //ou true pour que la requête survive à la page
     signal: undefined //ou AbortController pour annuler la requête            
-}
+};
+
 // ----------------------- 
 function ajax_post(url, mystrjson){    
     if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){        
         // POST avec fetch()
         // myInitPost.body: JSON.stringify(myjson), // turn the JS object literal into a JSON string
-        myInitPost.body: mystrjson, // mystrjson est déjà une chaîne
+        myInitPost.body= mystrjson; // mystrjson est déjà une chaîne
         fetch(url, myInitPost)
         .then(response => response.json())  // Le retour est aussi une chaîne
         .then(response => {
