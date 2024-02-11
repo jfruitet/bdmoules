@@ -186,16 +186,32 @@ function setModelesMoulesAdmin(response) {
     //        bdm_moule.idmoule, bdm_moule.numero_inventaire, bdm_moule.mdescription, bdm_moule.mlieu, bdm_moule.matiere, bdm_moule.etat, bdm_moule.longueur, bdm_moule.poids, bdm_moule.commentaire  
  
     const objModeleMoule = JSON.parse(response);   
+    tModeles=[]; // global;
+    tMoules=[];  // global
     let tModelesMoules = []; 
-    tAux = [];
+    let tAux1 = [];
+    let tAux2 = [];
+    let tAux = [];
+    
     for(let i in objModeleMoule ) { 
-        //tModelesMoules.push(i, objModeleMoule[i].id, objModeleMoule[i].nom, objModeleMoule[i].descriptif, objModeleMoule[i].dimension, objModeleMoule[i].categorie, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);
+        //tModelesMoules.push(objModeleMoule[i].id, objModeleMoule[i].nom, objModeleMoule[i].descriptif, objModeleMoule[i].dimension, objModeleMoule[i].categorie, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);
         tAux = [];
-        tAux.push(i, objModeleMoule[i].id, objModeleMoule[i].nom, objModeleMoule[i].descriptif, objModeleMoule[i].dimension, objModeleMoule[i].categorie, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);       
+        tAux.push(objModeleMoule[i].id, objModeleMoule[i].nom, objModeleMoule[i].descriptif, objModeleMoule[i].dimension, objModeleMoule[i].categorie, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);       
         tModelesMoules.push(tAux); 
+
+        // Table des modèles
+        if ((i==0) || (i>0) && (objModeleMoule[i].id!=objModeleMoule[i-1].id)){
+            tAux1 = [];
+            tAux1.push(objModeleMoule[i].id, objModeleMoule[i].nom, objModeleMoule[i].descriptif, objModeleMoule[i].dimension, objModeleMoule[i].categorie);
+            tModeles.push(tAux1); 
+        }
+        // Tables des moules
+        //  tAux2 = [];
+        //  tAux2.push(objModeleMoule[i].id, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);       
+        //  tMoules.push(tAux2); 
     }; 
         
-    document.getElementById("myListModeles").innerHTML = selectModelesMoulesAdmin(tModelesMoules);
+    selectModelesMoulesAdmin(tModelesMoules);
 }
 
 
@@ -205,55 +221,81 @@ function selectModelesMoulesAdmin(tModelesMoules){
 // Deux boutons de sélection
 // Les images associées
     //console.debug("Sélection d'un modèle et des moules associés\n"); 
-    let str='';
-    str='<table>';
-    str+='<tr><th>&nbsp;</th><th>ID Modèle</th><th>Nom</th><th width="30%">Descriptif</th><th>Dimensions</th><th>Catégorie</th><th>ID Moule</th><th>N°</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
+    let str='<p><b>Modèles</b> &nbsp; &nbsp;';
+    str+='<button id="btnaddmodele">Ajouter un modèle</button></p>';
+
+    str+='<table>';
     if ((tModelesMoules !== undefined) && (tModelesMoules.length>0)){ 
+
         for (let i in tModelesMoules) { 
             if (i % 6 == 0){
-            str+='<tr><th colspan="6">Sélectionner le modèle à éditer</th><th colspan="9">Sélectionner le moules à éditer</th></tr>';
+                str+='<tr><th>#ID Modèle</th><th colspan="2">&nbsp;</th></th><th>Nom</th><th width="30%">Descriptif</th><th>Dimensions</th><th>Catégorie</th><th>ID Moule</th><th>N°</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
+                str+='<tr><th>&nbsp;</th><th colspan="6">Sélectionner le modèle à éditer</th><th colspan="9">Sélectionner le moule à afficher</th></tr>';
             }
             str+='<tr>';
             for (let j in tModelesMoules[i]) {  
                 //console.debug(tModelesMoules[i]+"\n");
-                var idmodele=tModelesMoules[i][1];
-                var idmoule=tModelesMoules[i][6];
-                if (j==1) { // idmodele
-                    str+='<td><button name="modele'+tModelesMoules[i][j]+'" onclick="getModeleMoulesImages('+idmodele+'); editerThatModeleMoules('+idmodele+');">'+idmodele+'</button></td>';                    
+                var idmodele=tModelesMoules[i][0];
+                var idmoule=tModelesMoules[i][5];
+                // Modele
+                if (j<5){
+                    if ((i==0) || (i>0) && (tModelesMoules[i][0]!=tModelesMoules[i-1][0])){                             
+                        if (j==0) { // idmodele
+                            str+='<td><button name="modele'+idmodele+'" onclick="getModeleMoulesImages('+idmodele+'); editerThatModeleMoules('+idmodele+')">'+idmodele+'</button></td>';   
+                            str+='<td><button onclick="editModele('+idmodele+')">Edit</button></td><td><button onclick="deleteModele('+idmodele+')">Supp</button></td>';                       
+                        }
+                        else {
+                            str+='<td>';
+                            if (tModelesMoules[i][j] != null){
+                                str+=tModelesMoules[i][j]+'</td>';
+                            }
+                            else{
+                                str+='<td>&nbsp;</td>';
+                            }                
+                        }
+                    }
+                    else{
+                        if (j==0) { // idmodele
+                        str+='<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>';
+                        }
+                        else{
+                            str+='<td>&nbsp;</td>';
+                        }
+                    }
                 }
-                else if (j==4) { // descriptif
-                    str+='<td>';
-                    if (tModelesMoules[i][j] != null){
-                        str+=tModelesMoules[i][j]+'</td>';
+                if (j>=5){
+                    // Moule
+                    if (j==5) { // idmoule
+                        str+='<td><button name="moule'+idmoule+'" onclick="getThatMoule('+idmoule+');">'+idmoule+'</button></td>';
+                    }
+                    else if (tModelesMoules[i][j] != null){
+                        str+='<td>'+tModelesMoules[i][j]+'</td>';
                     }
                     else{
                         str+='<td>&nbsp;</td>';
                     }                
                 }
-                else if (j==6) { // idmoule
-                    str+='<td><button name="moule'+idmoule+'" onclick="editerThatMoule('+idmodele+','+idmoule+');">'+idmoule+'</button></td>';
-                }
-                else
-                if (tModelesMoules[i][j] != null){
-                    str+='<td>'+tModelesMoules[i][j]+'</td>';
-                }
-                else{
-                    str+='<td>&nbsp;</td>';
-                }                
             }     
             str+='</tr>';
         }
     }  
-    str+='</table>';      
-    return str;        
+    str+='</table>';     
+    
+    document.getElementById("myListModeles").innerHTML = str;
+    
+    // Nouveau modele
+    const btnaddmodele = document.querySelector('#btnaddmodele');       
+    btnaddmodele.addEventListener('click', (event) => {
+        newModele();
+    });    
+      
 }
 
-// -----------------------------------
-// Edite un moule associé à un modèle particulier
-function editerThatMoule(idmodele, idmoule){
-    console.debug ("Editer ce moule: "+idmoule);
-    console.debug ("A TERMINER");
+//  ----------------------------------
+function newModele(){
+
 }
+
 
 // -----------------------------------
 // Edite le modele associé à un modèle particulier
@@ -290,15 +332,13 @@ function ajax_GetThatModeleMoulesAdmin(url, idmodele){
 
 // Appelé par ajax_GetThatModeleMoulesAdmin();
 // Modifie idmodeleglobal
-// Appelle editerThatMoules();
+// Positionne tMoules[] global
+// Appelle editeMoule() et deleteMoule()
 // ----------------------- 
 function selectThatModeleMoulesAdmin(response, idmodele) {
     // console.debug("Affichage des modeles et des moules associés\n"+ response);
     // Traitement de la réponse 
-    //INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescription`, `mlieu`, `matiere`, `etat`, `longueur`, `poids`, `commentaire`) VALUES
-//(1, 20, 24, 'Moule capot moteur, composite', 'La Minais', 'Composite', 'Excellent', NULL, NULL, 'Moule d\'avion inconnu'),
-//(2, 13, 27, 'Ka6 4m, Moule bulle, Mpx 3 Axes', 'Chez Ludovic B.', 'Composite', 'Excellent', NULL, NULL, 'Chez Ludovic.');
-    
+    //INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescription`, `mlieu`, `matiere`, `etat`, `longueur`, `poids`, `commentaire`) VALUES    
     idmodeleglobal=idmodele; // Un peu indirect mais ça fera l'affaire
 
     const objModeleMoule = response.moules;
@@ -310,25 +350,20 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
     }; 
     
     let str='';
-    str+='<p>Moules';
-    str+='<button id="btnadd">Ajouter</button></p>';
-    str+='<table><tr><th>Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
+    str+='<p><b>Moules</b> &nbsp; &nbsp;';
+    str+='<button id="btnaddmoule">Ajouter un moule pour ce modèle</button></p>';
+    str+='<table><tr><th colspan="2">Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
     
     if ((tThatModeleMoules !== undefined) && (tThatModeleMoules.length>0)){ 
+        tMoules=[]; // global
         for (let i in tThatModeleMoules){
+            tMoules.push(tThatModeleMoules[i]);
             str+='<tr>';
             for (let j in tThatModeleMoules[i]) {             
-                //console.debug(tThatModeleMoules[i]+"\n");
-                tMoule = []; // Global
-                for (let k in tThatModeleMoules[i]){
-                    tMoule.push(tThatModeleMoules[i][k]);
-                }
-                //console.debug(tMoule);
                 var idmodele=tThatModeleMoules[i][0];
                 var idmoule=tThatModeleMoules[i][1];
                 if (j==0) { // checkbox
-                    str+='<td><button onclick="editMoule('+idmodele+','+idmoule+')">Edit</button> <button onclick="deleteMoule('+idmodele+','+idmoule+')">Supp</button></td>';
-                    //str+='<td><button onclick="editMoule('+idmodele+','+idmoule+','+tMoule+')">Editer</button> <button onclick="deleteMoule('+idmodele+','+idmoule+')">Supprimer</button></td>';                               
+                    str+='<td><button onclick="editMoule('+idmodele+','+idmoule+','+i+')">Edit</button></td><td><button onclick="deleteMoule('+idmodele+','+idmoule+')">Supp</button></td>';
                 }
                 else
                 if (tThatModeleMoules[i][j] != null){
@@ -348,8 +383,8 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
     document.getElementById("consigne").innerHTML = 'Modèle sélectionné: '+idmodeleglobal+'. Sélectionnez les moules à éditer';
 
     // Nouveau moule
-    const btnadd = document.querySelector('#btnadd');       
-    btnadd.addEventListener('click', (event) => {
+    const btnaddmoule = document.querySelector('#btnaddmoule');       
+    btnaddmoule.addEventListener('click', (event) => {
         newMoule(idmodele);
     });    
 } 
@@ -357,14 +392,14 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
 
 //-----------------------------------------
 // Affiche un formulaire d'édition
-function editMoule(idmodele, idmoule){
-    console.debug("ediThatMoule()");
+function editMoule(idmodele, idmoule, index){
+    console.debug("ediMoule()");
     console.debug("idmodele: "+idmodele);
     console.debug("idmoule: "+idmoule);
-    console.debug("tMmoule: "+tMoule);
+    console.debug("tMmoule: "+tMoules[index]);
     
     if ((idmodele !== undefined) && (idmodele>0) && (idmoule !== undefined) && (idmoule>0) 
-        && (tMoule !== undefined) && (tMoule !== null) && (tMoule.length>0)){
+        && (tMoules[index] !== undefined) && (tMoules[index] !== null) && (tMoules[index].length>0)){
 
         let str='';
         let url= url_serveur+'editmoulebypost.php';
@@ -375,19 +410,24 @@ function editMoule(idmodele, idmoule){
         str+='<div class="button"><input type="submit" value="Envoyer" onclick="return verifSaisieEdit();" /> <input type="reset" value="Réinitialiser"  /></div>';        
 
         // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
-        str+='<div><label for="mdescription">Description: </label><br /><input type="text" id="mdescription" size="50" name="mdescription" value="'+tMoule[3]+'" autocomplete="on" />';
-        str+='<br /><label for="mlieu">Lieu de dépôt: </label> <input type="text" id="mlieu" size="20" name="mlieu" value="'+tMoule[4]+'" autocomplete="on" />';
-        str+='<br /><label for="matiere">Matière: </label> <input type="text" id="matiere" size="20" name="matiere" value="'+tMoule[5]+'" autocomplete="on" />';
-        str+='<br /><label for="etatmoule">Etat: </label> <input type="text" id="etatmoule" size="20" name="etatmoule" value="'+tMoule[6]+'" autocomplete="on" />';
-        str+='<br /><label for="longueur">Longueur: </label> <input type="text" id="longueur" size="10" name="longueur" value="'+tMoule[7]+'" autocomplete="on" />';
-        str+='<br /><label for="poids">Poids: </label> <input type="text" id="poids" size="10" name="poids" value="'+tMoule[8]+'" autocomplete="on" />';
+        str+='<div><label for="mdescription">Description: </label><br /><input type="text" id="mdescription" size="50" name="mdescription" value="'+tMoules[index][3]+'" autocomplete="on" />';
+        str+='<br /><label for="mlieu">Lieu de dépôt: </label> <input type="text" id="mlieu" size="20" name="mlieu" value="'+tMoules[index][4]+'" autocomplete="on" />';
+        str+='<br /><label for="matiere">Matière: </label> <input type="text" id="matiere" size="20" name="matiere" value="'+tMoules[index][5]+'" autocomplete="on" />';
+        str+='<br /><label for="etatmoule">Etat: </label> <input type="text" id="etatmoule" size="20" name="etatmoule" value="'+tMoules[index][6]+'" autocomplete="on" />';
+        str+='<br /><label for="longueur">Longueur: </label> <input type="text" id="longueur" size="10" name="longueur" value="'+tMoules[index][7]+'" autocomplete="on" />';
+        str+='<br /><label for="poids">Poids: </label> <input type="text" id="poids" size="10" name="poids" value="'+tMoules[index][8]+'" autocomplete="on" />';
         str+='<br /><label for="mcommentaire">Remarques: </label><br />(<i><span class="small">Indiquez la disponibilité, les conditions de prêt, etc.</span></i>)';
-        str+='<br /><textarea cols="50" id="mcommentaire" rows="3" name="mcommentaire" autocomplete="on">'+tMoule[9]+'</textarea>';
+        if ((tMoules[index][9] !== undefined) && (tMoules[index][9].length>0) ) {
+            str+='<br /><textarea cols="50" id="mcommentaire" rows="3" name="mcommentaire" autocomplete="on">'+tMoules[index][9]+'</textarea>';
+        }
+        else{
+            str+='<br /><textarea cols="50" id="mcommentaire" rows="3" name="mcommentaire" autocomplete="on">A compléter...</textarea>';                
+        }            
         str+='</div>';        
 
         str+='<input type="hidden" id="refmodele" name="refmodele" value="'+idmodele+'" />';
         str+='<input type="hidden" id="idmoule" name="idmoule" value="'+idmoule+'" />';
-        str+='<input type="hidden" id="numinventaire" name="numinventaire" value="'+tMoule[2]+'" />';
+        str+='<input type="hidden" id="numinventaire" name="numinventaire" value="'+tMoules[index][2]+'" />';
         str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
         str+='</form>';
            

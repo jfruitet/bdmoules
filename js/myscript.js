@@ -1,8 +1,8 @@
 // JavaScript Document
 
 var fichieracharger='';
-
-let tModele = []; // Tableau du modele sélectionné
+let tModeles = []; // Tableau du contenu des modeles chargés
+let tModele = []; // Tableau du contenu du modele sélectionné
 let tMoules = []; // Tableau des moules associés à ce modèle
 let tMoule =[]; // Tableau des valeurs associés à un moule
 
