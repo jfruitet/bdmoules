@@ -1,6 +1,6 @@
 <?php
 // Script à ne pas supprimer
-// Ajoute un moule à la Base de données
+// Edite un moule de la Base de données
 // datas du formulaire en input, redirection vers la page appelante en sortie
 // Eviter touts les affichages avant la fin du script
 

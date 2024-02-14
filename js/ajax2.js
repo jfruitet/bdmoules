@@ -2,6 +2,7 @@
 // ajax2.js inclus dans administrer.html
 // Gestion des accès et modification de la BD
 
+// Saisie des moules
 let mdescription = '';   
 let mlieu = '';
 let matiere = '';
@@ -10,6 +11,12 @@ let mlongueur = '';
 let mpoids = '';
 let mcommentaire = '';
 let refmodele = 0;
+
+// Saisie des modèles
+let modelenom = '';
+let modeledescriptif = '';
+let modeledimensions = '';
+let modelecategorie = '';
 
 /** 
  * 
@@ -221,6 +228,7 @@ function selectModelesMoulesAdmin(tModelesMoules){
 // Deux boutons de sélection
 // Les images associées
     //console.debug("Sélection d'un modèle et des moules associés\n"); 
+    let compteurmodele=0;
     let str='<p><b>Modèles</b> &nbsp; &nbsp;';
     str+='<button id="btnaddmodele">Ajouter un modèle</button></p>';
 
@@ -236,17 +244,21 @@ function selectModelesMoulesAdmin(tModelesMoules){
             for (let j in tModelesMoules[i]) {  
                 //console.debug(tModelesMoules[i]+"\n");
                 var idmodele=tModelesMoules[i][0];
-                var idmoule=tModelesMoules[i][5];
+                var idmoule=0;
+                if ((tModelesMoules[i][5] !== undefined) && (tModelesMoules[i][5] !== null)){
+                    idmoule = tModelesMoules[i][5]; 
+                } 
                 // Modele
                 if (j<5){
                     if ((i==0) || (i>0) && (tModelesMoules[i][0]!=tModelesMoules[i-1][0])){                             
                         if (j==0) { // idmodele
                             str+='<td><button name="modele'+idmodele+'" onclick="getModeleMoulesImages('+idmodele+'); editerThatModeleMoules('+idmodele+')">'+idmodele+'</button></td>';   
-                            str+='<td><button onclick="editModele('+idmodele+')">Edit</button></td><td><button onclick="deleteModele('+idmodele+')">Supp</button></td>';                       
+                            str+='<td><button onclick="editModele('+idmodele+','+compteurmodele+')">Edit</button></td><td><button onclick="deleteModele('+idmodele+','+compteurmodele+')">Supp</button></td>';
+                            compteurmodele++;                       
                         }
                         else {
                             str+='<td>';
-                            if (tModelesMoules[i][j] != null){
+                            if (tModelesMoules[i][j] !== null){
                                 str+=tModelesMoules[i][j]+'</td>';
                             }
                             else{
@@ -256,7 +268,7 @@ function selectModelesMoulesAdmin(tModelesMoules){
                     }
                     else{
                         if (j==0) { // idmodele
-                        str+='<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>';
+                            str+='<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>';
                         }
                         else{
                             str+='<td>&nbsp;</td>';
@@ -265,14 +277,16 @@ function selectModelesMoulesAdmin(tModelesMoules){
                 }
                 if (j>=5){
                     // Moule
-                    if (j==5) { // idmoule
+                    if ((j==5) && (idmoule>0)) { // idmoule
                         str+='<td><button name="moule'+idmoule+'" onclick="getThatMoule('+idmoule+');">'+idmoule+'</button></td>';
                     }
-                    else if (tModelesMoules[i][j] != null){
-                        str+='<td>'+tModelesMoules[i][j]+'</td>';
-                    }
-                    else{
-                        str+='<td>&nbsp;</td>';
+                    else {
+                        if (tModelesMoules[i][j] !== null){
+                            str+='<td>'+tModelesMoules[i][j]+'</td>';
+                        }
+                        else{
+                            str+='<td>&nbsp;</td>';
+                        }
                     }                
                 }
             }     
@@ -289,19 +303,6 @@ function selectModelesMoulesAdmin(tModelesMoules){
         newModele();
     });    
       
-}
-
-//  ----------------------------------
-function newModele(){
-
-}
-
-
-// -----------------------------------
-// Edite le modele associé à un modèle particulier
-function editerThatModele(idmodele){
-    console.debug ("Editer ce moule: "+idmoule);
-    console.debug ("A TERMINER");        
 }
 
 // -----------------------------------
@@ -392,7 +393,7 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
 
 //-----------------------------------------
 // Affiche un formulaire d'édition
-// Utilise le tabelau gloabl tMoules de la liste des moules associés à un modèle
+// Utilise le tableau global tMoules de la liste des moules associés à un modèle
 function editMoule(idmodele, idmoule, index){
     console.debug("ediMoule()");
     console.debug("idmodele: "+idmodele);
@@ -578,6 +579,210 @@ function verifSaisieAdd(){
     return true;
 }
 
+
+
+/********************************************************
+ * 
+ * 
+ * Ajout et édition, suppression de de Modèles
+ * 
+ * 
+ * ******************************************************/
+ 
+ 
+
+/**********************************************
+ * 
+ * AJOUT DE MODELES A LA BD
+ * 
+ * ********************************************/
+ 
+// ---------------------------------------
+// Formulaire de création d'un moule rattaché à ce modèle
+// Envoi du formulaire vers serveur PHP sans appel Ajax
+// Compatible Firefox
+//  ----------------------------------
+function newModele(){
+    console.debug ("newModele()");
+
+        let str='';
+        let url= url_serveur+'addmodelebypost.php';
+        // Formulaire de création
+        str+='<h4>Complétez ce formulaire</h4>';
+        str+='<form name="AddFormModele" action="'+url+'" method="post">';
+        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieAddModele();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+
+        //  id 	nom 	descriptif 	dimension [long x larg x haut] 	categorie 	timestamp 	
+        str+='<div><label for="modelenom">Nom: </label><br /><input type="text" id="modelenom" size="50" name="modelenom" value="" autocomplete="on" />';
+        str+='<br /><textarea cols="50" id="modeledescriptif" rows="3" name="modeledescriptif" autocomplete="on"></textarea>';
+        str+='<br /><label for="modeledimensions">Dimensions: </label>'; 
+        str+='<input type="text" id="modeledimensions" size="20" name="modeledimensions" value="" autocomplete="on" />';
+        str+='<br /><label for="modelecategorie">Catégorie: </label>';
+        str+='<select name="modelecategorie[]" id="modelecategorie" autocomplete="on" multiple>';
+        str+='<option value="">--Sélectionnez au moins une catégorie--</option>';
+        str+='<option value="avion">Avion</option>';
+        str+='<option value="planeur">Planeur</option>';
+        str+='<option value="voilier">Voilier</option>';
+        str+='<option value="bateau">Bateau</option>';
+        str+='<option value="maquette">Maquette</option>';
+        str+='<option value="plan">Plan</option>';
+        str+='<option value="autre">Autre</option>';
+        str+='</select>';        
+        str+='</div>';        
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
+        str+='</form>';      
+        document.getElementById("myImage").innerHTML = str;
+    
+}
+
+// -----------------------------------------
+// Vérification des données
+function verifSaisieAddModele(){   
+    modelenom = document.forms["AddFormModeleModele"]["modelenom"];               
+    modeledescriptif = document.forms["AddFormModele"]["modeledescriptif"];    
+    modeledimensions = document.forms["AddFormModele"]["modeledimensions"];   
+    modelecategorie = document.forms["AddFormModele"]["modelecategorie"];  
+     if ( modelenom.value == "")                                  
+    { 
+        alert("Complétez lnom du modèle."); 
+        modelenom.focus(); 
+        return false; 
+    }    
+    if ( modeledescriptif.value == "")                               
+    { 
+        alert("Complétez le descriptif du modèlet"); 
+        modeledescriptif.focus(); 
+        return false; 
+    }        
+    if (modeledimensions.value == "")                  
+    { 
+        alert("Complétez les dimensions du modèle."); 
+        modeledimensions.focus(); 
+        return false; 
+    }     
+    if (modelecategorie.value == "")                  
+    { 
+        alert("Sélectionnez la catégorie du modèle."); 
+        modelecategorie.focus(); 
+        return false; 
+    }     
+
+    return true;
+}
+
+
+
+// -----------------------------------
+// Edite le modele associé à un modèle particulier
+function editModele(idmodele, index){
+    console.debug ("Editer ce modèle: "+idmodele);   
+    
+    if ((idmodele !== undefined) && (idmodele>0) 
+        && (tModeles[index] !== undefined) && (tModeles[index] !== null) && (tModeles[index].length>0)){
+        console.debug ("tModele: "+tModeles[index]);
+        let str='';
+        let url= url_serveur+'editmodelebypost.php';
+        // Formulaire de création
+        str+='<h4>Complétez ce formulaire</h4>';
+        str+='<form name="EditFormModele" action="'+url+'" method="post">';
+        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieAddModele();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+
+        //  id 	nom 	descriptif 	dimension [long x larg x haut] 	categorie 	timestamp 	
+        str+='<div><label for="modelenom">Nom: </label><br /><input type="text" id="modelenom" size="50" name="modelenom" value="'+tModeles[index][1]+'" autocomplete="on" />';
+        str+='<br /><textarea cols="50" id="modeledescriptif" rows="3" name="modeledescriptif" autocomplete="on">'+tModeles[index][2]+'</textarea>';
+        str+='<br /><label for="modeledimensions">Dimensions: </label>'; 
+        str+='<input type="text" id="modeledimensions" size="20" name="modeledimensions" value="'+tModeles[index][3]+'" autocomplete="on" />';
+        str+='<br /><label for="modelecategorie">Catégorie: </label>';
+        str+='<select name="modelecategorie[]" id="modelecategorie" multiple>';
+        str+='<option value="">--Sélectionnez au moins une catégorie--</option>';
+        let options = tModeles[index][4].split(",");
+        if (options.includes("avion")){         
+            str+='<option value="avion" selected>Avion</option>';
+        }
+        else{
+            str+='<option value="avion">Avion</option>';                    
+        }            
+        if (options.includes("planeur")){           
+                str+='<option value="planeur" selected>Planeur</option>';
+        }
+        else{
+                str+='<option value="planeur">Planeur</option>';       
+        }
+        if (options.includes("voilier")){           
+                str+='<option value="voilier" selected>Voilier</option>';
+        }
+        else{
+                str+='<option value="voilier">Voilier</option>';
+        }            
+        if (options.includes("bateau")){           
+                str+='<option value="bateau" selected>Bateau</option>';
+        }
+        else{
+                str+='<option value="bateau">Bateau</option>';
+        }
+        if (options.includes("maquette")){           
+                str+='<option value="maquette" selected>Maquette</option>';
+        }
+        else{
+                str+='<option value="maquette">Maquette</option>';
+        }    
+        if (options.includes("plan")){           
+                str+='<option value="plan" selected>Plan</option>';
+        }
+        else{
+                str+='<option value="plan">Plan</option>';
+        }
+        if (options.includes("autre")){           
+                str+='<option value="autre" selected>Autre</option>';
+        }
+        else{
+                str+='<option value="autre">Autre</option>';
+        }
+        
+        str+='</select>';        
+        str+='</div>';        
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />'
+        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'" />';
+        str+='</form>';      
+        document.getElementById("myImage").innerHTML = str;    
+    }       
+}
+
+
+// -----------------------------------
+// Edite le modele associé à un modèle particulier
+function deleteModele(idmodele, index){
+    console.debug ("Supprimer ce modèle: "+idmodele);
+    console.debug ("Index:"+index);     
+    
+    if ((idmodele !== undefined) && (idmodele>0) 
+        && (tModeles[index] !== undefined) && (tModeles[index] !== null) && (tModeles[index].length>0)){
+
+        let str='';
+        let url= url_serveur+'deletemodelebypost.php';
+        // Formulaire de création
+        str+='<h4>Confirmez la suppression de ce modèle<br />et de tous les moules associés !</h4>';
+//  	id 	nom 	descriptif 	dimension [long x larg x haut] 	categorie 	timestamp 	
+        str+='<form name="DelFormModele" action="'+url+'" method="post">';
+        str+='<div class="button"><input type="submit" name="delete" value="Confirmer" /> <input type="submit" name="delete" value="Annuler" /></div>';        
+
+        // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
+        str+='<div><b>#ID</b>: '+tModeles[index][0]+'<br /><b>Nom:</b> '+tModeles[index][1];
+        str+='<br /><b>Descriptif</b>: '+tModeles[index][2];
+        str+='<br /><b>Dimensions</b>: '+tModeles[index][3];
+        str+='<br /><b>Catégorie</b>: '+tModeles[index][4];
+        str+='</div>';        
+        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'" />';
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
+        str+='</form>';
+           
+        document.getElementById("myImage").innerHTML = str;
+    }             
+}
+
+
+ 
+ 
 /*******************************************************************************************************************
 // Version avec appel Ajax Get
 // Sur Firefox
