@@ -175,7 +175,7 @@ function ajax_GetModelesMoulesAdmin(url){
     }
 }
 
-// Remplit le tableau tModelesMoules
+// Remplit le tableau tModelesMoules, le tableau tModeles et le tableau tMoules
 // Appelé par ajax_GetModelesMoules();
 // Appelle selectModelesModules(); 
 // ----------------------- 
@@ -187,10 +187,10 @@ function setModelesMoulesAdmin(response) {
  
     const objModeleMoule = JSON.parse(response);   
     tModeles=[]; // global;
-    tMoules=[];  // global
+    //tMoules=[];  // global
     let tModelesMoules = []; 
     let tAux1 = [];
-    let tAux2 = [];
+    //let tAux2 = [];
     let tAux = [];
     
     for(let i in objModeleMoule ) { 
@@ -200,15 +200,15 @@ function setModelesMoulesAdmin(response) {
         tModelesMoules.push(tAux); 
 
         // Table des modèles
-        if ((i==0) || (i>0) && (objModeleMoule[i].id!=objModeleMoule[i-1].id)){
+        if ((i==0) || (i>0) && (objModeleMoule[i].id!=objModeleMoule[i-1].id)){ // Eviter de doublonner les modèles
             tAux1 = [];
             tAux1.push(objModeleMoule[i].id, objModeleMoule[i].nom, objModeleMoule[i].descriptif, objModeleMoule[i].dimension, objModeleMoule[i].categorie);
             tModeles.push(tAux1); 
         }
-        // Tables des moules
-        //  tAux2 = [];
-        //  tAux2.push(objModeleMoule[i].id, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);       
-        //  tMoules.push(tAux2); 
+        // Tables des moules; à ne pas traiter à ce niveau car tous les moules de tous les modèles seraint placés dans ce tableau
+        //tAux2 = [];
+        //tAux2.push(objModeleMoule[i].id, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);       
+        //tMoules.push(tAux2); 
     }; 
         
     selectModelesMoulesAdmin(tModelesMoules);
@@ -340,13 +340,14 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
     // Traitement de la réponse 
     //INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescription`, `mlieu`, `matiere`, `etat`, `longueur`, `poids`, `commentaire`) VALUES    
     idmodeleglobal=idmodele; // Un peu indirect mais ça fera l'affaire
-
+    tMoules=[];
     const objModeleMoule = response.moules;
-    let tThatModeleMoules = [];     
+    
     for(let i in objModeleMoule ) { 
         let tAux = [];
         tAux.push(objModeleMoule[i].ref_modele, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);         
-        tThatModeleMoules.push(tAux);  
+        // Tables des moules; pour ce modèle
+        tMoules.push(tAux);          
     }; 
     
     let str='';
@@ -354,20 +355,19 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
     str+='<button id="btnaddmoule">Ajouter un moule pour ce modèle</button></p>';
     str+='<table><tr><th colspan="2">Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
     
-    if ((tThatModeleMoules !== undefined) && (tThatModeleMoules.length>0)){ 
-        tMoules=[]; // global
-        for (let i in tThatModeleMoules){
-            tMoules.push(tThatModeleMoules[i]);
+    if ((tMoules !== undefined) && (tMoules.length>0)){ 
+        for (let i in tMoules){
+            tMoules.push(tMoules[i]);
             str+='<tr>';
-            for (let j in tThatModeleMoules[i]) {             
-                var idmodele=tThatModeleMoules[i][0];
-                var idmoule=tThatModeleMoules[i][1];
+            for (let j in tMoules[i]) {             
+                var idmodele=tMoules[i][0];
+                var idmoule=tMoules[i][1];
                 if (j==0) { // checkbox
-                    str+='<td><button onclick="editMoule('+idmodele+','+idmoule+','+i+')">Edit</button></td><td><button onclick="deleteMoule('+idmodele+','+idmoule+')">Supp</button></td>';
+                    str+='<td><button onclick="editMoule('+idmodele+','+idmoule+','+i+')">Edit</button></td><td><button onclick="deleteMoule('+idmodele+','+idmoule+','+i+')">Supp</button></td>';
                 }
                 else
-                if (tThatModeleMoules[i][j] != null){
-                    str+='<td>'+tThatModeleMoules[i][j]+'</td>';
+                if (tMoules[i][j] != null){
+                    str+='<td>'+tMoules[i][j]+'</td>';
                 }
                 else{
                     str+='<td>&nbsp;</td>';
@@ -392,6 +392,7 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
 
 //-----------------------------------------
 // Affiche un formulaire d'édition
+// Utilise le tabelau gloabl tMoules de la liste des moules associés à un modèle
 function editMoule(idmodele, idmoule, index){
     console.debug("ediMoule()");
     console.debug("idmodele: "+idmodele);
@@ -462,7 +463,7 @@ function verifSaisieEdit(){
     }        
     if (mcommentaire.value == "")                  
     { 
-        alert("Complétez le commentaire en précisant les conditions de prêt."); 
+        alert("Complétez le commentaire en précisant les conditions de prêt et de disponibilité."); 
         mcommentaire.focus(); 
         return false; 
     }     
@@ -471,13 +472,15 @@ function verifSaisieEdit(){
 }
 
 // ----------------------------------
-function deleteMoule(idmodele, idmoule){
+function deleteMoule(idmodele, idmoule, index){
     console.debug("deleteMoule()");
     console.debug("idmodele: "+idmodele);
     console.debug("idmoule: "+idmoule);
+
+    console.debug("tMmoule: "+tMoules[index]);    
     
     if ((idmoule !== undefined) && (idmoule>0) 
-        && (tMoule !== undefined) && (tMoule !== null) && (tMoule.length>0)){
+        && (tMoules[index] !== undefined) && (tMoules[index] !== null) && (tMoules[index].length>0)){
 
         let str='';
         let url= url_serveur+'deletemoulebypost.php';
@@ -488,11 +491,11 @@ function deleteMoule(idmodele, idmoule){
         str+='<div class="button"><input type="submit" name="delete" value="Confirmer" /> <input type="submit" name="delete" value="Annuler" /></div>';        
 
         // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
-        str+='<div><b>Description:</b> '+tMoule[3];
-        str+='<br /><b>Lieu de dépôt:</b> '+tMoule[4];
-        str+='<br /><b>Matière:</b> '+tMoule[5];
-        str+='<br /><b>Etat:</b> '+tMoule[6];
-        str+='<br /><b>Remarques:</b><br />'+tMoule[9];
+        str+='<div><b>Description:</b> '+tMoules[index][3];
+        str+='<br /><b>Lieu de dépôt:</b> '+tMoules[index][4];
+        str+='<br /><b>Matière:</b> '+tMoules[index][5];
+        str+='<br /><b>Etat:</b> '+tMoules[index][6];
+        str+='<br /><b>Remarques:</b><br />'+tMoules[index][9];
         str+='</div>';        
         str+='<input type="hidden" id="idmoule" name="idmoule" value="'+idmoule+'" />';
         str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
