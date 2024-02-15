@@ -1,7 +1,7 @@
 // JavaScript Document
 // ajax3.js inclus dans administrer.html
 // Gestion des comptes utilisateur de la BD
-
+// N'est pas encore implanté
 let unom = '';   
 let ulogin = '';
 let upass = '';

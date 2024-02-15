@@ -1,6 +1,8 @@
 // JavaScript Document
 // ajax2.js inclus dans administrer.html
+// Edition des modèles et des moules
 // Gestion des accès et modification de la BD
+// Tout le module d'authentification doit être changé : voir ajax3.js
 
 // Saisie des moules
 let mdescription = '';   
@@ -69,7 +71,9 @@ function formlogout(){
 function logout(){
             console.debug("Logout confirmé");
             dellCookie("sadmin");
-            if (admin==Courriel) {dellCookie("scourriel")}; 
+            if (admin==Courriel) {
+                dellCookie("scourriel")
+            }; 
             admin='';
             okadmin=false;            
             document.getElementById("logout").innerHTML = '&nbsp;';
@@ -106,7 +110,7 @@ function saisieLogin(){
     let str='';
     str+='<p>Saisissez votre identifiant d\'administrateur. &nbsp;';
     str+='<input type="text" id="adminmail" name="adminmail" value="" />';
-    //str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
+    str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
     str+=' &nbsp; <button id="btnlogin">Valider</button></p>';
 
     document.getElementById("loginform").innerHTML = str;

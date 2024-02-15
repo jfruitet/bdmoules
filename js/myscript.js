@@ -10,7 +10,7 @@ let tImages=[]; // Tableau des fichiers images
 let tVignettes=[]; // Tableau des fichiers vignettes
 
 // Réservation de moules
-  
+    var idmouleglobal=0;
     var idmodeleglobal=0;
     var modeledescription='';
     var idmoule=0;
@@ -108,14 +108,14 @@ function checkCookies() {
     // Compte utilisateur permettant l'accès à la gestion des données
     // Admin
     let sadmin = getCookie("sadmin");
-    if (sadmin!="" && sadmin!=null) {
+    if (sadmin!=="" && sadmin!==null) {
         // Verifier si c'est un admin autorisé
-        //console.debug("Vérification des droits attachés à un utilisateur");
+        console.debug("Vérification des droits attachés à un utilisateur");
         okadmin=false;
         for (let i in admins){
             if (sadmin==admins[i]){// A remplacer par le MD5 ? Voir https://github.com/blueimp/JavaScript-MD5
                 console.debug("Cookie sadmin valide");
-                console.debug("Admin: "+sadmin);
+                console.debug("Cookie Admin: "+sadmin);
                 okadmin=true;
                 admin=sadmin;
                 break;
@@ -127,16 +127,15 @@ function checkCookies() {
     }
 
     // Utilisateur pour lequel on veut créer / modifier le compte d'accès
+    /*
     let siduser = getCookie("siduser");
-    if (siduser!="" && siduser!=null) {
+    if (siduser!=="" && siduser!==null) {
         if (!isNaN(iduser=parseInt(sadmin,10))){
             console.debug("Cookie siduser valide");
             console.debug("iduser: "+iduser);
         }                              
-    }
-    else{
-        okadmin=false;     
-    }     
+    } 
+    */
     
     // Données des personnes voulant réserver un moule
     // Ces données ne sont pas stockées dans la base de données

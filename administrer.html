@@ -36,8 +36,8 @@
     <span id="myListModeles"></span>
 </div>
 <div class="scrollright">
-<p>Pour chaque modèle enregistrez au moins une photo de 800 pixels de large et une vignette de 400 pixels de large au format .JPG.
-<br />Les noms des photos doivent contenir le nom du modèle, par exemple "<i>Excalibur.jpg</i>", "<i>Excalibur_moules_fuseau.jpg</i>" et "<i>Excalibur_moules_verriere.jpg</i>".</p>
+<span id="myFile">Pour chaque modèle enregistrez au moins une photo de 400 pixels de large et de 600 pixels de haut au format .JPG ou .PNG</span>
+<button id="btnaddphoto">Ajouter une photo</button>
 <span id="myImage"></span>
 </div>
 <div id="myInfo"></div>
@@ -48,11 +48,17 @@
 <script src="js/myscript.js"></script>
 <script src="js/ajax.js"></script>
 <script src="js/ajax2.js"></script>
+<script src="js/photos.js"></script>
+
 <script>
 // Chargement de la liste des fichiers de données vérifiées
  window.onload = function(){
     // Cookies
     checkCookies();
+    if (okadmin){
+        console.debug("Administrateur : "+admin);
+    }
+
     // Paramètres
     let msg = ''; 
     const queryString = window.location.search;
@@ -73,7 +79,13 @@
             // Affiche le moule sélectionné 
             getModeleMoulesImages(idmodeleglobal); 
             editerThatModeleMoules(idmodeleglobal);
-        }         
+        }     
+       // Nouvelle photo
+        const btnaddphoto = document.querySelector('#btnaddphoto');       
+        btnaddphoto.addEventListener('click', (event) => {
+            newPhoto();
+        });    
+            
     }
     else { 
         if (!oklogin()) {
@@ -90,6 +102,7 @@
             formlogout();
         }
     }
+ 
  }   
 </script>
 </html>
