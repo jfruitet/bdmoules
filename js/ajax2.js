@@ -106,7 +106,7 @@ function saisieLogin(){
     let str='';
     str+='<p>Saisissez votre identifiant d\'administrateur. &nbsp;';
     str+='<input type="text" id="adminmail" name="adminmail" value="" />';
-    str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
+    //str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
     str+=' &nbsp; <button id="btnlogin">Valider</button></p>';
 
     document.getElementById("loginform").innerHTML = str;
