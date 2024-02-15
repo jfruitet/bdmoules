@@ -3,12 +3,16 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : sam. 10 fév. 2024 à 10:07
+-- Généré le : jeu. 15 fév. 2024 à 10:19
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
+--
+-- BDMoules version 0.1
+--
 SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
 SET time_zone = "+00:00";
 
 
@@ -35,10 +39,10 @@ CREATE TABLE IF NOT EXISTS `bdm_modele` (
   `nom` varchar(80) NOT NULL,
   `descriptif` text NOT NULL,
   `dimension` varchar(80) NOT NULL COMMENT 'long x larg x haut',
-  `categorie` enum('avion','planeur','voilier','bateau','autre') NOT NULL,
+  `categorie` varchar(50) NOT NULL,
   `timestamp` date NOT NULL DEFAULT current_timestamp(),
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `bdm_modele`
@@ -81,7 +85,9 @@ INSERT INTO `bdm_modele` (`id`, `nom`, `descriptif`, `dimension`, `categorie`, `
 (35, 'Modèle N°19 Catamaran', 'Moules des flotteurs de catamaran', '', 'voilier', '2024-01-19'),
 (36, 'Le Pointu (grand)', 'Moule bulle planeur Le Pointu grand modèle', '', 'planeur', '2024-01-19'),
 (37, 'Excalibur', 'Planeur de voltige par Eric Poulain.\r\nSurface alaire 52 dm², corde 250/150 mm, profil SB96V/VS', '260 x 145 x ?', 'planeur', '2024-01-22'),
-(38, 'Modèle N°10 Avion', 'Moule de capot moteur', '', 'avion', '2024-01-24');
+(38, 'Modèle N°10 Avion', 'Moule de capot moteur', '', 'avion', '2024-01-24'),
+(40, 'Modèle de test', 'Pour tester l\'ajout d\'un modèle à la BD.', '50 x 10 x 20 cm', '', '2024-02-14'),
+(43, 'Modèle de test', 'Pour tester l\'ajout d\'un modèle à la BD.', '50 x 10 x 20 cm', 'voilier,bateau,maquette', '2024-02-14');
 
 -- --------------------------------------------------------
 
@@ -97,12 +103,12 @@ CREATE TABLE IF NOT EXISTS `bdm_moule` (
   `mdescription` varchar(255) NOT NULL,
   `mlieu` varchar(255) NOT NULL,
   `matiere` varchar(80) NOT NULL,
-  `etat` enum('Excellent','Bon','Médiocre','Inconnu') NOT NULL,
+  `etat` varchar(80) NOT NULL,
   `longueur` smallint(6) DEFAULT NULL,
   `poids` tinyint(4) DEFAULT NULL,
   `commentaire` varchar(255) NOT NULL,
   PRIMARY KEY (`idmoule`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `bdm_moule`
@@ -115,20 +121,20 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 (4, 36, 29, 'Moule de la bulle', 'La Minais', 'Composite', 'Excellent', NULL, NULL, 'Planeur Le Pointu (Grand)'),
 (5, 5, 30, 'Moule de la bulle', 'La Minais', 'Composite', '', NULL, NULL, 'Planeur Fox 2 mètres'),
 (6, 7, 32, 'Master bulle pour planeurs Ls3, F3i, Ventus', 'La Minais', 'Composite', '', NULL, NULL, ''),
-(7, 10, 35, 'Master bulle Mpx de planeur Alpha 27', 'La Minais', 'Composite', '', NULL, NULL, ''),
+(7, 10, 35, 'Master bulle de planeur Alpha 27 Multiplex', 'La Minais', 'Composite', 'Correct', 0, 0, 'Disponible'),
 (8, 33, 44, 'Moule de la bulle de planeur Genesis', 'La Minais', 'Composite', '', NULL, NULL, 'En prêt à Rouen'),
 (9, 35, 47, 'Master de coque de catamaran ', 'La Minais', 'Bois', '', NULL, NULL, ''),
 (10, 1, 1, 'Maquette de Piper Cub J3', 'La Minais', 'Bois', '', NULL, NULL, 'Maquette de démonstration (squelette)'),
 (11, 2, 2, 'Moule de fuseau, avion Orca', 'La Minais', 'Composite', '', NULL, NULL, ''),
 (12, 2, 3, 'Moule de capot moteur, avion Orca', 'La Minais', 'Composite', '', NULL, NULL, ''),
-(13, 3, 4, 'Moule de fuseau, planeur Asw 15', 'La Minais', 'Composite', '', 127, NULL, ''),
+(13, 3, 4, 'Moule de fuseau, planeur Asw 15', 'La Minais', 'Composite', 'Correct', 127, 0, 'Disponible'),
 (14, 4, 5, 'Moule de capot moteur', 'La Minais', 'Composite', '', NULL, NULL, 'Destination inconnue'),
 (15, 5, 6, 'Moule de fuseau de Fox 2m', 'La Minais', 'Composite', '', 127, NULL, ''),
 (16, 6, 7, 'Master de verrière en plâtre', 'La Minais', 'Plâtre', '', NULL, NULL, ''),
 (17, 7, 8, 'Moule de fuseau, MPX, de planeur LS3', 'La Minais', 'Composite', '', NULL, NULL, ''),
 (18, 8, 9, 'Moule de fuseau de planeur Le Pointu (petit)', 'La Minais', 'Composite', '', NULL, NULL, ''),
 (19, 9, 10, 'Moule de bateau ', 'La Minais', 'Composite', '', NULL, NULL, 'Descriptif à compléter'),
-(20, 10, 11, 'Moule de fuseau Mpx pour planeur Alphe 27, 3 axes', 'La Minais', 'Composite', '', NULL, NULL, ''),
+(20, 10, 11, 'Moule de fuseau pour planeur Alpha 27, 3 axes, Multiplex', 'La Minais', 'Composite', 'Correct', 0, 0, 'Disponible en prêt interne.\r\nContactez le bureau de l\'ARBL'),
 (21, 11, 12, 'Moule de fuseau Mpx planeur Flamingo 3 axes', 'La Minais', 'Composite', '', NULL, NULL, ''),
 (22, 12, 13, 'Moule de fuseau - informations à compléter', 'La Minais', 'Composite', '', NULL, NULL, ''),
 (23, 13, 14, 'Moule fuseau Mpx planeur Ka6 4mètres, 3 axes', 'La Minais', 'Composite', '', 127, NULL, ''),
@@ -156,15 +162,11 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 (45, 36, 20, 'Moule du fuselage, planeur Le Pointu (grand)', 'La Minais', 'Composite', '', NULL, NULL, ''),
 (46, 37, 48, 'Master du fuseau', 'Didier Delhom', 'Composite', 'Excellent', 150, NULL, 'Propriété de Didier Delhom.\r\nNombreux tirages réalisés par Didier D. et Ludovic B.'),
 (47, 37, 49, 'Master de la verrière ', 'Didier Delhom', 'Composite', 'Excellent', NULL, NULL, 'Propriété de Didier Delhom.\r\nNombreux tirages réalisés par Didier D. et Ludovic B.'),
-(48, 10, 35, 'Master bulle de planeur Alpha 27 ', 'La Minais', 'Composite', '', 270, NULL, ''),
+(48, 10, 35, 'Maquette de démonstration Alpha 27', 'La Minais', 'Bois, toile et composite', 'Bon', 90, 127, 'Modèle pour exposition ; échelle 1/3 ; NON DISPONIBLE'),
 (49, 38, 25, 'Moule de capot moteur, avion modèle N°10', 'La Minais', 'Composite', '', NULL, NULL, 'Modèle à préciser'),
 (50, 8, 19, 'Fuselage blanc de planeur Le Pointu (petit)', 'La Minais', 'Composite', '', NULL, NULL, ''),
-(52, 10, 50, 'Plan de l\'Alpha 27', 'La Minais', 'Papier', '', 80, 100, 'Format A2, échelle 1/2'),
 (53, 37, 51, 'Maquette de démonstration', 'La Minais', 'Bois et toile', 'Excellent', 135, 127, 'Réalisation échelle 1/2'),
-(54, 10, 52, 'Modèle de démonstration Alpha 27', 'La Minais', 'Bois et toile', 'Bon', 90, 127, 'Pour exposition'),
-(55, 10, 53, 'Maquette de démonstration Alpha 27', 'La Minais', 'Bois, toile et composite', '', 90, 127, ''),
-(56, 10, 54, 'Maquette de démonstration Alpha 27', 'La Minais', 'Bois, toile et composite', '', 90, 127, 'Modèle pour exposition ; échelle 1/3'),
-(57, 10, 55, 'Maquette de démonstration Alpha 27', 'La Minais', 'Bois, toile et composite', '', 90, 127, 'Modèle pour exposition ; échelle 1/3');
+(60, 40, 52, 'Maquette de démonstration', 'La Minais', 'Bois, toile', 'Bon', 50, 127, 'A supprimer après le test de la BD');
 
 -- --------------------------------------------------------
 
@@ -238,6 +240,7 @@ CREATE TABLE IF NOT EXISTS `bdm_user_moule` (
   `ref_moule` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='associe un utilisateur à un moule pour modification';
 SET FOREIGN_KEY_CHECKS=1;
+COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
