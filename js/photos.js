@@ -109,6 +109,7 @@ function affFichersImages(response){
  * ********************************************/
 // https://blog.lesieur.name/coder-proprement-en-javascript-par-l-exemple-upload-d-image/
 
+/****************************
 function saisieFichierPhoto(){
 
 // ----------------------------- 
@@ -137,7 +138,7 @@ Function.prototype.namedParameters = function(type, list, error) {
   callback.apply(this, params);
 };
 
-/* Logic */
+// Logic 
 
 (function() {
   function selectImage(afterSelectCallback) {
@@ -158,6 +159,7 @@ Function.prototype.namedParameters = function(type, list, error) {
     var reader = new FileReader();
 
     reader.addEventListener("load", function() {
+         
       var image = document.createElement("img");
 
       image.addEventListener("load", function() {
@@ -167,6 +169,7 @@ Function.prototype.namedParameters = function(type, list, error) {
       });
 
       image.src = reader.result;
+      image.title = reader.name;
     });
 
     reader.readAsDataURL(inputFile.files[0]);
@@ -278,7 +281,7 @@ Function.prototype.namedParameters = function(type, list, error) {
     xhttp.send(formData);
   }
 
-  /* Exec */
+  // Exec 
 
   // var body = document.getElementsByTagName("body")[0];
   var myFile = document.getElementById("myFile");
@@ -308,6 +311,57 @@ Function.prototype.namedParameters = function(type, list, error) {
   );
 }());    
 }
+************************/
+
+// ---------------------
+function readFile(input) {
+    const preview =  document.querySelector("#preview");
+    const file = input.files[0];
+    
+    // ------------------------------
+    function readAndPreview(file) {
+        // On s'assure que `file.name` termine par
+        // une des extensions souhaitées
+        if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
+            const reader = new FileReader();
+
+            reader.addEventListener(
+            "load",
+            () => {
+                // affiche le contenu du fichier en mode blob 
+                console.log(`File name: ${file.name}`);
+                console.log(`Last modified: ${file.lastModified}`); // e.g 1552830408824
+                // console.log(reader.result);    
+
+                const image = new Image();
+                // image.height = 200;
+                image.width = 400;
+                image.title = file.name;
+                image.src = reader.result;
+                preview.appendChild(image);
+            },
+            false,
+            );
+
+            reader.readAsDataURL(file);
+        }
+    }
+  /*  
+    let reader = new FileReader();
+
+  // reader.readAsText(file);
+  reader.readAsDataURL(file);
+
+  reader.onload = function() {
+  };
+
+  reader.onerror = function() {
+    console.log(reader.error);
+  };
+  */
+    readAndPreview(file);
+
+}
 
 
 // ---------------------------------------
@@ -332,7 +386,14 @@ function newPhoto(idmodele=0, idmoule=0){
         okmoule=true;
     }
     
+    // <input id="browse" type="file" onchange="previewFiles()" multiple />
+
         let str='';
+        str+='<form>';
+        str+='<label for "browse"> Choisissez une photo</label> <input id="browse" type="file" onchange="readFile(this)" />';
+        str+='<div id="preview"></div>';
+
+/***************************        
         let url= url_serveur+'addphotobypost.php';
         // Formulaire de création
         str+='<h4>Complétez ce formulaire</h4>';
@@ -352,10 +413,11 @@ function newPhoto(idmodele=0, idmoule=0){
         str+='<option value="cc-by-nc-nd">CC-by-nc-nd (Attribution / Pas d’Utilisation Commerciale / Pas de Modification)</option>';
         str+='</select>';        
         str+='</div>';    
+
         str+='<div><b>Téléchargez une photo</b>';
         saisieFichierPhoto();
         str+='</div>';
-        
+************************/
         if (okmodele){
             str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'" />';        
         }
@@ -369,7 +431,8 @@ function newPhoto(idmodele=0, idmoule=0){
             str+='<input type="hidden" id="idmoule" name="idmoule" value="0" />';                        
         }
         str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
-        str+='</form>';      
+        str+='</form>';   
+       
         document.getElementById("myImage").innerHTML = str;
     
 }
