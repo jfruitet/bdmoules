@@ -33,6 +33,7 @@ let tVignettes=[]; // Tableau des fichiers vignettes
           
 // Admin
     let admin = '';
+    let adminpassword = '';
     let okadmin = false;     
     let iduser=0;
     /*  $appel='';  // Page appelante
@@ -108,22 +109,17 @@ function checkCookies() {
     // Compte utilisateur permettant l'accès à la gestion des données
     // Admin
     let sadmin = getCookie("sadmin");
-    if (sadmin!=="" && sadmin!==null) {
+    let sadminpass = getCookie("sadminpass");
+    okadmin=false;
+    if ((sadmin!=="" && sadmin!==null) && (sadminpass!=="" && sadminpass!==null)) {
         // Verifier si c'est un admin autorisé
         console.debug("Vérification des droits attachés à un utilisateur");
         okadmin=false;
-        for (let i in admins){
-            if (sadmin==admins[i]){// A remplacer par le MD5 ? Voir https://github.com/blueimp/JavaScript-MD5
-                console.debug("Cookie sadmin valide");
-                console.debug("Cookie Admin: "+sadmin);
-                okadmin=true;
-                admin=sadmin;
-                break;
-            }
-        }                   
-    }
-    else{
-        okadmin=false;     
+        if (verifLogin(sadmin, sadminpass) === 1){ // OK
+            okadmin=true;
+            admin=sadmin;
+            adminpassword=sadminpass;
+        }
     }
 
     // Utilisateur pour lequel on veut créer / modifier le compte d'accès
