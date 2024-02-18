@@ -15,9 +15,11 @@ $idmoule=0;
 $auteur='';
 $legende='';
 $copyright = '';
-$fichier = '';
+$filename = '';
+
 $refmodele=0;
 $refmoule=0;
+$file=NULL;
 
 $mysqli=NULL; // BD class data
 
@@ -26,6 +28,11 @@ if (isset($_SERVER['REQUEST_METHOD']) && (strtoupper($_SERVER['REQUEST_METHOD'])
   throw new Exception('Only POST requests are allowed');
 }
 
+if (!empty($_POST)) {
+    print_r($_POST);  
+}
+
+exit;
 
 if (!empty($_POST['appel'])) {
     $appel = $_POST['appel'];  
@@ -47,6 +54,10 @@ if (!empty($_POST['urlfile'])) {
     $file = $_POST['urlfile'];  
 }
 
+if (!empty($_POST['browse'])) {
+    $filename = $_POST['browse'];  
+}
+
 if (!empty($_POST['idmodele'])) {
     $idmodele = $_POST['idmodele'];  
 }
@@ -56,7 +67,7 @@ if (!empty($_POST['idmoule'])) {
 }
     // Debug
     if ($debug){
-        echo "Auteur: $auteur, Légende: $legende, Copyrigth: $copyright, Url: $file<br />\n";                
+        echo "Auteur: $auteur, Légende: $legende, Copyrigth: $copyright, Nom du fichier: $filename, Url: $file<br />\n";                
     }           
 
     connexion_db();
@@ -97,7 +108,7 @@ global $file;
 
 $sql='';
 
-        $sql="INSERT INTO `bdm_photo` ( `auteur`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) VALUES ('".addslashes($auteur)."', '".addslashes($legende)."', '".addslashes($copyright)."', '".$fichier.", ".$idmodele.", ".$idmoule.")";
+        $sql="INSERT INTO `bdm_photo` ( `auteur`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) VALUES ('".addslashes($auteur)."', '".addslashes($legende)."', '".addslashes($copyright)."', '".$filename.", ".$idmodele.", ".$idmoule.")";
         // Debug
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                

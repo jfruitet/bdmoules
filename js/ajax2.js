@@ -259,7 +259,7 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
     str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'">';  
          
     document.getElementById("infomoules").innerHTML = str;
-    document.getElementById("consigne").innerHTML = 'Modèle sélectionné: '+idmodeleglobal+'. Sélectionnez les moules à éditer';
+    document.getElementById("consigne").innerHTML = 'Modèle sélectionné: <b>'+idmodeleglobal+'</b>. Sélectionnez les moules à éditer';
 
     // Nouveau moule
     const btnaddmoule = document.querySelector('#btnaddmoule');       

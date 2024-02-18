@@ -109,8 +109,8 @@ function affFichersImages(response){
  * ********************************************/
 // https://blog.lesieur.name/coder-proprement-en-javascript-par-l-exemple-upload-d-image/
 
+
 /****************************
-function saisieFichierPhoto(){
 
 // ----------------------------- 
 Function.prototype.namedParameters = function(type, list, error) {
@@ -310,7 +310,7 @@ Function.prototype.namedParameters = function(type, list, error) {
     })
   );
 }());    
-}
+
 ************************/
 
 // ---------------------
@@ -323,42 +323,69 @@ function readFile(input) {
         // On s'assure que `file.name` termine par
         // une des extensions souhaitées
         if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
-            const reader = new FileReader();
-
+            const reader = new FileReader();            
+            
             reader.addEventListener(
-            "load",
-            () => {
-                // affiche le contenu du fichier en mode blob 
-                console.log(`File name: ${file.name}`);
-                console.log(`Last modified: ${file.lastModified}`); // e.g 1552830408824
-                // console.log(reader.result);    
+                "load",
+                () => {
+                    // affiche le contenu du fichier en mode blob 
+                    console.log(`File name: ${file.name}`);
+                    console.log(`Last modified: ${file.lastModified}`); // e.g 1552830408824
+                    // console.log(reader.result);    
 
-                const image = new Image();
-                // image.height = 200;
-                image.width = 400;
-                image.title = file.name;
-                image.src = reader.result;
-                preview.appendChild(image);
-            },
-            false,
+                    const image = new Image();
+                    // image.height = 200;
+                    image.width = 400;
+                    image.alt= file.name;
+                    image.title = file.name;
+                    image.src = reader.result;
+                    image.border = 1;
+                    preview.appendChild(image);
+                    
+                    
+                    // appel Ajax pour transférer le fichier vers le serveur
+                    var xhttp = new XMLHttpRequest();
+                    let formData = new FormData(document.forms.uneImage);
+                    formData.append("imagebase64", reader.result);
+                    formData.append("filename", file.name);   
+                                      
+                    xhttp.open("POST", url_serveur+"addfilebypost.php", true);
+                    xhttp.responseType = 'text';
+                    xhttp.send(formData); 
+                    xhttp.addEventListener("load", function() {
+                        if (xhttp.status != 200) { // analyse l'état HTTP de la réponse
+                            console.debug(`Error ${xhttp.status}: ${xhttp.statusText}`); // e.g. 404: Not Found
+                        } 
+                        else { // show the result                            
+                            console.debug(`Done, got ${xhttp.status}`);
+                            console.debug(`Done, got ${xhttp.response.length} bytes`); // response est la réponse du serveur
+                            console.debug(`Response : ${xhttp.response} `);
+                            let responseObj = JSON.parse(xhttp.response);    
+                            if ((responseObj.Ok !== undefined) && (responseObj.Ok ==1)){
+                                console.debug("Filename: "+responseObj.nomf);
+                                console.debug("Temporary Filename: "+responseObj.tmp);                                
+                            }                          
+                        }
+                    });                       
+                },
+                false,
             );
-
+            
+            // Error
+            reader.addEventListener(
+                "error",
+                () => {
+                    // affiche le contenu du fichier en mode blob 
+                    console.log(`Erreur: ${file.name}`);
+                    console.log(`Type d'erreur: ${reader.result}`); // 
+                },
+                false,
+                );
+            
             reader.readAsDataURL(file);
         }
     }
-  /*  
-    let reader = new FileReader();
 
-  // reader.readAsText(file);
-  reader.readAsDataURL(file);
-
-  reader.onload = function() {
-  };
-
-  reader.onerror = function() {
-    console.log(reader.error);
-  };
-  */
     readAndPreview(file);
 
 }
@@ -389,9 +416,33 @@ function newPhoto(idmodele=0, idmoule=0){
     // <input id="browse" type="file" onchange="previewFiles()" multiple />
 
         let str='';
-        str+='<form>';
-        str+='<label for "browse"> Choisissez une photo</label> <input id="browse" type="file" onchange="readFile(this)" />';
+        let url= url_serveur+'addphotobypost.php';
+        // Formulaire de création
+        str+='<h4>Chargez un fichier</h4>';
+        str+='<div><form name="uneImage">';
+        str+='<label for "browse"> Choisissez une photo</label>';
+        str+='<input type="file" id="browse" name="browse" accept="image/png, image/jpeg, image/gif" onchange="readFile(this)" />';
+        str+='</form></div>'; 
+        str+='<h4>Complétez ce formulaire</h4>';
+        str+='<form name="AddFormPhoto" action="'+url+'" method="post">';
+        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieAddPhoto();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+         //  id 	nom 	descriptif 	dimension [long x larg x haut] 	categorie 	timestamp 	
+        str+='<div><label for="auteur">Auteur: </label><br /><input type="text" id="auteur" size="50" name="auteur" value="" autocomplete="on" />';
+        str+='<br /><label for="legende">Légende: </label><textarea cols="50" id="legende" rows="2" name="legende" autocomplete="on"></textarea>';
+        str+='<br /><label for="licence">Licence: </label><select name="licence" id="licence" autocomplete="on">';
+        str+='<option value="">--Sélectionnez une licence Creative Commons--</option>';
+        str+='<option value="cc-by">CC-by (Attribution)</option>';
+        str+='<option value="cc-by-sa">CC-by-sa (Attribution / Partage dans les mêmes conditions)</option>';
+        str+='<option value="cc-by-nd">CC-by-nd (Attribution / Pas de Modification)</option>';
+        str+='<option value="cc-by-nc">CC-by-nc (Attribution / Pas d’Utilisation Commerciale)</option>';
+        str+='<option value="cc-by-nc-sa">CC-by-nc-sa (Attribution / Pas d’Utilisation Commerciale / Partage dans les mêmes conditions)</option>';
+        str+='<option value="cc-by-nc-nd">CC-by-nc-nd (Attribution / Pas d’Utilisation Commerciale / Pas de Modification)</option>';
+        str+='</select>';        
+        str+='</div>';   
         str+='<div id="preview"></div>';
+          
+        
+
 
 /***************************        
         let url= url_serveur+'addphotobypost.php';

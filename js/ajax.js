@@ -442,7 +442,7 @@ function selectThatModeleMoules(response) {
          
 
     document.getElementById("infomoules").innerHTML = str;
-    document.getElementById("consigne").innerHTML = 'Modèle sélectionné: '+idmodeleglobal+'. Sélectionnez les moules à réserver';
+    document.getElementById("consigne").innerHTML = 'Modèle sélectionné: <b>'+idmodeleglobal+'</b>. Sélectionnez les moules à réserver';
  
     // Collecte des ID des moules sélectionnés
     const btn = document.querySelector('#btn');
