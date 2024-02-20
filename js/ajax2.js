@@ -232,15 +232,15 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
     let str='';
     str+='<p><b>Moules</b> &nbsp; &nbsp;';
     str+='<button id="btnaddmoule">Ajouter un moule pour ce modèle</button></p>';
-    str+='<table><tr><th colspan="2">Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
+    str+='<table><tr><th colspan="2">Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th><th>Images</th></tr>';
     
     if ((tMoules !== undefined) && (tMoules.length>0)){ 
         for (let i in tMoules){
             tMoules.push(tMoules[i]);
             str+='<tr>';
-            for (let j in tMoules[i]) {             
-                var idmodele=tMoules[i][0];
-                var idmoule=tMoules[i][1];
+            var idmodele=tMoules[i][0];
+            var idmoule=tMoules[i][1];
+            for (let j in tMoules[i]) {               
                 if (j==0) { // checkbox
                     str+='<td><button onclick="editMoule('+idmodele+','+idmoule+','+i+')">Edit</button></td><td><button onclick="deleteMoule('+idmodele+','+idmoule+','+i+')">Supp</button></td>';
                 }
@@ -252,8 +252,9 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
                     str+='<td>&nbsp;</td>';
                 }    
             }     
+            str+='<td><button id="btnaddimagemoule" onclick="newPhoto('+idmodele+','+idmoule+');">Ajouter une photo pour ce moule</button></td>';                        
             str+='</tr>';
-        }
+        }            
     }  
     str+='</table>';  
     str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'">';  
@@ -265,7 +266,7 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
     const btnaddmoule = document.querySelector('#btnaddmoule');       
     btnaddmoule.addEventListener('click', (event) => {
         newMoule(idmodele);
-    });    
+    });       
 } 
  
 

@@ -1,6 +1,4 @@
 <?php
-
-define("DATAPATH_INPUT", "../json/"); // Les données de description de site seront lues dans ce dossier.
-define("DATAPATH_OUTPUT", "../data/"); // Les données de placement des bouées sont sauvegardées dans ce dossier.
-    
+define("DATAPATH_IMAGES", "../images/"); // Les images des modÃ¨les sont placÃ©es dans ce dossier.
+define("DATAPATH_VIGNETTES", "../images/vignettes/"); // Les vignettes des modÃ¨les sont placÃ©es dans ce dossier.
 ?>

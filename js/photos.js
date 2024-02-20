@@ -314,7 +314,7 @@ Function.prototype.namedParameters = function(type, list, error) {
 ************************/
 
 // ---------------------
-function readFile(input) {
+function readFile(input, idmodele=0, idmoule=0) {
     const preview =  document.querySelector("#preview");
     const file = input.files[0];
     
@@ -363,7 +363,8 @@ function readFile(input) {
                             let responseObj = JSON.parse(xhttp.response);    
                             if ((responseObj.Ok !== undefined) && (responseObj.Ok ==1)){
                                 console.debug("Filename: "+responseObj.nomf);
-                                console.debug("Temporary Filename: "+responseObj.tmp);                                
+                                console.debug("Temporary Filename: "+responseObj.tmp);   
+                                newLegendePhoto(responseObj.nomf,responseObj.tmp, idmodele, idmoule);                             
                             }                          
                         }
                     });                       
@@ -398,36 +399,81 @@ function readFile(input) {
 //  ----------------------------------
 function newPhoto(idmodele=0, idmoule=0){
     console.debug ("newPhoto()");
+
+    if ((idmodeleglobal !== undefined) && (idmodeleglobal > 0)){
+        idmodele=idmodeleglobal;
+    }
+    
+    if ((idmouleglobal !== undefined) && (idmouleglobal > 0)){        
+        idmoule=idmouleglobal;
+    }
+
+    console.debug ("Id modele: "+idmodele);
+    console.debug ("Id moule: "+idmoule);
+    
+        let str='';
+        // Formulaire de création
+        str+='<h4>Chargez une image</h4>';
+        str+='<div><form name="uneImage">';
+        if (idmodele>0){
+            str+='<label for "browse">Choisissez une photo pour le modèle '+idmodele+' </label> ';
+        }
+        else{
+            str+='<label for "browse">Choisissez une photo </label> ';
+        }
+        str+='<input type="file" id="browse" name="browse" accept="image/png, image/jpeg, image/gif" onchange="readFile(this,'+idmodele+','+idmoule+')" />';               
+        str+='</form>';   
+        str+='<div id="preview"></div>';       
+        document.getElementById("myPhoto").innerHTML += str;
+    
+}
+
+
+
+// ---------------------------------------
+// Formulaire de création d'une photo rattaché à un modèle
+// Envoi du formulaire vers serveur PHP sans appel Ajax
+// Compatible Firefox
+//  ----------------------------------
+function newLegendePhoto(nomfichier, nomfichiertemporaire, idmodele=0, idmoule=0){
+    //console.debug ("newLegendePhoto()");
     let okmodele=false;
     let okmoule=false;
-    if ((idmodele !== null) && (idmodele > 0)){
-        okmodele=true;
-    }
-    else{
-        if ((idmodeleglobal !== null) && (idmodeleglobal > 0)){
-            okmodele=true;
-            idmodele=idmodeleglobal;
+    let modelname='';
+        //console.debug("Modèle "+idmodele);
+        //console.debug(tModeles);
+        if ((tModeles !== undefined) && (tModeles !== null)){
+            for (let i in tModeles) { 
+                // console.debug ("Index :"+i);
+                //console.debug ("ID :"+tModeles[i][0]);
+                //console.debug ("Nom :"+tModeles[i][1]);
+                
+                if (parseInt(tModeles[i][0]) == idmodele){
+                    modelname = tModeles[i][1];
+                    break;
+                }
+            }
         }
-    }
-    if ((idmoule !== null) && (idmoule > 0)){
-        okmoule=true;
-    }
+    
+
     
     // <input id="browse" type="file" onchange="previewFiles()" multiple />
 
         let str='';
         let url= url_serveur+'addphotobypost.php';
         // Formulaire de création
-        str+='<h4>Chargez un fichier</h4>';
-        str+='<div><form name="uneImage">';
-        str+='<label for "browse"> Choisissez une photo</label>';
-        str+='<input type="file" id="browse" name="browse" accept="image/png, image/jpeg, image/gif" onchange="readFile(this)" />';
-        str+='</form></div>'; 
         str+='<h4>Complétez ce formulaire</h4>';
         str+='<form name="AddFormPhoto" action="'+url+'" method="post">';
         str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieAddPhoto();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
          //  id 	nom 	descriptif 	dimension [long x larg x haut] 	categorie 	timestamp 	
-        str+='<div><label for="auteur">Auteur: </label><br /><input type="text" id="auteur" size="50" name="auteur" value="" autocomplete="on" />';
+        str+='<div>';
+        if (okmodele){
+            str+='<label for="modelenom">Modèle '+idmodele+'</label><br /><input type="text" id="modelenom" size="50" name="modelenom" value="'+modelname+'" autocomplete="on" />';
+        }
+        else{
+            str+='<label for="modelenom">Nom de ce modèle: </label><br /><input type="text" id="modelenom" size="50" name="modelenom" value="" autocomplete="on" />';        
+        }        
+        str+='<br /><label for="auteur">Auteur: </label><br /><input type="text" id="auteur" size="50" name="auteur" value="" autocomplete="on" />';
         str+='<br /><label for="legende">Légende: </label><textarea cols="50" id="legende" rows="2" name="legende" autocomplete="on"></textarea>';
         str+='<br /><label for="licence">Licence: </label><select name="licence" id="licence" autocomplete="on">';
         str+='<option value="">--Sélectionnez une licence Creative Commons--</option>';
@@ -439,48 +485,11 @@ function newPhoto(idmodele=0, idmoule=0){
         str+='<option value="cc-by-nc-nd">CC-by-nc-nd (Attribution / Pas d’Utilisation Commerciale / Pas de Modification)</option>';
         str+='</select>';        
         str+='</div>';   
-        str+='<div id="preview"></div>';
-          
-        
-
-
-/***************************        
-        let url= url_serveur+'addphotobypost.php';
-        // Formulaire de création
-        str+='<h4>Complétez ce formulaire</h4>';
-        str+='<form name="AddFormPhoto" action="'+url+'" method="post">';
-        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieAddPhoto();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
-
-        //  id 	nom 	descriptif 	dimension [long x larg x haut] 	categorie 	timestamp 	
-        str+='<div><label for="auteur">Auteur: </label><br /><input type="text" id="auteur" size="50" name="auteur" value="" autocomplete="on" />';
-        str+='<br /><label for="legende">Légende: </label><textarea cols="50" id="legende" rows="2" name="legende" autocomplete="on"></textarea>';
-        str+='<br /><label for="licence">Licence: </label><select name="licence" id="licence" autocomplete="on">';
-        str+='<option value="">--Sélectionnez une licence Creative Commons--</option>';
-        str+='<option value="cc-by">CC-by (Attribution)</option>';
-        str+='<option value="cc-by-sa">CC-by-sa (Attribution / Partage dans les mêmes conditions)</option>';
-        str+='<option value="cc-by-nd">CC-by-nd (Attribution / Pas de Modification)</option>';
-        str+='<option value="cc-by-nc">CC-by-nc (Attribution / Pas d’Utilisation Commerciale)</option>';
-        str+='<option value="cc-by-nc-sa">CC-by-nc-sa (Attribution / Pas d’Utilisation Commerciale / Partage dans les mêmes conditions)</option>';
-        str+='<option value="cc-by-nc-nd">CC-by-nc-nd (Attribution / Pas d’Utilisation Commerciale / Pas de Modification)</option>';
-        str+='</select>';        
-        str+='</div>';    
-
-        str+='<div><b>Téléchargez une photo</b>';
-        saisieFichierPhoto();
-        str+='</div>';
-************************/
-        if (okmodele){
-            str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'" />';        
-        }
-        else{
-            str+='<input type="hidden" id="idmodele" name="idmodele" value="0" />';                        
-        }
-        if (okmoule){
-            str+='<input type="hidden" id="idmoule" name="idmoule" value="'+idmoule+'" />';        
-        }
-        else{
-            str+='<input type="hidden" id="idmoule" name="idmoule" value="0" />';                        
-        }
+        //str+='<div id="preview"></div>';
+        str+='<input type="hidden" id="nomfichier" name="nomfichier" value="'+nomfichier+'" />';        
+        str+='<input type="hidden" id="nomfichiertemporaire" name="nomfichiertemporaire" value="'+nomfichiertemporaire+'" />';        
+        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'" />';        
+        str+='<input type="hidden" id="idmoule" name="idmoule" value="'+idmoule+'" />';        
         str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
         str+='</form>';   
        
@@ -490,7 +499,7 @@ function newPhoto(idmodele=0, idmoule=0){
 
 // -----------------------------------------
 // Vérification des données
-function verifSaisieAddMPhotoe(){   
+function verifSaisieAddPhotoe(){   
     photoauteur = document.forms["AddFormPhoto"]["auteur"];               
     photolegende = document.forms["AddFormPhoto"]["legende"];    
     photolicence = document.forms["AddFormPhoto"]["licence"];   
@@ -613,7 +622,7 @@ function deletePhoto(idphoto, index){
         str+='<form name="DelFormPhoto" action="'+url+'" method="post">';
         str+='<div class="button"><input type="submit" name="delete" value="Confirmer" /> <input type="submit" name="delete" value="Annuler" /></div>';        
 
-       // 	photoid 	legende [légende photo] 	copyrigth 	fichier 	refmodele [référence un modèle] 	refmoule [référence un élément] 	
+       // 	photoid 	legende [légende photo] 	copyright 	fichier 	refmodele [référence un modèle] 	refmoule [référence un élément] 	
         str+='<div><b>#ID</b>: '+tPhotos[index][0]+'<br /><b>Auteur:</b> '+tPhotos[index][1];
         str+='<br /><b>Légende</b>: '+tPhotos[index][2];
         str+='<br /><b>Licence CC</b>: '+tPhotos[index][3];
