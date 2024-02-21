@@ -44,7 +44,7 @@ global $mysqli;
     FROM bdm_modele
     LEFT JOIN bdm_moule
     ON bdm_modele.id=bdm_moule.ref_modele
-    ORDER BY bdm_modele.nom");
+    ORDER BY bdm_modele.id");
     // Récupérer les lignes de la table 
     while ( $row = $result->fetch_assoc())  {
         $data[] = $row;

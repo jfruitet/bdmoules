@@ -42,7 +42,8 @@ global $debug;
 global $mysqli;
 $data = array();
     if (!empty($idmodele)){
-        $result = $mysqli->query("SELECT * FROM bdmoules.bdm_moule WHERE ref_modele=".$idmodele." ORDER BY mdescription");
+        // $result = $mysqli->query("SELECT * FROM bdmoules.bdm_moule WHERE ref_modele=".$idmodele." ORDER BY mdescription");
+        $result = $mysqli->query("SELECT * FROM bdmoules.bdm_moule WHERE ref_modele=".$idmodele." ORDER BY idmoule");
         // Récupérer les lignes de la table 
         while ( $row = $result->fetch_assoc())  {
             $data[] = $row;

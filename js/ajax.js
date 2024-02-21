@@ -148,7 +148,7 @@ function setModelesMoules(response) {
     for(let i in objModeleMoule ) { 
         //tModelesMoules.push(i, objModeleMoule[i].id, objModeleMoule[i].nom, objModeleMoule[i].descriptif, objModeleMoule[i].dimension, objModeleMoule[i].categorie, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);
         tAux = [];
-        tAux.push(i, objModeleMoule[i].id, objModeleMoule[i].nom, objModeleMoule[i].descriptif, objModeleMoule[i].dimension, objModeleMoule[i].categorie, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);       
+        tAux.push(objModeleMoule[i].id, objModeleMoule[i].nom, objModeleMoule[i].descriptif, objModeleMoule[i].dimension, objModeleMoule[i].categorie, objModeleMoule[i].idmoule, objModeleMoule[i].numero_inventaire, objModeleMoule[i].mdescription, objModeleMoule[i].mlieu, objModeleMoule[i].matiere, objModeleMoule[i].etat, objModeleMoule[i].longueur, objModeleMoule[i].poids, objModeleMoule[i].commentaire);       
         tModelesMoules.push(tAux); 
     }; 
         
@@ -194,41 +194,58 @@ function selectModelesMoules(){
 // Deux boutons de sélection
 // Les images associées
     //console.debug("Sélection d'un modèle et des moules associés\n"); 
-    let str='';
-    str='<table>';
-    str+='<tr><th>&nbsp;</th><th>ID Modèle</th><th>Nom</th><th width="30%">Descriptif</th><th>Dimensions</th><th>Catégorie</th><th>ID Moule</th><th>N°</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
+    let compteurmodele=0;
+    let str='<p><b>Modèles</b> &nbsp; &nbsp;';
+    str+='<table>';
     if ((tModelesMoules !== undefined) && (tModelesMoules.length>0)){ 
         for (let i in tModelesMoules) { 
             if (i % 6 == 0){
-            str+='<tr><th colspan="6">Choisir un Modèle</th><th colspan="9">Réserver un Moule</th></tr>';
+                str+='<tr><th colspan="5">Choisir un Modèle</th><th colspan="9">Réserver un Moule</th></tr>';
+                str+='<tr><th>ID Modèle</th><th>Nom</th><th width="30%">Descriptif</th><th>Dimensions</th><th>Catégorie</th><th>ID Moule</th><th>N°</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
             }
             str+='<tr>';
             for (let j in tModelesMoules[i]) {  
                 //console.debug(tModelesMoules[i]+"\n");
-                var idmodele=tModelesMoules[i][1];
-                var idmoule=tModelesMoules[i][6];
-                if (j==1) { // idmodele
-                    str+='<td><button name="modele'+tModelesMoules[i][j]+'" onclick="getModeleMoulesImages('+idmodele+'); reserverModeleMoules('+idmodele+');">'+idmodele+'</button></td>';                    
-                }
-                else if (j==4) { // descriptif
-                    str+='<td>';
-                    if (tModelesMoules[i][j] != null){
-                        str+=tModelesMoules[i][j]+'</td>';
+                var idmodele=tModelesMoules[i][0];
+                var idmoule=0;
+                if ((tModelesMoules[i][5] !== undefined) && (tModelesMoules[i][5] !== null)){
+                    idmoule = tModelesMoules[i][5]; 
+                } 
+                // Modèle                
+                if (j<5) { // idmodele
+                    if ((i==0) || (i>0) && (tModelesMoules[i][0] !== tModelesMoules[i-1][0])){
+                        // Nouvelle ligne de modèle                             
+                        if (j==0) { // idmodele
+                            str+='<td><button name="modele'+idmodele+'" onclick="getModeleMoulesImages('+idmodele+'); reserverModeleMoules('+idmodele+');">'+idmodele+'</button></td>';                    
+                            compteurmodele++;  
+                        }
+                        else {
+                            str+='<td>';
+                            if (tModelesMoules[i][j] !== null){
+                                str+=tModelesMoules[i][j]+'</td>';
+                            }
+                            else{
+                                str+='<td>&nbsp;</td>';
+                            }                
+                        }
                     }
                     else{
                         str+='<td>&nbsp;</td>';
-                    }                
+                    }                    
                 }
-                else if (j==6) { // idmoule
-                    str+='<td><button name="moule'+idmoule+'" onclick="getThatMoule('+idmoule+');">'+idmoule+'</button></td>';
-                }
-                else
-                if (tModelesMoules[i][j] != null){
-                    str+='<td>'+tModelesMoules[i][j]+'</td>';
-                }
-                else{
-                    str+='<td>&nbsp;</td>';
-                }                
+                else { // Moule
+                    if ((j==5) && (idmoule>0)) { // idmoule
+                        str+='<td><button name="moule'+idmoule+'" onclick="getThatMoule('+idmoule+');">'+idmoule+'</button></td>';
+                    }
+                    else{
+                        if (tModelesMoules[i][j] != null){
+                            str+='<td>'+tModelesMoules[i][j]+'</td>';
+                        }
+                        else{
+                            str+='<td>&nbsp;</td>';
+                        }  
+                    }
+                }              
             }     
             str+='</tr>';
         }
