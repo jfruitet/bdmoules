@@ -252,7 +252,7 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
                     str+='<td>&nbsp;</td>';
                 }    
             }     
-            str+='<td><button id="btnaddimagemoule" onclick="newPhoto('+idmodele+','+idmoule+');">Ajouter une photo pour ce moule</button></td>';                        
+            str+='<td><button id="btnaddimagemoule" onclick="newPhoto('+idmodele+','+idmoule+');">Ajouter une photo</button></td>';                        
             str+='</tr>';
         }            
     }  
@@ -517,7 +517,7 @@ function newModele(){
 // -----------------------------------------
 // Vérification des données
 function verifSaisieAddModele(){   
-    modelenom = document.forms["AddFormModeleModele"]["modelenom"];               
+    modelenom = document.forms["AddFormModele"]["modelenom"];               
     modeledescriptif = document.forms["AddFormModele"]["modeledescriptif"];    
     modeledimensions = document.forms["AddFormModele"]["modeledimensions"];   
     modelecategorie = document.forms["AddFormModele"]["modelecategorie"];  

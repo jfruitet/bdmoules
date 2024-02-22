@@ -17,6 +17,8 @@ $auteur='';
 $legende='';
 $copyright = '';
 $nomfichier = '';
+$nomfichiertemporaire = '';
+$okrenamefile=false;
 
 $mysqli=NULL; // BD class data
 
@@ -45,9 +47,21 @@ if (!empty($_POST['licence'])) {
     $copyright = $_POST['licence'];  
 }
 
-if (!empty($_POST['nomfichier'])) {
-    $nomfichier = $_POST['nomfichier'];  
+// Nom du fichier à sauvegarder
+if (!empty($_POST['nomfichiertemporaire'])) {
+    $nomfichiertemporaire = $_POST['nomfichiertemporaire'];  
 }
+
+if (!empty($_POST['nomfichier'])) {
+    $nomfichier = $_POST['nomfichier'];
+    if (!empty($nomfichiertemporaire) && ($nomfichier != $nomfichiertemporaire)){
+        $okrenamefile=true;
+    }  
+}
+else{
+    $nomfichier = $nomfichiertemporaire;
+}
+
 
 if (!empty($_POST['idmodele'])) {
     $idmodele = $_POST['idmodele'];  
@@ -63,6 +77,17 @@ if (!empty($_POST['idmoule'])) {
         echo "ID moule: $idmoule, ID modèle: $idmodele, Modèle: $modelenom, Auteur: $auteur, Légende: $legende, Copyrigth: $copyright, Nom du fichier: $nomfichier<br />\n";                
     }           
 
+    // Renommer le fichier sauvegardé
+    if ($okrenamefile){
+    	if (file_exists(DATAPATH_IMAGES.$nomfichiertemporaire)){
+            rename (DATAPATH_IMAGES.$nomfichiertemporaire, DATAPATH_IMAGES.$nomfichier);
+        }
+    	if (file_exists(DATAPATH_VIGNETTES.$nomfichiertemporaire)){
+            rename (DATAPATH_VIGNETTES.$nomfichiertemporaire, DATAPATH_IMAGES.$nomfichier);
+        }
+    }
+    
+    
 	if (!empty($idmodele) || !empty($idmoule)){
 		// 
 		connexion_db();

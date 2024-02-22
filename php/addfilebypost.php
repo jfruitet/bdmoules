@@ -21,7 +21,7 @@ if (!empty($_POST['imagebase64'])){
 }
 
 if (!empty($filename)){
-	$nomf = substr($filename, 0, strrpos($filename,'.')-1); // supprimer l'extension
+	$nomf = substr($filename, 0, strrpos($filename,'.')); // supprimer l'extension
 	$extension = substr($filename, strrpos($filename,'.')+1); // extension
 }
 else{
