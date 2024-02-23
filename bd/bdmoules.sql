@@ -3,14 +3,10 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : jeu. 15 fév. 2024 à 10:19
+-- Généré le : ven. 23 fév. 2024 à 14:21
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
---
--- BDMoules version 0.1
---
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -24,8 +20,6 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `bdmoules`
 --
-CREATE DATABASE IF NOT EXISTS `bdmoules` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
-USE `bdmoules`;
 
 -- --------------------------------------------------------
 
@@ -33,16 +27,14 @@ USE `bdmoules`;
 -- Structure de la table `bdm_modele`
 --
 
-DROP TABLE IF EXISTS `bdm_modele`;
-CREATE TABLE IF NOT EXISTS `bdm_modele` (
-  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `bdm_modele` (
+  `id` int(10) UNSIGNED NOT NULL,
   `nom` varchar(80) NOT NULL,
   `descriptif` text NOT NULL,
   `dimension` varchar(80) NOT NULL COMMENT 'long x larg x haut',
   `categorie` varchar(50) NOT NULL,
-  `timestamp` date NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `timestamp` date NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `bdm_modele`
@@ -57,7 +49,7 @@ INSERT INTO `bdm_modele` (`id`, `nom`, `descriptif`, `dimension`, `categorie`, `
 (6, 'Moule N°2', 'Master verrière en plâtre', '', 'autre', '2024-01-19'),
 (7, 'LS3', 'LS3 de 3 mètres, moule fuseau, MPX', '', 'planeur', '2024-01-19'),
 (8, 'Le Pointu (petit)', 'Moule du fuseau et fuselage blanc.', '', 'planeur', '2024-01-19'),
-(9, 'Moule N°3', 'Moule de bateau, description à compléter', '', 'bateau', '2024-01-19'),
+(9, 'Moule N°3', 'Moule de coque de voilier 1 mètre \"Gothix\", réalisé par l\'ARBL à partir du Goth de Franck Russel', '100 x 20 x 20', 'voilier', '2024-01-19'),
 (10, 'Alpha 27', 'Moule fuseau, Mpx 3 axes', '', 'planeur', '2024-01-19'),
 (11, 'Flamingo 1980', 'Planeur F3b, moule fuseau, Mpx 3 axes', '', 'planeur', '2024-01-19'),
 (12, 'Moule N°4', 'Modèle non décrit, moule fuseau, à compléter', '', 'autre', '2024-01-19'),
@@ -81,13 +73,11 @@ INSERT INTO `bdm_modele` (`id`, `nom`, `descriptif`, `dimension`, `categorie`, `
 (31, 'Modèle N°16', 'Moule capot moteur', '', 'autre', '2024-01-19'),
 (32, 'Modèle N°17', 'Moule capot moteur', '', 'autre', '2024-01-19'),
 (33, 'Genesis', 'Moule fuselage', '', 'planeur', '2024-01-19'),
-(34, 'Modèle N°18, voilier', 'Moule de pont de voilier, modèle inconnu', '', 'voilier', '2024-01-19'),
+(34, 'Voilier Marblehead GothiX', 'Moule du Gothic de Franck Russel adapté par l\'ARBL', '135 x 40 x 30', 'voilier', '2024-01-19'),
 (35, 'Modèle N°19 Catamaran', 'Moules des flotteurs de catamaran', '', 'voilier', '2024-01-19'),
 (36, 'Le Pointu (grand)', 'Moule bulle planeur Le Pointu grand modèle', '', 'planeur', '2024-01-19'),
 (37, 'Excalibur', 'Planeur de voltige par Eric Poulain.\r\nSurface alaire 52 dm², corde 250/150 mm, profil SB96V/VS', '260 x 145 x ?', 'planeur', '2024-01-22'),
-(38, 'Modèle N°10 Avion', 'Moule de capot moteur', '', 'avion', '2024-01-24'),
-(40, 'Modèle de test', 'Pour tester l\'ajout d\'un modèle à la BD.', '50 x 10 x 20 cm', '', '2024-02-14'),
-(43, 'Modèle de test', 'Pour tester l\'ajout d\'un modèle à la BD.', '50 x 10 x 20 cm', 'voilier,bateau,maquette', '2024-02-14');
+(38, 'Modèle N°10 Avion', 'Moule de capot moteur', '', 'avion', '2024-01-24');
 
 -- --------------------------------------------------------
 
@@ -95,9 +85,8 @@ INSERT INTO `bdm_modele` (`id`, `nom`, `descriptif`, `dimension`, `categorie`, `
 -- Structure de la table `bdm_moule`
 --
 
-DROP TABLE IF EXISTS `bdm_moule`;
-CREATE TABLE IF NOT EXISTS `bdm_moule` (
-  `idmoule` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE `bdm_moule` (
+  `idmoule` int(10) UNSIGNED NOT NULL,
   `ref_modele` int(10) UNSIGNED NOT NULL,
   `numero_inventaire` int(4) DEFAULT 0 COMMENT 'numéro d''enregistrement du moule',
   `mdescription` varchar(255) NOT NULL,
@@ -106,9 +95,8 @@ CREATE TABLE IF NOT EXISTS `bdm_moule` (
   `etat` varchar(80) NOT NULL,
   `longueur` smallint(6) DEFAULT NULL,
   `poids` tinyint(4) DEFAULT NULL,
-  `commentaire` varchar(255) NOT NULL,
-  PRIMARY KEY (`idmoule`)
-) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `commentaire` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `bdm_moule`
@@ -133,7 +121,7 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 (16, 6, 7, 'Master de verrière en plâtre', 'La Minais', 'Plâtre', '', NULL, NULL, ''),
 (17, 7, 8, 'Moule de fuseau, MPX, de planeur LS3', 'La Minais', 'Composite', '', NULL, NULL, ''),
 (18, 8, 9, 'Moule de fuseau de planeur Le Pointu (petit)', 'La Minais', 'Composite', '', NULL, NULL, ''),
-(19, 9, 10, 'Moule de bateau ', 'La Minais', 'Composite', '', NULL, NULL, 'Descriptif à compléter'),
+(19, 9, 10, 'Moule de voilier ', 'La Minais', 'Composite', 'Très bon', 120, 0, 'Moule de voilier 1 mètre \"Gothix\" réalisé par l\'ARBL à partir du \"Goth\" de Franck Russel.'),
 (20, 10, 11, 'Moule de fuseau pour planeur Alpha 27, 3 axes, Multiplex', 'La Minais', 'Composite', 'Correct', 0, 0, 'Disponible en prêt interne.\r\nContactez le bureau de l\'ARBL'),
 (21, 11, 12, 'Moule de fuseau Mpx planeur Flamingo 3 axes', 'La Minais', 'Composite', '', NULL, NULL, ''),
 (22, 12, 13, 'Moule de fuseau - informations à compléter', 'La Minais', 'Composite', '', NULL, NULL, ''),
@@ -165,8 +153,7 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 (48, 10, 35, 'Maquette de démonstration Alpha 27', 'La Minais', 'Bois, toile et composite', 'Bon', 90, 127, 'Modèle pour exposition ; échelle 1/3 ; NON DISPONIBLE'),
 (49, 38, 25, 'Moule de capot moteur, avion modèle N°10', 'La Minais', 'Composite', '', NULL, NULL, 'Modèle à préciser'),
 (50, 8, 19, 'Fuselage blanc de planeur Le Pointu (petit)', 'La Minais', 'Composite', '', NULL, NULL, ''),
-(53, 37, 51, 'Maquette de démonstration', 'La Minais', 'Bois et toile', 'Excellent', 135, 127, 'Réalisation échelle 1/2'),
-(60, 40, 52, 'Maquette de démonstration', 'La Minais', 'Bois, toile', 'Bon', 50, 127, 'A supprimer après le test de la BD');
+(53, 37, 51, 'Maquette de démonstration', 'La Minais', 'Bois et toile', 'Excellent', 135, 127, 'Réalisation échelle 1/2');
 
 -- --------------------------------------------------------
 
@@ -174,25 +161,32 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 -- Structure de la table `bdm_photo`
 --
 
-DROP TABLE IF EXISTS `bdm_photo`;
-CREATE TABLE IF NOT EXISTS `bdm_photo` (
-  `photoid` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `bdm_photo` (
+  `photoid` int(11) NOT NULL,
+  `auteur` varchar(50) NOT NULL,
   `legende` varchar(255) NOT NULL COMMENT 'légende photo',
-  `copyrigth` varchar(80) NOT NULL,
+  `copyright` varchar(80) NOT NULL,
   `fichier` varchar(255) NOT NULL,
   `refmodele` int(11) DEFAULT NULL COMMENT 'référence un modèle',
-  `refmoule` int(11) DEFAULT NULL COMMENT 'référence un élément',
-  PRIMARY KEY (`photoid`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `refmoule` int(11) DEFAULT NULL COMMENT 'référence un élément'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `bdm_photo`
 --
 
-INSERT INTO `bdm_photo` (`photoid`, `legende`, `copyrigth`, `fichier`, `refmodele`, `refmoule`) VALUES
-(1, 'Excalibur 2.0', '(CC)', 'Excalibur.jpg', 37, NULL),
-(2, 'Excalibur 2.0 - Master du fuseau', '(CC)', 'Excalibur_moules_fuseau.jpg', NULL, 46),
-(3, 'Excalibur 2.0 - Master de la verrière.', '(CC)', 'Excalibur_moules_verriere.jpg', NULL, 47);
+INSERT INTO `bdm_photo` (`photoid`, `auteur`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) VALUES
+(1, '', 'Excalibur 2.0', '(CC)', 'Excalibur.jpg', 37, NULL),
+(2, '', 'Excalibur 2.0 - Master du fuseau', '(CC)', 'Excalibur_moules_fuseau.jpg', NULL, 46),
+(3, '', 'Excalibur 2.0 - Master de la verrière.', '(CC)', 'Excalibur_moules_verriere.jpg', NULL, 47),
+(4, 'Inconnu', 'Moto planeur tout composite', 'cc-by-sa', 'Planeur_Fox-2.3.jpg', 5, 0),
+(7, 'Inconnu', 'Planeur Ventus CX de Luxe, 4,50 mètres', 'cc-by-sa', 'ventus-2cx-de-luxe-env450m-arf-topmodel-c.jpg', 23, 0),
+(8, '', 'Moule de fuseau', 'cc-by-sa', 'moulage-LudovicB_0.jpg', 23, 0),
+(9, 'Ludo', 'Master de la bulle du Ventus', 'cc-by-sa', 'moulage-LudovicB_0.jpg', NULL, 33),
+(11, 'ARBL d\'après Franck Russel', 'Master de \"Gothix\", voilier 1Mètre inspiré du \"Goth\" de Franck Russel ', 'cc-by-sa', 'Gothix_master.jpg', NULL, 19),
+(16, 'Franck Russel - Hans-Günter Groes', 'Réalisation composite', 'cc-by-sa', 'Gothic_Marblehead_FranckRussel_mk3_version.png', 34, NULL),
+(17, 'Franck Russel', 'Marblehead réalisé par Maurizio Morbidelli (MX Components)', 'cc-by-sa', 'Gothic_Marblehead_FranckRussel_mx_version.png', 34, NULL),
+(18, 'ARBL d\'après Franck Russel', 'Version ARBL du voilier Gothic M de Franck Russel', 'cc-by-sa', 'Voilier_M_GothiX.jpg', NULL, 43);
 
 -- --------------------------------------------------------
 
@@ -200,14 +194,12 @@ INSERT INTO `bdm_photo` (`photoid`, `legende`, `copyrigth`, `fichier`, `refmodel
 -- Structure de la table `bdm_realisation`
 --
 
-DROP TABLE IF EXISTS `bdm_realisation`;
-CREATE TABLE IF NOT EXISTS `bdm_realisation` (
-  `realid` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `bdm_realisation` (
+  `realid` int(11) NOT NULL,
   `realisateur` varchar(80) NOT NULL COMMENT 'auteur',
   `realdate` date NOT NULL COMMENT 'date de fabrication',
   `realelement` int(11) NOT NULL,
-  `realmaj` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  PRIMARY KEY (`realid`)
+  `realmaj` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -216,16 +208,14 @@ CREATE TABLE IF NOT EXISTS `bdm_realisation` (
 -- Structure de la table `bdm_user`
 --
 
-DROP TABLE IF EXISTS `bdm_user`;
-CREATE TABLE IF NOT EXISTS `bdm_user` (
-  `userid` int(11) NOT NULL AUTO_INCREMENT,
+CREATE TABLE `bdm_user` (
+  `userid` int(11) NOT NULL,
   `usernom` varchar(80) NOT NULL,
   `userlogin` varchar(30) NOT NULL,
   `statut` tinyint(4) NOT NULL COMMENT '1: admin, 2:auteur, 3: lecteur\r\n',
   `pass` varchar(255) NOT NULL COMMENT 'pass crypté MD5',
   `telephone` varchar(30) NOT NULL,
-  `club` varchar(255) NOT NULL,
-  PRIMARY KEY (`userid`)
+  `club` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -234,12 +224,78 @@ CREATE TABLE IF NOT EXISTS `bdm_user` (
 -- Structure de la table `bdm_user_moule`
 --
 
-DROP TABLE IF EXISTS `bdm_user_moule`;
-CREATE TABLE IF NOT EXISTS `bdm_user_moule` (
+CREATE TABLE `bdm_user_moule` (
   `ref_user` int(10) NOT NULL,
   `ref_moule` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='associe un utilisateur à un moule pour modification';
-SET FOREIGN_KEY_CHECKS=1;
+
+--
+-- Index pour les tables déchargées
+--
+
+--
+-- Index pour la table `bdm_modele`
+--
+ALTER TABLE `bdm_modele`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Index pour la table `bdm_moule`
+--
+ALTER TABLE `bdm_moule`
+  ADD PRIMARY KEY (`idmoule`);
+
+--
+-- Index pour la table `bdm_photo`
+--
+ALTER TABLE `bdm_photo`
+  ADD PRIMARY KEY (`photoid`);
+
+--
+-- Index pour la table `bdm_realisation`
+--
+ALTER TABLE `bdm_realisation`
+  ADD PRIMARY KEY (`realid`);
+
+--
+-- Index pour la table `bdm_user`
+--
+ALTER TABLE `bdm_user`
+  ADD PRIMARY KEY (`userid`);
+
+--
+-- AUTO_INCREMENT pour les tables déchargées
+--
+
+--
+-- AUTO_INCREMENT pour la table `bdm_modele`
+--
+ALTER TABLE `bdm_modele`
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
+
+--
+-- AUTO_INCREMENT pour la table `bdm_moule`
+--
+ALTER TABLE `bdm_moule`
+  MODIFY `idmoule` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+
+--
+-- AUTO_INCREMENT pour la table `bdm_photo`
+--
+ALTER TABLE `bdm_photo`
+  MODIFY `photoid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+
+--
+-- AUTO_INCREMENT pour la table `bdm_realisation`
+--
+ALTER TABLE `bdm_realisation`
+  MODIFY `realid` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `bdm_user`
+--
+ALTER TABLE `bdm_user`
+  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
