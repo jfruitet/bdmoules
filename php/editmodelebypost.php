@@ -7,7 +7,7 @@
 include ("./include/config.php");
 include ("./include/mysql.php");
 
-$debug = true;
+$debug = false;
 $appel='';  // Page appelante
 $reponse='';
 $idmodele=0;

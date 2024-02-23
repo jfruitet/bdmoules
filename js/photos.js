@@ -83,7 +83,7 @@ function affFichersImages(response){
         for(let i in objImage ) { 
             tAux = [];
             tAux.push(objImage[i].photoid, objImage[i].auteur, objImage[i].legende, objImage[i].copyright, objImage[i].fichier, objImage[i].refmodele, objImage[i].refmoule);        
-            console.debug ("\n"+tAux+"\n");
+            //console.debug ("\n"+tAux+"\n");
             tImages.push(tAux); 
         }
         
@@ -273,14 +273,14 @@ function newLegendePhoto(nomfichiertemporaire, idmodele=0, idmoule=0){
          //  id 	nom 	descriptif 	dimension [long x larg x haut] 	categorie 	timestamp 	
         str+='<div>';
         if (okmodele){
-            str+='<label for="modelenom">Modèle '+idmodele+'</label><br /><input type="text" id="modelenom" size="50" name="modelenom" value="'+modelname+'" autocomplete="on" />';
+            str+='<label for="modelenom">Modèle '+idmodele+'</label><br /><input type="text" id="modelenom" size="80" name="modelenom" value="'+modelname+'" autocomplete="on" />';
         }
         else{
-            str+='<label for="modelenom">Nom de ce modèle: </label><br /><input type="text" id="modelenom" size="50" name="modelenom" value="" autocomplete="on" />';        
+            str+='<label for="modelenom">Nom de ce modèle: </label><br /><input type="text" id="modelenom" size="80" name="modelenom" value="" autocomplete="on" />';        
         }       
         if (nomfichiertemporaire.length>0){
             str+='<br /><b>Nom du fichier</b> (<i>'+nomfichiertemporaire+'</i>)<br />'; 
-            str+='<label for ="nomfichier">Nouveau nom </label> <input type="text" id="nomfichier" name="nomfichier" value="" autocomplete="on" />'; 
+            str+='<label for ="nomfichier">Nouveau nom </label> <input type="text" id="nomfichier" size="80" name="nomfichier" value="" autocomplete="on" />'; 
         } 
         str+='<br /><label for="auteur">Auteur: </label><br /><input type="text" id="auteur" size="50" name="auteur" value="" autocomplete="on" />';
         str+='<br /><label for="legende">Légende: </label><textarea cols="50" id="legende" rows="2" name="legende" autocomplete="on"></textarea>';
@@ -311,7 +311,8 @@ function verifSaisieAddPhoto(){
     //photoauteur = document.forms["AddFormPhoto"]["auteur"];               
     photolegende = document.forms["AddFormPhoto"]["legende"];    
     photolicence = document.forms["AddFormPhoto"]["licence"];   
-    //nomfichiertemporaire = document.forms["AddFormPhoto"]["nomfichiertemporaire"];  
+    nomfichier = document.forms["AddFormPhoto"]["nomfichier"];
+    nomfichiertemporaire = document.forms["AddFormPhoto"]["nomfichiertemporaire"];  
 
     if ( photolegende.value == "")                               
     { 
@@ -326,7 +327,34 @@ function verifSaisieAddPhoto(){
         photolicence.focus(); 
         return false; 
     }          
-     
+
+    if ((nomfichier.value !== "") && (nomfichiertemporaire.value !== ""))                                
+    { 
+        console.debug("Nomfichier "+ nomfichier.value);
+        console.debug("Nomfichiertemporaire "+ nomfichiertemporaire.value);
+        const  regex = /\./;
+
+        if (!regex.test(nomfichier.value)){
+            console.debug("Pas d'extension dans "+nomfichier.value);
+            if (regex.test(nomfichiertemporaire.value)){
+                console.debug("Extension dans "+nomfichiertemporaire.value);
+                const myArray = nomfichiertemporaire.value.split(".");
+                console.debug(myArray);
+                nomfichier.value += '.'+myArray.slice(-1);
+                console.debug("Nomfichier "+ nomfichier.value);
+                document.forms["AddFormPhoto"]["nomfichier"].value = nomfichier.value;
+                return true;
+            }
+            else{
+                alert("Ajoutez une extension ad hoc au nom de fichier.");   
+                nomfichier.focus();
+                return false;            
+            }
+        }
+        else{
+            return true;        
+        } 
+    }            
 
     return true;
 }

@@ -37,7 +37,7 @@
 </div>
 <div class="scrollright">
 <span id="myFile">Pour chaque modèle enregistrez au moins une photo de 400 pixels de large et de 600 pixels de haut au format .JPG ou .PNG</span>
-<button id="btnaddphoto">Ajouter une photo</button>
+<span id="myButton"></span>
 <span id="myPhoto"></span>
 <span id="myImage"></span>
 </div>
@@ -77,16 +77,18 @@
         //console.debug("Admin reconnu. Afficher les modeles");
         getModelesMoulesAdmin();
         if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+            // Affiche le bouton d'ajout d'une image pour ce modèle 
+            document.getElementById("myButton").innerHTML = '<button id="btnaddphoto">Ajouter une photo pour ce modèle</button>';
             // Affiche le moule sélectionné 
             getModeleMoulesImages(idmodeleglobal); 
             editerThatModeleMoules(idmodeleglobal);
+            // Nouvelle photo
+            const btnaddphoto = document.querySelector('#btnaddphoto');       
+            btnaddphoto.addEventListener('click', (event) => {
+                newPhoto();
+            });                  
         }     
-       // Nouvelle photo
-        const btnaddphoto = document.querySelector('#btnaddphoto');       
-        btnaddphoto.addEventListener('click', (event) => {
-            newPhoto();
-        });    
-            
+          
     }
     else { 
         if (!oklogin()) {

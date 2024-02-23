@@ -19,6 +19,7 @@ $copyright = '';
 $nomfichier = '';
 $nomfichiertemporaire = '';
 $okrenamefile=false;
+$okfilerenamed=false;
 
 $mysqli=NULL; // BD class data
 
@@ -74,49 +75,71 @@ if (!empty($_POST['idmoule'])) {
 
     // Debug
     if ($debug){
-        echo "ID moule: $idmoule, ID modèle: $idmodele, Modèle: $modelenom, Auteur: $auteur, Légende: $legende, Copyrigth: $copyright, Nom du fichier: $nomfichier<br />\n";                
+        echo "ID moule: $idmoule, ID modèle: $idmodele, Modèle: $modelenom, Auteur: $auteur, Légende: $legende, Copyrigth: $copyright, Nom du fichier: $nomfichier, Nom du fichier temporaire: $nomfichiertemporaire<br />\n";                
     }           
 
     // Renommer le fichier sauvegardé
     if ($okrenamefile){
     	if (file_exists(DATAPATH_IMAGES.$nomfichiertemporaire)){
+            // Renommer les fichiers
             rename (DATAPATH_IMAGES.$nomfichiertemporaire, DATAPATH_IMAGES.$nomfichier);
-        }
-    	if (file_exists(DATAPATH_VIGNETTES.$nomfichiertemporaire)){
-            rename (DATAPATH_VIGNETTES.$nomfichiertemporaire, DATAPATH_IMAGES.$nomfichier);
-        }
-    }
+        }           
+        if (file_exists(DATAPATH_VIGNETTES.$nomfichiertemporaire)){
+            rename (DATAPATH_VIGNETTES.$nomfichiertemporaire, DATAPATH_VIGNETTES.$nomfichier);		
+        }         
+    }        
     
-    
-	if (!empty($idmodele) || !empty($idmoule)){
-		// 
-		connexion_db();
-		$reponse = mysql_add_photo();
-		$mysqli -> close();
-	}
-	if (!$debug){
-		if (!empty($reponse)){ 
-			header("Location: ".$appel."?msg=Nouvelle photo enregistrée. ".$reponse);
-		}
-		else{
-			header("Location: ".$appel."?msg=Erreur à l'enregistrement de la photo.");   
-		}    
-	}
-	else{
-		if (!empty($reponse)){ 
-			echo "Nouvelle photo enregistrée. ".$reponse;
-		}
-		else{
-			echo "Erreur à l'enregistrement de la photo. "; 
-		}    
-	}    
+ 
+            if (!empty($idmodele) || !empty($idmoule)){
+		          connexion_db();
+		          $reponse = mysql_add_photo();
+		          $mysqli -> close();
+            }
+	        if (!$debug){
+                if (!empty($reponse)){ 
+                    header("Location: ".$appel."?msg=Nouvelle photo enregistrée. ".$reponse);
+    		    }
+		        else{
+                    header("Location: ".$appel."?msg=Erreur à l'enregistrement de la photo.");   
+                }    
+            }
+            else{
+                if (!empty($reponse)){ 
+                    echo "Nouvelle photo enregistrée. ".$reponse;
+                }
+                else{
+                    echo "Erreur à l'enregistrement de la photo. "; 
+                }    
+            }      
+
 
 die();   
+
+// -------------------------
+function mysql_rename_files(){
+global $debug;
+global $mysqli;
+global $nomfichier;
+global $nomfichiertemporaire;
+    $reponse='';
+    $sql='';
+	if (!empty($nomfichier) && !empty($nomfichiertemporaire)){ 
+        $sql="UPDATE `bdm_photo` SET `fichier`='$nomfichier' WHERE `fichier`='$nomfichiertemporaire'";
+ 		// Debug
+        if ($debug){
+            echo "SQL: ".$sql."<br />\n";                
+        }           
+		if ($result = $mysqli->query($sql)){
+			$reponse = '{"ok"=1, "nomfichier":'.$nomfichier.'}';  	
+        }                    
+    }
+    return $reponse;
+}
 
 //--------------------------
 function mysql_add_photo(){ 
 global $debug;
-global $reponse;
+
 global $mysqli;
 global $idmodele;
 global $idmoule;
@@ -126,7 +149,7 @@ global $legende;
 global $copyright;
 global $nomfichier;
 
-
+$reponse='';
 $sql='';
 	if (!empty($nomfichier)){ 
         if (!empty($idmoule)){
