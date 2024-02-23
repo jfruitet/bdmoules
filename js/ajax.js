@@ -441,7 +441,7 @@ function selectThatModeleMoules(response) {
                 var idmodele=tThatModeleMoules[i][0];
                 var idmoule=tThatModeleMoules[i][1];
                 if (j==0) { // checkbox
-                    str+='<td><label for '+idmoule+'><input type="checkbox" id="'+idmoule+'" name="idmoule" value="'+idmoule+'" checked />'+idmoule+'</label></td>';
+                    str+='<td><label for ="idmoule'+idmoule+'">Moule '+idmoule+'</label> <input type="checkbox" id="idmoule'+idmoule+'" name="idmoule'+idmoule+'" value="'+idmoule+'" checked /></td>';
                 }
                 else
                 if (tThatModeleMoules[i][j] != null){

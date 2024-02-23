@@ -221,10 +221,10 @@ function newPhoto(idmodele=0, idmoule=0){
         str+='<h4>Chargez une image</h4>';
         str+='<div><form name="uneImage">';
         if (idmodele>0){
-            str+='<label for "browse">Choisissez une photo pour le modèle '+idmodele+' </label> ';
+            str+='<label for="browse">Choisissez une photo pour le modèle '+idmodele+' </label> ';
         }
         else{
-            str+='<label for "browse">Choisissez une photo </label> ';
+            str+='<label for="browse">Choisissez une photo </label> ';
         }
         str+='<input type="file" id="browse" name="browse" accept="image/png, image/jpeg, image/gif" onchange="readFile(this,'+idmodele+','+idmoule+')" />';               
         str+='</form>';   
@@ -280,7 +280,7 @@ function newLegendePhoto(nomfichiertemporaire, idmodele=0, idmoule=0){
         }       
         if (nomfichiertemporaire.length>0){
             str+='<br /><b>Nom du fichier</b> (<i>'+nomfichiertemporaire+'</i>)<br />'; 
-            str+='<label for ="nomfichier">Nouveau nom </label> <input type="text" id="nomfichier" size="80" name="nomfichier" value="" autocomplete="on" />'; 
+            str+='<label for="nomfichier">Nouveau nom </label> <input type="text" id="nomfichier" size="80" name="nomfichier" value="" autocomplete="on" />'; 
         } 
         str+='<br /><label for="auteur">Auteur: </label><br /><input type="text" id="auteur" size="50" name="auteur" value="" autocomplete="on" />';
         str+='<br /><label for="legende">Légende: </label><textarea cols="50" id="legende" rows="2" name="legende" autocomplete="on"></textarea>';

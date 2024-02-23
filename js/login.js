@@ -30,7 +30,7 @@ function formlogout(){
  
 // --------------------------------
 function logout(){
-            console.debug("Logout confirmé");
+            //console.debug("Logout confirmé");
             dellCookie("sadmin");
             if (admin==Courriel) {
                 dellCookie("scourriel")
@@ -53,7 +53,7 @@ function logout(){
 // --------------------------------
 function getUserAutorisation(){
 // Le courriel fourni par le cookie est-il reconnu ?
-    console.debug("Login : vérification Courriel: "+Courriel);
+    //console.debug("Login : vérification Courriel: "+Courriel);
     admin='';
     adminpassword='';
     okadmin=false;
@@ -95,13 +95,13 @@ function getUserAutorisation(){
 function saisieLogin(mail=''){
 // Saisie d'une adresse mail 
 
-    console.debug("Saisie du Login");
+    //console.debug("Saisie du Login");
     okadmin=false;
     admin=''; // toute saisie annule les autorisations antérieures
     let str='';
     str+='<p>Saisissez votre identifiant d\'administrateur.</p>';
-    str+='<label for "adminmail">Courriel</label> <input type="text" id="adminmail" name="adminmail" value="'+mail+'" />';
-    str+='&nbsp; &nbsp; <label for "adminpass">Mot de passe</label> <input type="password" id="adminpass" name="adminpass" size="10" value="" />';
+    str+='<label for="adminmail">Courriel</label> <input type="text" id="adminmail" name="adminmail" value="'+mail+'" />';
+    str+='&nbsp; &nbsp; <label for="adminpass">Mot de passe</label> <input type="password" id="adminpass" name="adminpass" size="10" value="" />';
     str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
     str+='&nbsp; &nbsp; <button id="btnlogin">Valider</button></p>';
 
