@@ -138,6 +138,8 @@ function afficheAdminEnv(){
         formlogout();
         getModelesMoulesAdmin();
         if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+            // Affiche le bouton d'ajout d'une image pour ce modèle 
+            document.getElementById("myButton").innerHTML = '<button id="btnaddphoto">Ajouter une photo pour ce modèle</button>';        
             // Affiche le moule sélectionné 
             getModeleMoulesImages(idmodeleglobal); 
             editerThatModeleMoules(idmodeleglobal);
