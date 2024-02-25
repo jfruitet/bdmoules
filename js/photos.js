@@ -206,29 +206,37 @@ function readFile(input, idmodele=0, idmoule=0) {
 // Compatible Firefox
 //  ----------------------------------
 function newPhoto(idmodele=0, idmoule=0){
-    console.debug ("newPhoto()");
+    //console.debug ("newPhoto()");
     if (idmodele===0){
         if ((idmodeleglobal !== undefined) && (idmodeleglobal > 0)){
             idmodele=idmodeleglobal;
         }
     }
 
-    console.debug ("Id modele: "+idmodele);
-    console.debug ("Id moule: "+idmoule);
+    //console.debug ("Id modele: "+idmodele);
+    //console.debug ("Id moule: "+idmoule);
     
         let str='';
         // Formulaire de création
         str+='<h4>Chargez une image</h4>';
         str+='<div><form name="uneImage">';
-        if (idmodele>0){
-            str+='<label for="browse">Choisissez une photo pour le modèle '+idmodele+' </label> ';
+        str+='<label for="browse">Choisissez une photo ';
+        if (idmoule>0){
+            str+='pour le moule N° '+idmoule+' ';
+            if (idmodele>0){
+                str+='du modèle N° '+idmodele+' ';
+            }
         }
         else{
-            str+='<label for="browse">Choisissez une photo </label> ';
+            if (idmodele>0){
+                str+='pour le modèle N° '+idmodele+' ';
+            }
         }
+        str+='</label> ';        
         str+='<input type="file" id="browse" name="browse" accept="image/png, image/jpeg, image/gif" onchange="readFile(this,'+idmodele+','+idmoule+')" />';               
         str+='</form>';   
-        str+='<div id="preview"></div>';       
+        str+='<div id="preview"></div>';  
+        document.getElementById("myPhoto").innerHTML = '';     
         document.getElementById("myPhoto").innerHTML += str;
     
 }
