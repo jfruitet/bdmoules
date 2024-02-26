@@ -94,13 +94,21 @@ function affFichersImages(response){
             for(let i in tImages) { 
                 if ((tImages[i][1] !== undefined) && (tImages[i][1] !== null)){
                     titre = tImages[i][2].replaceAll('"',' ')+' par '+tImages[i][1]+' ('+tImages[i][3]+')';
-                    str += '<a href="images/'+tImages[i][4]+'"><img src="images/vignettes/'+tImages[i][4]+'" alt="'+titre+'" title="'+titre+'"></a><br />';                   
-                    str += '<p>'+tImages[i][2]+' par '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)</p>';
+                    str += '<div><a href="images/'+tImages[i][4]+'"><img src="images/vignettes/'+tImages[i][4]+'" alt="'+titre+'" title="'+titre+'"></a><hr>';                   
+                    str += '<p>'+tImages[i][2]+' par '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)<br />';
+                    if ((okadmin !== undefined) && okadmin){
+                        str += '<button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+');">Supprimer</button>';  
+                    }
+                    str+='</p></div><br />';
                 }
                 else{
                     titre = tImages[i][2].replaceAll('"',' ')+' - ('+tImages[i][3]+')';
-                    str += '<a href="images/'+tImages[i][3]+'"><img src="images/vignettes/'+tImages[i][3]+'" alt="'+titre+'" title="'+titre+'"></a><br />';                               
-                    str += '<p>'+tImages[i][2]+' - (<i>'+tImages[i][3]+')</i></p>';
+                    str += '<div><a href="images/'+tImages[i][3]+'"><img src="images/vignettes/'+tImages[i][3]+'" alt="'+titre+'" title="'+titre+'"></a>';                               
+                    str += '<p>'+tImages[i][2]+' - (<i>'+tImages[i][3]+')</i><br />';
+                    if ((okadmin !== undefined) && okadmin){
+                        str += '<button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+';)">Supprimer</button>'; 
+                    }
+                    str+='</p></div><br />';                    
                 }                
             }    
             // console.debug("\nSTR: "+str+"\n");
@@ -236,7 +244,7 @@ function newPhoto(idmodele=0, idmoule=0){
         str+='<input type="file" id="browse" name="browse" accept="image/png, image/jpeg, image/gif" onchange="readFile(this,'+idmodele+','+idmoule+')" />';               
         str+='</form>';   
         str+='<div id="preview"></div>';  
-        document.getElementById("myPhoto").innerHTML = '';     
+            
         document.getElementById("myPhoto").innerHTML += str;
     
 }
@@ -368,92 +376,130 @@ function verifSaisieAddPhoto(){
 }
 
 
+// Lance l'appel Ajax 
+// `bdm_photo` (`photoid`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) 
+// -----------------------
+function ajax_PhotoEdit(url, mydata){ 
+    if ((url !== undefined) && (url.length>0) && (mydata !== undefined) && (mydata.length>0)){
+        // GET avec fetch()
+        fetch(url+mydata, myInitGet)
+        .then(response => response.text())  // Le retour est aussi une chaîne
+        .then(response => {
+            
+            console.debug ("\n"+response+"\n");
+            response = JSON.parse(response);
+            editionPhoto(response); 
+                    })  // as usual...              
+        .catch(error => console.debug("Erreur : "+error));
+    }
+}
+
 
 // -----------------------------------
-// Edite le modele associé à un modèle particulier
-function editPhoto(idmodele, index){
-    console.debug ("Editer ce modèle: "+idmodele);   
-    
-    if ((idmodele !== undefined) && (idmodele>0) 
-        && (tPhotos[index] !== undefined) && (tPhotos[index] !== null) && (tPhotos[index].length>0)){
-        console.debug ("tPhoto: "+tPhotos[index]);
+// Appel Ajax
+function editPhoto(idphoto){
+    console.debug ("Editer cette photo: "+idphoto);      
+    if ((idphoto !== undefined) && (idphoto>0)){
+        var url= url_serveur+'getphoto.php';
+        var mydata="?idphoto="+idphoto;  
+        ajax_PhotoEdit(url, mydata);
+    }
+}
+
+// -----------------------------------
+// Formulaire d'édition
+function editionPhoto(response){    
+    console.debug ("\n"+response+"\n");
+    if ((response !== undefined) && (response !== null)){       
+        // 	photoid 	auteur 	legende copyright 	fichier 	refmodele refmoule
+        console.debug ("IDPhoto: "+response.photoid+"\n");
+        console.debug ("Fichier : "+response.fichier+"\n");
+        
+        let photoid = response.photoid;
+        let nomfichiertemporaire = response.fichier; 
+        
         let str='';
-        let url= url_serveur+'editmodelebypost.php';
+        let url= url_serveur+'editphotobypost.php';
         // Formulaire de création
         str+='<h4>Complétez ce formulaire</h4>';
         str+='<form name="EditFormPhoto" action="'+url+'" method="post">';
-        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieAddPhoto();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieEditPhoto();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+ 	
+        str+='<div>';
+        if (response.fichier.length>0){
+            str+='<br /><b>Nom du fichier</b> (<i>'+response.fichier+'</i>)<br />'; 
+            str+='<label for="nomfichier">Nom du fichier</label> <input type="text" id="nomfichier" size="80" name="nomfichier" value="'+response.fichier+'" autocomplete="on" />'; 
+        } 
+        str+='<br /><label for="auteur">Auteur: </label><br /><input type="text" id="auteur" size="50" name="auteur" value="'+response.auteur+'" autocomplete="on" />';
+        str+='<br /><label for="legende">Légende: </label><textarea cols="50" id="legende" rows="2" name="legende" autocomplete="on">'+response.legende+'</textarea>';
+        str+='<br /><label for="licence">Licence <a target="_blank" href="https://creativecommons.org/share-your-work/cclicenses/">Creative Commons</a></label> <select name="licence" id="licence">';
+        if ((response.copyright !== undefined) && (response.copyright.length>0)){
+            if (response.copyright === "cc-by"){   // <a href="https://creativecommons.org/licenses/by/4.0/">(Attribution)</a></option>';
+                str+='<option value="cc-by selected">CC-by</option>';
+            }
+            else{
+                str+='<option value="cc-by">CC-by</option>'; 
+            }
+            if (response.copyright === "cc-by-sa"){ // <a href="https://creativecommons.org/licenses/by-sa/4.0/">(Attribution + partage identique)</a>';
+                str+='<option value="cc-by-sa" selected>CC-by-sa</option>'; 
+            }
+            else{
+                str+='<option value="cc-by-sa">CC-by-sa</option>';             
+            }
+            if (response.copyright === "cc-by-nd"){  // <a href="https://creativecommons.org/licenses/by-nd/4.0/">(Attribution + sans modification)</a></option>';             
+                str+='<option value="cc-by-nd" selected>CC-by-nd</option>';
+            }
+            else{
+                str+='<option value="cc-by-nd">CC-by-nd</option>';
+            }
+            if (response.copyright === "cc-by-nc"){  // <a href="https://creativecommons.org/licenses/by-nc/4.0/">(Attribution + sans util. commerc.)</a></option>';
+ 
+                str+='<option value="cc-by-nc" selected>CC-by-nc</option>';
+            }
+            else{
+                str+='<option value="cc-by-nc">CC-by-nc</option>'; 
+            }
+            if (response.copyright === "cc-by-nc-sa"){  // <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">(Attribution + sans util. commerc. + partage identique)</a></option>';
+                str+='<option value="cc-by-nc-sa" selected>CC-by-nc-sa</option>';
+            }
+            else{
+                str+='<option value="cc-by-nc-sa">CC-by-nc-sa</option>';
+            }
+            if (response.copyright === "cc-by-nc-nd"){         // <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/">(Attribution + sans util. commerc. + sans modification)</a></option>';
 
-        //  id 	nom 	descriptif 	dimension [long x larg x haut] 	categorie 	timestamp 	
-        str+='<div><label for="modelenom">Nom: </label><br /><input type="text" id="modelenom" size="50" name="modelenom" value="'+tPhotos[index][1]+'" autocomplete="on" />';
-        str+='<br /><textarea cols="50" id="modeledescriptif" rows="3" name="modeledescriptif" autocomplete="on">'+tPhotos[index][2]+'</textarea>';
-        str+='<br /><label for="modeledimensions">Dimensions: </label>'; 
-        str+='<input type="text" id="modeledimensions" size="20" name="modeledimensions" value="'+tPhotos[index][3]+'" autocomplete="on" />';
-        str+='<br /><label for="modelecategorie">Catégorie: </label>';
-        str+='<select name="modelecategorie[]" id="modelecategorie" multiple>';
-        str+='<option value="">--Sélectionnez au moins une catégorie--</option>';
-        let options = tPhotos[index][4].split(",");
-        if (options.includes("avion")){         
-            str+='<option value="avion" selected>Avion</option>';
-        }
+                str+='<option value="cc-by-nc-nd" selected>CC-by-nc-nd</option>';
+            }
+            else{
+                str+='<option value="cc-by-nc-nd">CC-by-nc-nd</option>';
+            }
+        }     
         else{
-            str+='<option value="avion">Avion</option>';                    
-        }            
-        if (options.includes("planeur")){           
-                str+='<option value="planeur" selected>Planeur</option>';
-        }
-        else{
-                str+='<option value="planeur">Planeur</option>';       
-        }
-        if (options.includes("voilier")){           
-                str+='<option value="voilier" selected>Voilier</option>';
-        }
-        else{
-                str+='<option value="voilier">Voilier</option>';
-        }            
-        if (options.includes("bateau")){           
-                str+='<option value="bateau" selected>Bateau</option>';
-        }
-        else{
-                str+='<option value="bateau">Bateau</option>';
-        }
-        if (options.includes("maquette")){           
-                str+='<option value="maquette" selected>Maquette</option>';
-        }
-        else{
-                str+='<option value="maquette">Maquette</option>';
-        }    
-        if (options.includes("plan")){           
-                str+='<option value="plan" selected>Plan</option>';
-        }
-        else{
-                str+='<option value="plan">Plan</option>';
-        }
-        if (options.includes("autre")){           
-                str+='<option value="autre" selected>Autre</option>';
-        }
-        else{
-                str+='<option value="autre">Autre</option>';
-        }
-        
+            str+='<option value="cc-by selected">CC-by</option>';
+            str+='<option value="cc-by-sa">CC-by-sa</option>';             
+            str+='<option value="cc-by-nd">CC-by-nd</option>';
+            str+='<option value="cc-by-nc">CC-by-nc</option>'; 
+            str+='<option value="cc-by-nc-sa">CC-by-nc-sa</option>';
+            str+='<option value="cc-by-nc-nd">CC-by-nc-nd</option>';             
+        }      
         str+='</select>';        
-        str+='</div>';        
-        str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />'
-        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'" />';
-        str+='</form>';      
-        document.getElementById("myImage").innerHTML = str;    
+        str+='</div>';   
+        str+='<input type="hidden" id="nomfichiertemporaire" name="nomfichiertemporaire" value="'+nomfichiertemporaire+'" />';        
+        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+parseInt(response.idmodele)+'" />';        
+        str+='<input type="hidden" id="idmoule" name="idmoule" value="'+parseInt(response.idmoule)+'" />';        
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
+        str+='</form>';       
+        document.getElementById("myImage").innerHTML = str+document.getElementById("myImage").innerHTML;    
     }       
 }
 
 
 // -----------------------------------
 // Edite le modele associé à un modèle particulier
-function deletePhoto(idphoto, index){
+function deletePhoto(idphoto){
     console.debug ("Supprimer cette photo : "+idphoto);
     console.debug ("Index:"+index);     
     
-    if ((idphoto !== undefined) && (idphoto>0) 
-        && (tPhotos[index] !== undefined) && (tPhotos[index] !== null) && (tPhotos[index].length>0)){
+    if ((idphoto !== undefined) && (idphoto>0)){
 
         let str='';
         let url= url_serveur+'deletephotobypost.php';
