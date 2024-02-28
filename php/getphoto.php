@@ -40,7 +40,7 @@ function mysql_get_photo($idphoto){
 global $debug;
 global $mysqli;
     if (!empty($idphoto)){
-        if ($result = $mysqli->query("SELECT * FROM bdm_photo WHERE bdm_photo.photoid=".$idphoto)){
+        if ($result = $mysqli->query("SELECT * FROM bdm_photo WHERE bdm_photo.idphoto=".$idphoto)){
             // Récupérer les lignes de la table 
             if ( $row = $result->fetch_assoc())  {
                 return (json_encode($row));

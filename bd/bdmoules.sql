@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : ven. 23 fév. 2024 à 14:21
+-- Généré le : mer. 28 fév. 2024 à 13:01
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -153,7 +153,8 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 (48, 10, 35, 'Maquette de démonstration Alpha 27', 'La Minais', 'Bois, toile et composite', 'Bon', 90, 127, 'Modèle pour exposition ; échelle 1/3 ; NON DISPONIBLE'),
 (49, 38, 25, 'Moule de capot moteur, avion modèle N°10', 'La Minais', 'Composite', '', NULL, NULL, 'Modèle à préciser'),
 (50, 8, 19, 'Fuselage blanc de planeur Le Pointu (petit)', 'La Minais', 'Composite', '', NULL, NULL, ''),
-(53, 37, 51, 'Maquette de démonstration', 'La Minais', 'Bois et toile', 'Excellent', 135, 127, 'Réalisation échelle 1/2');
+(53, 37, 51, 'Maquette de démonstration', 'La Minais', 'Bois et toile', 'Excellent', 135, 127, 'Réalisation échelle 1/2'),
+(61, 37, 52, 'Fuseau planeur Excalibur', 'La Minais', 'Composite', '?', 120, 0, 'Disponible.');
 
 -- --------------------------------------------------------
 
@@ -162,7 +163,7 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 --
 
 CREATE TABLE `bdm_photo` (
-  `photoid` int(11) NOT NULL,
+  `idphoto` int(11) NOT NULL,
   `auteur` varchar(50) NOT NULL,
   `legende` varchar(255) NOT NULL COMMENT 'légende photo',
   `copyright` varchar(80) NOT NULL,
@@ -175,18 +176,22 @@ CREATE TABLE `bdm_photo` (
 -- Déchargement des données de la table `bdm_photo`
 --
 
-INSERT INTO `bdm_photo` (`photoid`, `auteur`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) VALUES
+INSERT INTO `bdm_photo` (`idphoto`, `auteur`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) VALUES
 (1, '', 'Excalibur 2.0', '(CC)', 'Excalibur.jpg', 37, NULL),
 (2, '', 'Excalibur 2.0 - Master du fuseau', '(CC)', 'Excalibur_moules_fuseau.jpg', NULL, 46),
 (3, '', 'Excalibur 2.0 - Master de la verrière.', '(CC)', 'Excalibur_moules_verriere.jpg', NULL, 47),
 (4, 'Inconnu', 'Moto planeur tout composite', 'cc-by-sa', 'Planeur_Fox-2.3.jpg', 5, 0),
 (7, 'Inconnu', 'Planeur Ventus CX de Luxe, 4,50 mètres', 'cc-by-sa', 'ventus-2cx-de-luxe-env450m-arf-topmodel-c.jpg', 23, 0),
-(8, '', 'Moule de fuseau', 'cc-by-sa', 'moulage-LudovicB_0.jpg', 23, 0),
 (9, 'Ludo', 'Master de la bulle du Ventus', 'cc-by-sa', 'moulage-LudovicB_0.jpg', NULL, 33),
 (11, 'ARBL d\'après Franck Russel', 'Master de \"Gothix\", voilier 1Mètre inspiré du \"Goth\" de Franck Russel ', 'cc-by-sa', 'Gothix_master.jpg', NULL, 19),
 (16, 'Franck Russel - Hans-Günter Groes', 'Réalisation composite', 'cc-by-sa', 'Gothic_Marblehead_FranckRussel_mk3_version.png', 34, NULL),
 (17, 'Franck Russel', 'Marblehead réalisé par Maurizio Morbidelli (MX Components)', 'cc-by-sa', 'Gothic_Marblehead_FranckRussel_mx_version.png', 34, NULL),
-(18, 'ARBL d\'après Franck Russel', 'Version ARBL du voilier Gothic M de Franck Russel', 'cc-by-sa', 'Voilier_M_GothiX.jpg', NULL, 43);
+(18, 'ARBL d\'après Franck Russel', 'Version ARBL du voilier Gothic M de Franck Russel', 'cc-by-sa', 'Voilier_M_GothiX.jpg', NULL, 43),
+(19, 'ARBL', 'Master', 'cc-by-sa', 'MasterPlaneurExcalibur_Fuselage.jpg', NULL, 61),
+(20, 'Alexander Schleicher', 'L\'ASW 27 est un planeur de la classe FAI 15 mètres, construit en matériaux composites par Alexander Schleicher GmbH & Co. Il effectua son premier vol en 1995 et fut certifié en 1997. Le W indique que Gerhard Waibel fut l\'ingénieur responsable du projet. ', 'cc-by-sa', 'Schleicher_ASW27b.jpg', 17, NULL),
+(21, '?', 'Planeur de 5 mètres d\'envergure', 'cc-by-sa', 'Moule de fuseau de planeur ASW28.jpg', NULL, 27),
+(22, 'François B.', 'Moule de fuseau. Planeur très populaire en Bretagne. Si vous disposez de photos de ce modèle, merci de nous les faire parvenir.', 'cc-by-sa', 'Planneur_Le-Pointu.jpg', 8, 0),
+(25, '', 'De nombreux modèles d\'Alpina entre 3m et 5m.', 'cc-by-sa', 'Alpina_161008-calans-57.jpg', 8, NULL);
 
 -- --------------------------------------------------------
 
@@ -249,7 +254,7 @@ ALTER TABLE `bdm_moule`
 -- Index pour la table `bdm_photo`
 --
 ALTER TABLE `bdm_photo`
-  ADD PRIMARY KEY (`photoid`);
+  ADD PRIMARY KEY (`idphoto`);
 
 --
 -- Index pour la table `bdm_realisation`
@@ -277,13 +282,13 @@ ALTER TABLE `bdm_modele`
 -- AUTO_INCREMENT pour la table `bdm_moule`
 --
 ALTER TABLE `bdm_moule`
-  MODIFY `idmoule` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `idmoule` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT pour la table `bdm_photo`
 --
 ALTER TABLE `bdm_photo`
-  MODIFY `photoid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `idphoto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- AUTO_INCREMENT pour la table `bdm_realisation`

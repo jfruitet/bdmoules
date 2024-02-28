@@ -56,7 +56,7 @@ function getModeleMoulesImages(idmodele){
 
 
 // Lance l'appel Ajax et appelle affImage(nomfichier, legende, isvignette=false)
-// `bdm_photo` (`photoid`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) 
+// `bdm_photo` (`idphoto`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) 
 // -----------------------
 function ajax_GetImage(url, mydata){ 
     if ((url !== undefined) && (url.length>0) && (mydata !== undefined) && (mydata.length>0)){
@@ -82,7 +82,7 @@ function affFichersImages(response){
     if ((objImage!==undefined) && (objImage!==null)){
         for(let i in objImage ) { 
             tAux = [];
-            tAux.push(objImage[i].photoid, objImage[i].auteur, objImage[i].legende, objImage[i].copyright, objImage[i].fichier, objImage[i].refmodele, objImage[i].refmoule);        
+            tAux.push(objImage[i].idphoto, objImage[i].auteur, objImage[i].legende, objImage[i].copyright, objImage[i].fichier, objImage[i].refmodele, objImage[i].refmoule);        
             //console.debug ("\n"+tAux+"\n");
             tImages.push(tAux); 
         }
@@ -97,7 +97,7 @@ function affFichersImages(response){
                     str += '<div><a href="images/'+tImages[i][4]+'"><img src="images/vignettes/'+tImages[i][4]+'" alt="'+titre+'" title="'+titre+'"></a><hr>';                   
                     str += '<p>'+tImages[i][2]+' par '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)<br />';
                     if ((okadmin !== undefined) && okadmin){
-                        str += '<button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+');">Supprimer</button>';  
+                        str += '<button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="assignePhoto('+tImages[i][0]+');">Ré-assigner</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+');">Supprimer</button>';  
                     }
                     str+='</p></div><br />';
                 }
@@ -106,7 +106,7 @@ function affFichersImages(response){
                     str += '<div><a href="images/'+tImages[i][3]+'"><img src="images/vignettes/'+tImages[i][3]+'" alt="'+titre+'" title="'+titre+'"></a>';                               
                     str += '<p>'+tImages[i][2]+' - (<i>'+tImages[i][3]+')</i><br />';
                     if ((okadmin !== undefined) && okadmin){
-                        str += '<button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+';)">Supprimer</button>'; 
+                        str += '<button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="assignePhoto('+tImages[i][0]+');">Ré-assigner</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+';)">Supprimer</button>'; 
                     }
                     str+='</p></div><br />';                    
                 }                
@@ -285,7 +285,7 @@ function newLegendePhoto(nomfichiertemporaire, idmodele=0, idmoule=0){
         // Formulaire de création
         str+='<h4>Complétez ce formulaire</h4>';
         str+='<form name="AddFormPhoto" action="'+url+'" method="post">';
-        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieAddPhoto();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisiePhoto(\"AddFormPhoto\");" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
          //  id 	nom 	descriptif 	dimension [long x larg x haut] 	categorie 	timestamp 	
         str+='<div>';
         if (okmodele){
@@ -323,12 +323,12 @@ function newLegendePhoto(nomfichiertemporaire, idmodele=0, idmoule=0){
 
 // -----------------------------------------
 // Vérification des données
-function verifSaisieAddPhoto(){   
-    //photoauteur = document.forms["AddFormPhoto"]["auteur"];               
-    photolegende = document.forms["AddFormPhoto"]["legende"];    
-    photolicence = document.forms["AddFormPhoto"]["licence"];   
-    nomfichier = document.forms["AddFormPhoto"]["nomfichier"];
-    nomfichiertemporaire = document.forms["AddFormPhoto"]["nomfichiertemporaire"];  
+function verifSaisiePhoto(ThisForm){   
+    //photoauteur = document.forms[ThisForm]["auteur"];               
+    photolegende = document.forms[ThisForm]["legende"];    
+    photolicence = document.forms[ThisForm]["licence"];   
+    nomfichier = document.forms[ThisForm]["nomfichier"];
+    nomfichiertemporaire = document.forms[ThisForm]["nomfichiertemporaire"];  
 
     if ( photolegende.value == "")                               
     { 
@@ -358,7 +358,7 @@ function verifSaisieAddPhoto(){
                 console.debug(myArray);
                 nomfichier.value += '.'+myArray.slice(-1);
                 console.debug("Nomfichier "+ nomfichier.value);
-                document.forms["AddFormPhoto"]["nomfichier"].value = nomfichier.value;
+                document.forms[ThisForm]["nomfichier"].value = nomfichier.value;
                 return true;
             }
             else{
@@ -377,7 +377,7 @@ function verifSaisieAddPhoto(){
 
 
 // Lance l'appel Ajax 
-// `bdm_photo` (`photoid`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) 
+// `bdm_photo` (`idphoto`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) 
 // -----------------------
 function ajax_PhotoEdit(url, mydata){ 
     if ((url !== undefined) && (url.length>0) && (mydata !== undefined) && (mydata.length>0)){
@@ -409,21 +409,33 @@ function editPhoto(idphoto){
 // -----------------------------------
 // Formulaire d'édition
 function editionPhoto(response){    
-    console.debug ("\n"+response+"\n");
+    console.debug ("\neditionPhoto()\n");
     if ((response !== undefined) && (response !== null)){       
-        // 	photoid 	auteur 	legende copyright 	fichier 	refmodele refmoule
-        console.debug ("IDPhoto: "+response.photoid+"\n");
-        console.debug ("Fichier : "+response.fichier+"\n");
+        // 	idphoto 	auteur 	legende copyright 	fichier 	refmodele refmoule
+        // console.debug ("IDPhoto: "+response.idphoto+"\n");
+        // console.debug ("Fichier : "+response.fichier+"\n");
+        // console.debug ("IDModèle: "+response.refmodele+"\n");
+        // console.debug ("IDMoule: "+response.refmoule+"\n");
         
-        let photoid = response.photoid;
+        let idphoto = parseInt(response.idphoto);
+        if ((response.refmodele === undefined) || (response.refmodele === null)){
+            response.refmodele = '';
+        }
+        if ((response.refmoule === undefined) || (response.refmoule === null)){
+            response.refmoule = '';
+        }
+         
+        // console.debug ("Id Modèle: "+response.refmodele);
+        // console.debug ("Id Moule: "+response.refmoule);
+        
         let nomfichiertemporaire = response.fichier; 
         
         let str='';
-        let url= url_serveur+'editphotobypost.php';
+        let url= url_serveur+'addphotobypost.php';
         // Formulaire de création
         str+='<h4>Complétez ce formulaire</h4>';
         str+='<form name="EditFormPhoto" action="'+url+'" method="post">';
-        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisieEditPhoto();" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+        str+='<div class="button"><input type="submit" value="Envoyer" name="Envoyer" onclick="return verifSaisiePhoto(\"EditFormPhoto\");" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
  	
         str+='<div>';
         if (response.fichier.length>0){
@@ -483,43 +495,103 @@ function editionPhoto(response){
         }      
         str+='</select>';        
         str+='</div>';   
-        str+='<input type="hidden" id="nomfichiertemporaire" name="nomfichiertemporaire" value="'+nomfichiertemporaire+'" />';        
-        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+parseInt(response.idmodele)+'" />';        
-        str+='<input type="hidden" id="idmoule" name="idmoule" value="'+parseInt(response.idmoule)+'" />';        
+        str+='<input type="hidden" id="nomfichiertemporaire" name="nomfichiertemporaire" value="'+nomfichiertemporaire+'" />';
+        str+='<input type="hidden" id="idphoto" name="idphoto" value="'+idphoto+'" />';    
+        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+response.refmodele+'" />';        
+        str+='<input type="hidden" id="idmoule" name="idmoule" value="'+response.refmoule+'" />';        
         str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
         str+='</form>';       
-        document.getElementById("myImage").innerHTML = str+document.getElementById("myImage").innerHTML;    
+        document.getElementById("myImage").innerHTML += str;    
     }       
 }
 
 
 // -----------------------------------
-// Edite le modele associé à un modèle particulier
+// Suppression d'une photo
 function deletePhoto(idphoto){
-    console.debug ("Supprimer cette photo : "+idphoto);
-    console.debug ("Index:"+index);     
+    console.debug ("Supprimer cette photo : "+idphoto);   
     
-    if ((idphoto !== undefined) && (idphoto>0)){
+    if ((idphoto !== undefined) && (idphoto !== null) && (idphoto>0)){
+        var url= url_serveur+'getphoto.php';
+        var mydata="?idphoto="+idphoto;  
+        ajax_PhotoDelete(url, mydata);
+    }
+}
 
+// Lance l'appel Ajax 
+// `bdm_photo` (`idphoto`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) 
+// -----------------------
+function ajax_PhotoDelete(url, mydata){ 
+    if ((url !== undefined) && (url.length>0) && (mydata !== undefined) && (mydata.length>0)){
+        // GET avec fetch()
+        fetch(url+mydata, myInitGet)
+        .then(response => response.text())  // Le retour est aussi une chaîne
+        .then(response => {
+            
+            console.debug ("\n"+response+"\n");
+            response = JSON.parse(response);
+            suppressionPhoto(response); 
+                    })  // as usual...              
+        .catch(error => console.debug("Erreur : "+error));
+    }
+}
+
+// -----------------------------------
+// Formulaire d'édition
+function suppressionPhoto(response){    
+    console.debug ("\nsuppressionPhoto()\n");
+    if ((response !== undefined) && (response !== null)){       
+        // 	idphoto 	auteur 	legende copyright 	fichier 	refmodele refmoule
+        // console.debug ("IDPhoto: "+response.idphoto+"\n");
+        // console.debug ("Fichier : "+response.fichier+"\n");
+        // console.debug ("IDModèle: "+response.refmodele+"\n");
+        // console.debug ("IDMoule: "+response.refmoule+"\n");
+        
+        let idphoto = parseInt(response.idphoto);
+        if ((response.refmodele === undefined) || (response.refmodele === null)){
+            response.refmodele = '';
+        }
+        if ((response.refmoule === undefined) || (response.refmoule === null)){
+            response.refmoule = '';
+        }
+         
+        // console.debug ("Id Modèle: "+response.refmodele);
+        // console.debug ("Id Moule: "+response.refmoule);
         let str='';
         let url= url_serveur+'deletephotobypost.php';
         // Formulaire de création
         str+='<h4>Confirmez la suppression de cette photo !</h4>';
+        if (response.refmoule==''){
+            str+='<p>Photo du modèle #'+response.refmodele+'</p>'
+        }
+        else{
+            str+='<p>Photo du moule #'+response.refmoule+'</p>'        
+        }
         str+='<form name="DelFormPhoto" action="'+url+'" method="post">';
         str+='<div class="button"><input type="submit" name="delete" value="Confirmer" /> <input type="submit" name="delete" value="Annuler" /></div>';        
 
-       // 	photoid 	legende [légende photo] 	copyright 	fichier 	refmodele [référence un modèle] 	refmoule [référence un élément] 	
-        str+='<div><b>#ID</b>: '+tPhotos[index][0]+'<br /><b>Auteur:</b> '+tPhotos[index][1];
-        str+='<br /><b>Légende</b>: '+tPhotos[index][2];
-        str+='<br /><b>Licence CC</b>: '+tPhotos[index][3];
-        str+='<br /><b>Fichier</b>: '+tPhotos[index][4];
+       // 	idphoto 	legende [légende photo] 	copyright 	fichier 	refmodele [référence un modèle] 	refmoule [référence un élément] 	
+        str+='<div><b>#ID</b>: '+idphoto+'<br /><b>Auteur:</b> '+response.auteur;
+        str+='<br /><b>Légende</b>: '+response.legende;
+        str+='<br /><b>Licence CC</b>: '+response.copyright;
+        str+='<br /><b>Fichier</b>: '+response.fichier;
         str+='</div>';        
+        str+='<input type="hidden" id="idphoto" name="idphoto" value="'+idphoto+'" />';
+        str+='<input type="hidden" id="nomfichier" name="nomfichier" value="'+response.fichier+'" />';
         str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
         str+='</form>';
            
-        document.getElementById("myImage").innerHTML = str;
+        document.getElementById("myImage").innerHTML += str;
+        //+document.getElementById("myImage").innerHTML;
     }             
 }
 
+
+// -------------------------------
+function assignePhoto(idphoto){
+    console.debug ("\nassignePhoto()\n");
+    console.debug ("A TERMINER\n");
+    
+}
 
 
