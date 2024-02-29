@@ -28,9 +28,11 @@
 <br />
 Quand vous avez sélectionné un modèle faites sa <a href="reservation.html">réservation</a> auprès du bureau de l'association.
 </p>
-
+<div class="left">
 <h3>Liste des modèles et de leurs moules associés</h3>
 <p><span id="consigne">Sélectionnez un modèle.<span></p>
+</div>
+<div class="rightscrolldown"><span id="infomodelessearch"></span></div>
 <div class="scrolldown"><span id="infomoules"></span></div>
 <div class="scrollleft">
     <span id="myListModeles"></span>
@@ -52,7 +54,7 @@ Quand vous avez sélectionné un modèle faites sa <a href="reservation.html">r�
  window.onload = function(){
     // Cookies
     checkCookies(); 
-    // getModeles();
+    getModelesSearch();
     // getMoules();
     getModelesMoules();   
     if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){

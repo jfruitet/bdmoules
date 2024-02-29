@@ -7,29 +7,29 @@
 
 /**********************************************
  * 
- * MODELES - Ce BLOC n'est pas utilisé
+ * MODELES - Ce BLOC est utilisé pour les fonctions de recherche
  * 
- *********************************************
+ *********************************************/
  
 // Récupère les modèles disponibles
 // ------------------------
-function getModeles() {    
+function getModelesSearch() {    
         //console.debug("Chargement des modeles");
         var url= url_serveur+'getmodeles.php';
         var mydata="";    
-        ajax_GetModeles(url, mydata);         
+        ajax_GetModelesSearch(url, mydata);         
 }
 
 // Lance l'appel Ajax et transmet les données reçues à setModeles
 // Initialise le tableau tModeles
 // -----------------------
-function ajax_GetModeles(url){ 
+function ajax_GetModelesSearch(url){ 
     if ((url !== undefined) && (url.length>0)){        
         // GET avec fetch()
         fetch(url, myInitGet)
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
-            setModeles(response);         
+            setModelesSearch(response);         
                     })  // tout le boulot se fait ici  dans le script  setModeles.js              
         .catch(error => console.debug("Erreur : "+error));
     }
@@ -37,23 +37,72 @@ function ajax_GetModeles(url){
 
 // Rempli le tableau tModeles
 // ----------------------- 
-function setModeles(response) {
+function setModelesSearch(response) {
     //console.debug("Affichage des modeles\n"+ response);
     // Traitement de la réponse 
-     // INSERT INTO `bdm_modele` (`id`, `nom`, `descriptif`, `dimension`, `categorie`, `timestamp`) VALUES
+     //  `bdm_modele` (`id`, `nom`, `descriptif`, `dimension`, `categorie`, `timestamp`) VALUES
     // (3, 'Asw 15', 'Asw 15 3m.\r\nMoule fuseau', '? x 300 x ?', 'planeur', '2024-01-19'),
 
     const objModele = JSON.parse(response);   
-    tModeles = []; 
+    tModelesSearch = []; 
 
     for(let i in objModele ) { 
-        tModeles.push(i, objModele[i].id, objModele[i].nom, objModele[i].descriptif, objModele[i].dimension, objModele[i].categorie, objModele[i].timestamp); 
+        let tAux=[];
+        tAux.push(objModele[i].id, objModele[i].nom, objModele[i].descriptif, objModele[i].categorie);
+        tModelesSearch.push(tAux); 
     }; 
-    document.getElementById("infomodeles").innerHTML = tModeles; 
+    AffFormSearchModeles();
+}
+
+// ----------------------- 
+function AffFormSearchModeles(){
+    if ((tModelesSearch !== undefined) && (tModelesSearch !== null) && (tModelesSearch.length>0)){        
+        let str='<h4>Sélectionner un modèle</h4>';
+        str+='<form name="SearchFormModeles">';
+        str+='<select name="selectnom" id="selectnom" onchange="setIdModeleGlobal();">';
+        str+='<option value="">--Sélectionnez au moins un nom--</option>';
+        if ((idmodeleglobal !== undefined) && (idmodeleglobal > 0)){
+            //console.debug("Modèle global Id:"+idmodeleglobal);
+            for(let i in tModelesSearch){
+                //console.debug(tModelesSearch[i]);
+                if (tModelesSearch[i][0] == idmodeleglobal){
+                    str+='<option value="'+tModelesSearch[i][0]+'" selected>'+tModelesSearch[i][1]+'</option>';        
+                }
+                else{
+                    str+='<option value="'+tModelesSearch[i][0]+'">'+tModelesSearch[i][1]+'</option>'; 
+                }
+            }
+        }
+        else{
+            //console.debug(tModelesSearch[i]);
+            for(let i in tModelesSearch){
+                str+='<option value="'+tModelesSearch[i][0]+'">'+tModelesSearch[i][1]+'</option>';        
+            }       
+        }    
+        str+='</select>';               
+        str+='</form>';
+        document.getElementById("infomodelessearch").innerHTML = str;
+    } 
 }
 
 
-**********************************************
+// --------------------------------------------
+function setIdModeleGlobal(){
+    let modeleid = document.forms["SearchFormModeles"]["selectnom"];    
+    //console.debug("Modèle sélectionné \n"+ document.forms["SearchFormModeles"]["selectnom"].value);           
+    if ((modeleid !== undefined) && (modeleid !== null) && (modeleid.value !== '')  && (parseInt(modeleid.value) > 0 )){
+        idmodeleglobal = parseInt(modeleid.value);          
+        if (idmodeleglobal>0){
+            setCookie("sidmodele", idmodeleglobal, 30); // 30 jours
+            // Affiche le moule sélectionné 
+            getModeleMoulesImages(idmodeleglobal); 
+            reserverModeleMoules(idmodeleglobal);
+        }          
+    }        
+}
+
+
+/**********************************************
  * 
  * MOULES - Ce BLOC n'est pas utilisé
  * 
@@ -363,6 +412,9 @@ function reserverModeleMoules(idmodele){
 // Récupère la liste des moules associés à ce modèle
     if ((idmodele !== undefined) && (idmodele>0)){
         getThatModeleMoules(idmodele);
+        idmodeleglobal=idmodele;
+        setCookie("sidmodele", idmodeleglobal, 30); // 30 jours
+        getModelesSearch();
     }     
 }
 

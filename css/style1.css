@@ -82,12 +82,20 @@
 }
 
 
-.scrollleft {
-    height:500px;
+.left {
     width:65%;
     margin:2px;
     padding:2px;
-    border:1px solid black;
+    float:left;
+    clear: left;
+    position : relative;
+}
+
+.scrollleft {
+    height:500px;
+    width:45%;
+    margin:2px;
+    padding:2px;
     float:left;
     overflow:auto;
     clear: right;
@@ -118,6 +126,15 @@
     position:relative;
 }
     
+.rightscrolldown{
+    height:100px;
+    margin:2px;
+    padding:2px;
+    float:right;
+    overflow:auto;
+    clear:right;
+    position:relative;
+}
 
 #myinfo {
     right:0;

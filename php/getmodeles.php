@@ -1,6 +1,6 @@
 <?php
 // Script à ne pas supprimer
-// Script à ne pas supprimer
+
 // Lecture des modeles dans la Base de données
 // Chaîne JSON en sortie
 

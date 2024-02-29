@@ -523,7 +523,7 @@ function verifSaisieAddModele(){
     modelecategorie = document.forms["AddFormModele"]["modelecategorie"];  
      if ( modelenom.value == "")                                  
     { 
-        alert("Complétez lnom du modèle."); 
+        alert("Complétez le nom du modèle."); 
         modelenom.focus(); 
         return false; 
     }    
