@@ -28,9 +28,11 @@
 <h3>Administration de la base de données</h3>
 <p><span id="msg">Identifiez-vous pour accéder à l'enregistrement des moules...</span>
 <span id="loginform"><span></p>
-
-<h3>Modèles</h3>
-<p><span id="consigne">Sélectionnez un modèle.</span></p>
+<div class="left">
+<h3>Liste des modèles et de leurs moules associés</h3>
+<p><span id="consigne">Sélectionnez un modèle.<span></p>
+</div>
+<div class="rightscrolldown"><span id="infomodelessearch"></span></div>
 <div class="scrolldown"><span id="infomoules"></span></div>
 <div class="scrollleft">
     <span id="myListModeles"></span>
@@ -57,9 +59,10 @@
     // Cookies
     checkCookies();
     if (okadmin){
-        console.debug("Administrateur : "+admin);
+        //console.debug("Administrateur : "+admin);
     }
-
+    getModelesSearch();
+    
     // Paramètres
     let msg = ''; 
     const queryString = window.location.search;

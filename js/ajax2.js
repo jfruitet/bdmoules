@@ -130,7 +130,7 @@ function selectModelesMoulesAdmin(tModelesMoules){
                 if (j<5){
                     if ((i==0) || (i>0) && (tModelesMoules[i][0]!=tModelesMoules[i-1][0])){                             
                         if (j==0) { // idmodele
-                            str+='<td><button name="modele'+idmodele+'" onclick="getModeleMoulesImages('+idmodele+'); editerThatModeleMoules('+idmodele+')">'+idmodele+'</button></td>';   
+                            str+='<td><button name="modele'+idmodele+'" onclick="getModeleMoulesImages('+idmodele+'); editerThatModeleMoules('+idmodele+'); setModeleSearch('+idmodele+');">'+idmodele+'</button></td>';   
                             str+='<td><button onclick="editModele('+idmodele+','+compteurmodele+')">Edit</button></td><td><button onclick="deleteModele('+idmodele+','+compteurmodele+')">Supp</button></td>';
                             compteurmodele++;                       
                         }

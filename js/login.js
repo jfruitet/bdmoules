@@ -22,7 +22,7 @@ function oklogin(){
 
 // --------------------------------
 function formlogout(){
-    console.debug("Bouton Logout");
+    // console.debug("Bouton Logout");
     let str='';
     str+='<p>&nbsp; <button id="btnlogout" onclick="return logout();">Déconnexion</button></p>';
     document.getElementById("logout").innerHTML = str;

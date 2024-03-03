@@ -88,14 +88,14 @@ function affFichersImages(response){
         }
         
         //console.debug ("\n"+tImages+"\n");
-            
+        /********    
         if ((tImages !== null) && (tImages.length>0)){
             let str = '';
             for(let i in tImages) { 
                 if ((tImages[i][1] !== undefined) && (tImages[i][1] !== null)){
                     titre = tImages[i][2].replaceAll('"',' ')+' par '+tImages[i][1]+' ('+tImages[i][3]+')';
-                    str += '<div><a href="images/'+tImages[i][4]+'"><img src="images/vignettes/'+tImages[i][4]+'" alt="'+titre+'" title="'+titre+'"></a><hr>';                   
-                    str += '<p>'+tImages[i][2]+' par '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)<br />';
+                    str += '<div><a href="images/'+tImages[i][4]+'"><img src="images/vignettes/'+tImages[i][4]+'" alt="'+titre+'" title="'+titre+'"></a></div>';                   
+                    str += '<div><p>'+tImages[i][2]+' par '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)<br />';
                     if ((okadmin !== undefined) && okadmin){
                         str += '<button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="assignePhoto('+tImages[i][0]+');">Ré-assigner</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+');">Supprimer</button>';  
                     }
@@ -103,8 +103,8 @@ function affFichersImages(response){
                 }
                 else{
                     titre = tImages[i][2].replaceAll('"',' ')+' - ('+tImages[i][3]+')';
-                    str += '<div><a href="images/'+tImages[i][3]+'"><img src="images/vignettes/'+tImages[i][3]+'" alt="'+titre+'" title="'+titre+'"></a>';                               
-                    str += '<p>'+tImages[i][2]+' - (<i>'+tImages[i][3]+')</i><br />';
+                    str += '<div><a href="images/'+tImages[i][3]+'"><img src="images/vignettes/'+tImages[i][3]+'" alt="'+titre+'" title="'+titre+'"></a></div>';                               
+                    str += '<div><p>'+tImages[i][2]+' - (<i>'+tImages[i][3]+')</i><br />';
                     if ((okadmin !== undefined) && okadmin){
                         str += '<button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="assignePhoto('+tImages[i][0]+');">Ré-assigner</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+';)">Supprimer</button>'; 
                     }
@@ -112,6 +112,31 @@ function affFichersImages(response){
                 }                
             }    
             // console.debug("\nSTR: "+str+"\n");
+            ****/
+        if ((tImages !== null) && (tImages.length>0)){
+            //let str = '';
+            let str='<table>';
+            for(let i in tImages) { 
+                if ((tImages[i][1] !== undefined) && (tImages[i][1] !== null)){
+                    titre = tImages[i][2].replaceAll('"',' ')+' par '+tImages[i][1]+' ('+tImages[i][3]+')';
+                    str += '<tr><td>'+tImages[i][2]+' par '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)</td></tr>';
+                    str += '<tr><td><a href="images/'+tImages[i][4]+'"><img src="images/vignettes/'+tImages[i][4]+'" alt="'+titre+'" title="'+titre+'"></a></td></tr>';                    
+                    if ((okadmin !== undefined) && okadmin){
+                        str += '<tr><td><button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> <button id="photodel'+tImages[i][0]+'" onclick="assignePhoto('+tImages[i][0]+');">Assigner</button> <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+');">Supprimer</button></td></tr>';  
+                    }
+                }
+                else{
+                    titre = tImages[i][2].replaceAll('"',' ')+' - ('+tImages[i][3]+')';
+                    str += '<tr><td>'+tImages[i][2]+' - (<i>'+tImages[i][3]+')</i></td></tr>';
+                    str += '<tr><td><a href="images/'+tImages[i][3]+'"><img src="images/vignettes/'+tImages[i][3]+'" alt="'+titre+'" title="'+titre+'"></a></td></tr>';                               
+                    if ((okadmin !== undefined) && okadmin){
+                        str += '<tr><td><button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> <button id="photodel'+tImages[i][0]+'" onclick="assignePhoto('+tImages[i][0]+');">Assigner</button> <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+';)">Supprimer</button></td></tr>'; 
+                    }
+                }                
+            }  
+            str+='</table>';  
+            // console.debug("\nSTR: "+str+"\n");
+            
             // Afficher
             document.getElementById("myImage").innerHTML = str;
         }
@@ -245,7 +270,7 @@ function newPhoto(idmodele=0, idmoule=0){
         str+='</form>';   
         str+='<div id="preview"></div>';  
             
-        document.getElementById("myPhoto").innerHTML += str;
+        document.getElementById("myPhoto").innerHTML = document.getElementById("myPhoto").innerHTML + str;
     
 }
 
@@ -346,18 +371,18 @@ function verifSaisiePhoto(ThisForm){
 
     if ((nomfichier.value !== "") && (nomfichiertemporaire.value !== ""))                                
     { 
-        console.debug("Nomfichier "+ nomfichier.value);
-        console.debug("Nomfichiertemporaire "+ nomfichiertemporaire.value);
+        //console.debug("Nomfichier "+ nomfichier.value);
+        //console.debug("Nomfichiertemporaire "+ nomfichiertemporaire.value);
         const  regex = /\./;
 
         if (!regex.test(nomfichier.value)){
-            console.debug("Pas d'extension dans "+nomfichier.value);
+            //console.debug("Pas d'extension dans "+nomfichier.value);
             if (regex.test(nomfichiertemporaire.value)){
-                console.debug("Extension dans "+nomfichiertemporaire.value);
+                //console.debug("Extension dans "+nomfichiertemporaire.value);
                 const myArray = nomfichiertemporaire.value.split(".");
-                console.debug(myArray);
+                //console.debug(myArray);
                 nomfichier.value += '.'+myArray.slice(-1);
-                console.debug("Nomfichier "+ nomfichier.value);
+                //console.debug("Nomfichier "+ nomfichier.value);
                 document.forms[ThisForm]["nomfichier"].value = nomfichier.value;
                 return true;
             }
@@ -509,7 +534,7 @@ function editionPhoto(response){
 // -----------------------------------
 // Suppression d'une photo
 function deletePhoto(idphoto){
-    console.debug ("Supprimer cette photo : "+idphoto);   
+    //console.debug ("Supprimer cette photo : "+idphoto);   
     
     if ((idphoto !== undefined) && (idphoto !== null) && (idphoto>0)){
         var url= url_serveur+'getphoto.php';
@@ -587,11 +612,143 @@ function suppressionPhoto(response){
 }
 
 
+// Ré assigne une photo à un autre modèle ou à un autre moule afin de corriger des erreurs d'attribution
 // -------------------------------
 function assignePhoto(idphoto){
     console.debug ("\nassignePhoto()\n");
-    console.debug ("A TERMINER\n");
-    
+    if ((idphoto !== undefined) && (idphoto !== null) && (idphoto>0)){    
+        var url= url_serveur+'getphotosmodelesmoules.php';
+        var mydata="?idphoto="+idphoto;  
+        ajax_PhotoAssigne(url, mydata);
+    }
 }
 
+// Lance l'appel Ajax 
+// `bdm_photo` (`idphoto`, `legende`, `copyright`, `fichier`, `refmodele`, `refmoule`) 
+// -----------------------
+function ajax_PhotoAssigne(url, mydata){ 
+    if ((url !== undefined) && (url.length>0) && (mydata !== undefined) && (mydata.length>0)){
+        // GET avec fetch()
+        fetch(url+mydata, myInitGet)
+        .then(response => response.text())  // Le retour est aussi une chaîne
+        .then(response => {           
+            // console.debug ("\n"+response+"\n");
+            selectAssignePhoto(response); 
+                    })  // as usual...              
+        .catch(error => console.debug("Erreur : "+error));
+    }
+}
+
+
+// ------------------------
+function selectAssignePhoto(response){
+
+// '{"idphoto":'.$idphoto.', "modeles":'.json_encode($data).', "moules":[]}';
+let msg='';
+let tSearch = [];
+let idphoto = 0;
+let typemodele=0;
+    if ((response !== undefined) && (response !== null)){ 
+        //console.debug("Response:\n"+response)
+        const objModele = JSON.parse(response);
+        if ((objModele.idphoto !== undefined) && (objModele.idphoto > 0)){
+            idphoto=objModele.idphoto;
+        }              
+        
+        //console.debug("Id Photo:"+idphoto);
+                          
+        if ((objModele.modeles !== undefined) && (objModele.modeles !== null) && (objModele.modeles.length > 0)){
+            msg='Sélectionnez le Modèle pour l\'image '+idphoto;
+            //console.debug("Msg: "+ msg);
+            typemodele=1;
+            for(let i in objModele.modeles ) { 
+                let tAux=[];
+                tAux.push(objModele.modeles[i].id, objModele.modeles[i].nom, 0);
+                tSearch.push(tAux);
+            }
+        } 
+        else if ((objModele.moules !== undefined) && (objModele.moules !== null) && (objModele.moules.length > 0)){
+                msg='Sélectionnez le Moule pour l\'image '+idphoto;   
+                //console.debug("Msg: "+ msg);   
+                typemodele=2;      
+                for(let i in objModele.moules ) { 
+                    let tAux=[];
+                    tAux.push(objModele.moules[i].idmoule, objModele.moules[i].mdescription, objModele.moules[i].refmodele);
+                    tSearch.push(tAux);
+            } 
+        }
+    }
+    // Mise en page
+    if ((idphoto>0) && (tSearch !== undefined) && (tSearch !== null) && (tSearch.length > 0)){
+        //console.debug("tSearch:\n"+tSearch);                
+        let str='<h4>'+msg+'</h4>';
+        str+='<form name="SearchForm">';
+        str+='<select name="selectid" id="selectid" onchange="assignePhotoToId();">';
+        //console.debug("Photo Id:"+idphoto);
+        for(let i in tSearch){
+            //console.debug(tSearch[i]);
+            str+='<option value="'+tSearch[i][0]+'" selected>'+tSearch[i][1]+'</option>';        
+        }
+        str+='</select>'; 
+        str+='<input type="hidden" id="idphoto" name="idphoto" value="'+idphoto+'" />';   
+        str+='<input type="hidden" id="typemodele" name="typemodele" value="'+typemodele+'" />';           
+        str+='</form>';
+        //console.debug("Form:\n"+str);
+        document.getElementById("infomodelessearch").innerHTML = str;            
+    }        
+}
+
+
+// -----------------------
+function ajax_PhotoSet(url, mydata){ 
+    if ((url !== undefined) && (url.length>0) && (mydata !== undefined) && (mydata.length>0)){
+        // GET avec fetch()
+        fetch(url+mydata, myInitGet)
+        .then(response => response.text())  // Le retour est aussi une chaîne
+        .then(response => {           
+            console.debug ("\n"+response+"\n");
+            const objModele = JSON.parse(response);  
+            if ((objModele.ok==1) && (objModele.id !== undefined) && (objModele.id > 0)){
+                console.debug ("ID modèle affecté\n"+objModele.id);
+                idmodeleglobal = parseInt(objModele.id);                          
+                if (idmodeleglobal>0){
+                    setCookie("sidmodele", idmodeleglobal, 30); // 30 jours
+                    // Affiche le moule sélectionné 
+                    getModeleMoulesImages(idmodeleglobal); 
+                    reserverModeleMoules(idmodeleglobal);
+                }
+            } ;
+                    })  // as usual...              
+        .catch(error => console.debug("Erreur : "+error));
+    }
+}
+
+// ---------------------------
+function assignePhotoToId(){
+console.debug("assignePhotoToId()");
+    let id = document.forms["SearchForm"]["selectid"];
+    let idphoto = document.forms["SearchForm"]["idphoto"];
+    let type = document.forms["SearchForm"]["typemodele"];
+    
+    //console.debug("Id photo : "+idphoto.value);
+    //console.debug("Type : "+type.value);
+           
+    if ((id.value !== '')  && (parseInt(id.value) > 0 )){
+        console.debug("Id : "+id.value);
+        if (type.value==1){ // Modèle
+            // Modifier la table photo
+            console.debug("Modifier la référence du modèle "+id.value+" pour la photo "+idphoto);
+            var url= url_serveur+'setphoto.php';
+            var mydata="?idphoto="+idphoto.value+'&idmodele='+id.value;  
+            ajax_PhotoSet(url, mydata);
+        } 
+        else if (type.value==2){ // Moule
+            // Modifier la table photo
+            console.debug("Modifier la référence du moule "+id.value+" pour la photo "+idphoto.value);   
+            var url= url_serveur+'setphoto.php';
+            var mydata="?idphoto="+idphoto.value+'&idmoule='+id.value;  
+            ajax_PhotoSet(url, mydata);       
+        }         
+    }        
+}
 

@@ -102,6 +102,17 @@ function setIdModeleGlobal(){
 }
 
 
+// -----------------------------------
+// Propage le choix du modèle
+function setModeleSearch(idmodele){
+    if ((idmodele !== undefined) && (idmodele>0)){
+        idmodeleglobal=idmodele;
+        setCookie("sidmodele", idmodeleglobal, 30); // 30 jours
+        getModelesSearch();
+    }     
+}
+
+
 /**********************************************
  * 
  * MOULES - Ce BLOC n'est pas utilisé
@@ -265,7 +276,7 @@ function selectModelesMoules(){
                     if ((i==0) || (i>0) && (tModelesMoules[i][0] !== tModelesMoules[i-1][0])){
                         // Nouvelle ligne de modèle                             
                         if (j==0) { // idmodele
-                            str+='<td><button name="modele'+idmodele+'" onclick="getModeleMoulesImages('+idmodele+'); reserverModeleMoules('+idmodele+');">'+idmodele+'</button></td>';                    
+                            str+='<td><button name="modele'+idmodele+'" onclick="getModeleMoulesImages('+idmodele+'); reserverModeleMoules('+idmodele+'); setModeleSearch('+idmodele+');">'+idmodele+'</button></td>';                    
                             compteurmodele++;  
                         }
                         else {
@@ -405,6 +416,7 @@ function affThatMoule(tMoule){
     return str;        
 }
 
+
 // Appelé par selectModelesMoules()
 // Affiche la liste de moules avec une checkbox de sélection
 // ----------------------------------
@@ -412,9 +424,6 @@ function reserverModeleMoules(idmodele){
 // Récupère la liste des moules associés à ce modèle
     if ((idmodele !== undefined) && (idmodele>0)){
         getThatModeleMoules(idmodele);
-        idmodeleglobal=idmodele;
-        setCookie("sidmodele", idmodeleglobal, 30); // 30 jours
-        getModelesSearch();
     }     
 }
 
@@ -493,7 +502,7 @@ function selectThatModeleMoules(response) {
                 var idmodele=tThatModeleMoules[i][0];
                 var idmoule=tThatModeleMoules[i][1];
                 if (j==0) { // checkbox
-                    str+='<td><label for ="idmoule'+idmoule+'">Moule '+idmoule+'</label> <input type="checkbox" id="idmoule'+idmoule+'" name="idmoule" value="'+idmoule+'" checked /></td>';
+                    str+='<td><input type="checkbox" id="idmoule'+idmoule+'" name="idmoule" value="'+idmoule+'" checked /></td>';
                 }
                 else
                 if (tThatModeleMoules[i][j] != null){

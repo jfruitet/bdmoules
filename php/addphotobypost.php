@@ -170,7 +170,7 @@ global $nomfichiertemporaire;
             echo "SQL: ".$sql."<br />\n";                
         }           
 		if ($result = $mysqli->query($sql)){
-			$reponse = '{"ok"=1, "nomfichier":'.$nomfichier.'}';  	
+			$reponse = '{"ok":1, "nomfichier":'.$nomfichier.'}';  	
         }                    
     }
     return $reponse;
@@ -207,7 +207,7 @@ $idphoto=0;
 		if ($result = $mysqli->query($sql)){
 			// récupérer l'id créé
 			$idphoto = $mysqli->insert_id;
-			$reponse = '{"ok"=1, "idphoto":'.$idphoto.', "nomfichier":"'.$nomfichier.'"}';   			
+			$reponse = '{"ok":1, "idphoto":'.$idphoto.', "nomfichier":"'.$nomfichier.'"}';   			
         }                    
     }
     return $reponse;
@@ -234,13 +234,13 @@ global $nomfichiertemporaire;
 // idphoto 	auteur 	legende copyright 	fichier 	refmodele   refmoule
 
 	if (!empty($idphoto) && !empty($idphoto)){ 
-        $sql="UPDATE `bdm_photo` SET `auteur`='$auteur', `legende`='$legende', `copyright`='$copyright', `fichier`='$nomfichier', `refmodele`=$idmodele, `refmoule`=$idmoule WHERE `idphoto`=$idphoto";
+        $sql="UPDATE `bdm_photo` SET `auteur`='".addslashes($auteur)."', `legende`='".addslashes($legende)."', `copyright`='".addslashes($copyright)."', `fichier`='$nomfichier', `refmodele`=$idmodele, `refmoule`=$idmoule WHERE `idphoto`=$idphoto";
  		// Debug
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                
         }           
 		if ($result = $mysqli->query($sql)){
-			$reponse = '{"ok"=1, "idphoto":'.$idphoto.', "nomfichier":"'.$nomfichier.'"}';  	
+			$reponse = '{"ok":1, "idphoto":'.$idphoto.', "nomfichier":"'.$nomfichier.'"}';  	
         }                    
     }
     return $reponse;

@@ -113,7 +113,7 @@ function checkCookies() {
     okadmin=false;
     if ((sadmin!=="" && sadmin!==null) && (sadminpass!=="" && sadminpass!==null)) {
         // Verifier si c'est un admin autorisé
-        console.debug("Vérification des droits attachés à un utilisateur");
+        // console.debug("Vérification des droits attachés à un utilisateur");
         okadmin=false;
         if (verifLogin(sadmin, sadminpass) === 1){ // OK
             okadmin=true;

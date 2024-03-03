@@ -83,7 +83,6 @@
 
 
 .left {
-    width:65%;
     margin:2px;
     padding:2px;
     float:left;
@@ -92,18 +91,19 @@
 }
 
 .scrollleft {
-    height:500px;
-    width:45%;
+    width:59%;
+    height:500px;    
     margin:2px;
     padding:2px;
     float:left;
     overflow:auto;
-    clear: right;
+    clear: left;
     position : relative;
 }
   
 
 .scrollright {
+    width:420px;
     height:500px;
     margin:2px;
     padding:2px;
