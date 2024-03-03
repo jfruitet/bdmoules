@@ -32,6 +32,7 @@ let tVignettes=[]; // Tableau des fichiers vignettes
     var Commentaire = '';
           
 // Admin
+    let adminpage = false; // pour distinguer la page admin.html de la page index.html
     let admin = '';
     let adminpassword = '';
     let okadmin = false;     

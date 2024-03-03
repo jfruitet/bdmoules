@@ -96,7 +96,7 @@ if (!empty($_POST['idphoto'])) {
     }        
     
  
-    if (empty($idphoto) && (!empty($idmodele) || empty($idmoule))){ // Ajout d'une ligne dans la BD
+    if (empty($idphoto) && (!empty($idmodele) || !empty($idmoule))){ // Ajout d'une ligne dans la BD
 		connexion_db();
 		$reponse = mysql_add_photo();
         $mysqli -> close();
@@ -233,7 +233,7 @@ global $nomfichiertemporaire;
     $sql='';
 // idphoto 	auteur 	legende copyright 	fichier 	refmodele   refmoule
 
-	if (!empty($idphoto) && !empty($idphoto)){ 
+	if (!empty($idphoto)){
         $sql="UPDATE `bdm_photo` SET `auteur`='".addslashes($auteur)."', `legende`='".addslashes($legende)."', `copyright`='".addslashes($copyright)."', `fichier`='$nomfichier', `refmodele`=$idmodele, `refmoule`=$idmoule WHERE `idphoto`=$idphoto";
  		// Debug
         if ($debug){

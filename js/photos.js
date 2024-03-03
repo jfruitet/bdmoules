@@ -93,9 +93,9 @@ function affFichersImages(response){
             let str = '';
             for(let i in tImages) { 
                 if ((tImages[i][1] !== undefined) && (tImages[i][1] !== null)){
-                    titre = tImages[i][2].replaceAll('"',' ')+' par '+tImages[i][1]+' ('+tImages[i][3]+')';
+                    titre = tImages[i][2].replaceAll('"',' ')+' - '+tImages[i][1]+' ('+tImages[i][3]+')';
                     str += '<div><a href="images/'+tImages[i][4]+'"><img src="images/vignettes/'+tImages[i][4]+'" alt="'+titre+'" title="'+titre+'"></a></div>';                   
-                    str += '<div><p>'+tImages[i][2]+' par '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)<br />';
+                    str += '<div><p>'+tImages[i][2]+' - '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)<br />';
                     if ((okadmin !== undefined) && okadmin){
                         str += '<button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="assignePhoto('+tImages[i][0]+');">Ré-assigner</button> &nbsp; <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+');">Supprimer</button>';  
                     }
@@ -118,10 +118,10 @@ function affFichersImages(response){
             let str='<table>';
             for(let i in tImages) { 
                 if ((tImages[i][1] !== undefined) && (tImages[i][1] !== null)){
-                    titre = tImages[i][2].replaceAll('"',' ')+' par '+tImages[i][1]+' ('+tImages[i][3]+')';
-                    str += '<tr><td>'+tImages[i][2]+' par '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)</td></tr>';
+                    titre = tImages[i][2].replaceAll('"',' ')+' - '+tImages[i][1]+' ('+tImages[i][3]+')';
+                    str += '<tr><td>'+tImages[i][2]+' - '+tImages[i][1]+' - (<i>'+tImages[i][3]+'</i>)</td></tr>';
                     str += '<tr><td><a href="images/'+tImages[i][4]+'"><img src="images/vignettes/'+tImages[i][4]+'" alt="'+titre+'" title="'+titre+'"></a></td></tr>';                    
-                    if ((okadmin !== undefined) && okadmin){
+                    if ((okadmin !== undefined) && okadmin && (adminpage !== undefined) && (adminpage==true)){
                         str += '<tr><td><button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> <button id="photodel'+tImages[i][0]+'" onclick="assignePhoto('+tImages[i][0]+');">Assigner</button> <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+');">Supprimer</button></td></tr>';  
                     }
                 }
@@ -129,7 +129,7 @@ function affFichersImages(response){
                     titre = tImages[i][2].replaceAll('"',' ')+' - ('+tImages[i][3]+')';
                     str += '<tr><td>'+tImages[i][2]+' - (<i>'+tImages[i][3]+')</i></td></tr>';
                     str += '<tr><td><a href="images/'+tImages[i][3]+'"><img src="images/vignettes/'+tImages[i][3]+'" alt="'+titre+'" title="'+titre+'"></a></td></tr>';                               
-                    if ((okadmin !== undefined) && okadmin){
+                    if ((okadmin !== undefined) && okadmin && (adminpage !== undefined) && (adminpage==true)){
                         str += '<tr><td><button id="photo'+tImages[i][0]+'" onclick="editPhoto('+tImages[i][0]+');">Editer</button> <button id="photodel'+tImages[i][0]+'" onclick="assignePhoto('+tImages[i][0]+');">Assigner</button> <button id="photodel'+tImages[i][0]+'" onclick="deletePhoto('+tImages[i][0]+';)">Supprimer</button></td></tr>'; 
                     }
                 }                
@@ -154,6 +154,7 @@ function affFichersImages(response){
  * 
  * ********************************************/
 
+
 // ---------------------
 function readFile(input, idmodele=0, idmoule=0) {
     const preview =  document.querySelector("#preview");
@@ -161,8 +162,7 @@ function readFile(input, idmodele=0, idmoule=0) {
     
     // ------------------------------
     function readAndPreview(file) {
-        // On s'assure que `file.name` termine par
-        // une des extensions souhaitées
+        // On s'assure que `file.name` termine par une des extensions souhaitées
         if (/\.(jpe?g|png|gif)$/i.test(file.name)) {
             const reader = new FileReader();            
             
@@ -240,7 +240,7 @@ function readFile(input, idmodele=0, idmoule=0) {
 //  ----------------------------------
 function newPhoto(idmodele=0, idmoule=0){
     //console.debug ("newPhoto()");
-    if (idmodele===0){
+    if (idmodele==0){
         if ((idmodeleglobal !== undefined) && (idmodeleglobal > 0)){
             idmodele=idmodeleglobal;
         }
@@ -409,9 +409,8 @@ function ajax_PhotoEdit(url, mydata){
         // GET avec fetch()
         fetch(url+mydata, myInitGet)
         .then(response => response.text())  // Le retour est aussi une chaîne
-        .then(response => {
-            
-            console.debug ("\n"+response+"\n");
+        .then(response => {            
+            //console.debug ("\n"+response+"\n");
             response = JSON.parse(response);
             editionPhoto(response); 
                     })  // as usual...              
@@ -423,7 +422,7 @@ function ajax_PhotoEdit(url, mydata){
 // -----------------------------------
 // Appel Ajax
 function editPhoto(idphoto){
-    console.debug ("Editer cette photo: "+idphoto);      
+    // console.debug ("Editer cette photo: "+idphoto);      
     if ((idphoto !== undefined) && (idphoto>0)){
         var url= url_serveur+'getphoto.php';
         var mydata="?idphoto="+idphoto;  
@@ -434,7 +433,7 @@ function editPhoto(idphoto){
 // -----------------------------------
 // Formulaire d'édition
 function editionPhoto(response){    
-    console.debug ("\neditionPhoto()\n");
+    // console.debug ("\neditionPhoto()\n");
     if ((response !== undefined) && (response !== null)){       
         // 	idphoto 	auteur 	legende copyright 	fichier 	refmodele refmoule
         // console.debug ("IDPhoto: "+response.idphoto+"\n");
@@ -526,7 +525,7 @@ function editionPhoto(response){
         str+='<input type="hidden" id="idmoule" name="idmoule" value="'+response.refmoule+'" />';        
         str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
         str+='</form>';       
-        document.getElementById("myImage").innerHTML += str;    
+        document.getElementById("myImage").innerHTML = str + document.getElementById("myImage").innerHTML;    
     }       
 }
 

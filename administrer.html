@@ -60,6 +60,7 @@
     checkCookies();
     if (okadmin){
         //console.debug("Administrateur : "+admin);
+        adminpage =true;
     }
     getModelesSearch();
     
@@ -87,9 +88,7 @@
             editerThatModeleMoules(idmodeleglobal);
             // Nouvelle photo
             const btnaddphoto = document.querySelector('#btnaddphoto');       
-            btnaddphoto.addEventListener('click', (event) => {
-                newPhoto();
-            });                  
+            btnaddphoto.addEventListener('click', (event) => { newPhoto();});                  
         }     
           
     }
