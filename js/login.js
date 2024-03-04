@@ -130,6 +130,7 @@ function afficheAdminEnv(){
         && (adminpassword !== undefined) && (adminpassword !== null) && (adminpassword.length > 0)
         && (okadmin !== undefined) && (okadmin !== null) && (okadmin === true)){
         //console.debug("Admin reconnu: "+admin);
+        adminpage=true;
         setCookie("sadmin", admin, 1); // 1 jour
         setCookie("sadminpass", adminpassword, 1); // 1 jour  
         document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
