@@ -1,6 +1,6 @@
 /* CSS Document */
 html {
-    margin: 2px;
+    margin: 4px;
     padding: 2px; 
 }
 body {
@@ -35,6 +35,7 @@ h5 {
 }
 
 p,ul,li,td {
+    padding-left: 4px;
     color: black; 
 }
 

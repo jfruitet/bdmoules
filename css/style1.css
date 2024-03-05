@@ -1,9 +1,12 @@
 /* CSS Document */
 
 .button {
-  background-color: white; 
-  color: navy;
-  text-align: center;
+    margin: 0px;
+    padding: 0px; 
+    background-color: white; 
+    color: navy;
+    text-align: center;
+    font-weight: bold;
 }
 
 .input {
@@ -28,7 +31,7 @@
   border: 1px solid orange;
   margin: 2px;
   padding: 2px;
-   width:100%;
+  width:100%;
 }
 
 .menu {
@@ -90,9 +93,9 @@
     position : relative;
 }
 
-.scrollleft {
-    width:59%;
-    height:500px;    
+.scrollleft {  
+    width:420px;
+    height: 800px;
     margin:2px;
     padding:2px;
     float:left;
@@ -101,10 +104,8 @@
     position : relative;
 }
   
-
 .scrollright {
-    width:420px;
-    height:500px;
+    height: 800px;
     margin:2px;
     padding:2px;
     border:1px solid black;
@@ -116,7 +117,7 @@
 
 .scrolldown {
     height:100px;
-    width:100%;
+
     margin:2px;
     padding:2px;
     border:1px solid black;

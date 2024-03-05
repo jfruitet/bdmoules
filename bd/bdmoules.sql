@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 28 fév. 2024 à 13:01
+-- Généré le : mar. 05 mars 2024 à 13:51
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -154,7 +154,8 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 (49, 38, 25, 'Moule de capot moteur, avion modèle N°10', 'La Minais', 'Composite', '', NULL, NULL, 'Modèle à préciser'),
 (50, 8, 19, 'Fuselage blanc de planeur Le Pointu (petit)', 'La Minais', 'Composite', '', NULL, NULL, ''),
 (53, 37, 51, 'Maquette de démonstration', 'La Minais', 'Bois et toile', 'Excellent', 135, 127, 'Réalisation échelle 1/2'),
-(61, 37, 52, 'Fuseau planeur Excalibur', 'La Minais', 'Composite', '?', 120, 0, 'Disponible.');
+(61, 37, 52, 'Fuseau planeur Excalibur', 'La Minais', 'Composite', '?', 120, 0, 'Disponible.'),
+(62, 23, 53, 'Moule de fuseau de planeur Ventus', 'La Minais', 'Composite', 'Bon', 150, 0, 'Disponible.');
 
 -- --------------------------------------------------------
 
@@ -187,11 +188,23 @@ INSERT INTO `bdm_photo` (`idphoto`, `auteur`, `legende`, `copyright`, `fichier`,
 (16, 'Franck Russel - Hans-Günter Groes', 'Réalisation composite', 'cc-by-sa', 'Gothic_Marblehead_FranckRussel_mk3_version.png', 34, NULL),
 (17, 'Franck Russel', 'Marblehead réalisé par Maurizio Morbidelli (MX Components)', 'cc-by-sa', 'Gothic_Marblehead_FranckRussel_mx_version.png', 34, NULL),
 (18, 'ARBL d\'après Franck Russel', 'Version ARBL du voilier Gothic M de Franck Russel', 'cc-by-sa', 'Voilier_M_GothiX.jpg', NULL, 43),
-(19, 'ARBL', 'Master', 'cc-by-sa', 'MasterPlaneurExcalibur_Fuselage.jpg', NULL, 61),
 (20, 'Alexander Schleicher', 'L\'ASW 27 est un planeur de la classe FAI 15 mètres, construit en matériaux composites par Alexander Schleicher GmbH & Co. Il effectua son premier vol en 1995 et fut certifié en 1997. Le W indique que Gerhard Waibel fut l\'ingénieur responsable du projet. ', 'cc-by-sa', 'Schleicher_ASW27b.jpg', 17, NULL),
 (21, '?', 'Planeur de 5 mètres d\'envergure', 'cc-by-sa', 'Moule de fuseau de planeur ASW28.jpg', NULL, 27),
 (22, 'François B.', 'Moule de fuseau. Planeur très populaire en Bretagne. Si vous disposez de photos de ce modèle, merci de nous les faire parvenir.', 'cc-by-sa', 'Planneur_Le-Pointu.jpg', 8, 0),
-(25, '', 'De nombreux modèles d\'Alpina entre 3m et 5m.', 'cc-by-sa', 'Alpina_161008-calans-57.jpg', 8, NULL);
+(25, '', 'De nombreux modèles d\'Alpina entre 3m et 5m.', 'cc-by-sa', 'Alpina_161008-calans-57.jpg', 8, NULL),
+(26, '', 'Fuselage en fibre de verre, ailes et empennage en polystyrène coffré. ', 'cc-by-sa', 'ASW_15_GST4_1_-1a7a4.jpg', 3, NULL),
+(27, 'ARBL', 'Piper Cub J3, squelette de démonstration', 'cc-by-sa', 'PiperCub J3', 1, NULL),
+(28, '', 'Le Rolladen-Schneider LS3 est un planeur monoplace de classe standard qui a été produit par Rolladen-Schneider de 1976 à 1983.', 'cc-by-sa', 'Multiplex_LS3CS_01.jpg', 7, NULL),
+(29, 'Multiplex', 'Planeur Flamingo Contest de chez Multiplex', 'cc-by-sa', 'multiplex-flamingo-contest.jpg', 11, NULL),
+(30, 'Multiplex', 'D\'une envergure de 2.85 m, c\'était un bon compromis pour recommencer à tatouiller la bulle, à la recherche de l\'ascenseur de service. Fuselage fibre de bonne qualité, ailes entoilées en expansé coffrée, j\'ai affaire à un kit classique de planeur dont on p', 'cc-by-sa', 'flamingo_1.jpg', 11, 0),
+(31, 'Multiplex', 'Le Planeur Flamingo est un planeur de compétition de haut niveau, fabriqué par l\'excellente marque Multiplex.', 'cc-by-sa', 'multiplex-flamingo-contest_02.jpg', 11, NULL),
+(32, '', 'Le Planeur Flamingo est un planeur de compétition de haut niveau, fabriqué par l\'excellente marque Multiplex Mini 9. Ce planeur a été construit en 2001 et a été soigneusement entretenu depuis cette période. Il mesure 3,00 mètres de long et possède des ail', 'cc-by-sa', 'flamingo_2001.jpg', 11, NULL),
+(33, '', 'Moule de fuseau', 'cc-by-sa', 'fuseau_ventus.jpg', 0, 62),
+(34, '', 'Le Ventus 2cx De Luxe Topmodel CZ est une \"grande plume\" semi-maquette de 4.50m à l\'échelle 1/4e.La construction est magnifique et élégante. ', 'cc-by-sa', 'planeur_ventus_01.gif', NULL, 62),
+(35, '', 'L\'Alexander Schleicher Ka 6 Rhönsegler est un planeur de compétition allemand de Classe Standard qui a dominé la compétition au début des années 1960. 1400 exemplaires ont été construits. ', 'cc-by-sa', 'K6_Grandeur&RC.jpg', 13, NULL),
+(36, 'ARBL', 'Disponible.', 'cc-by-sa', 'K6_moule_bulle.jpg', NULL, 2),
+(37, '', 'Le MDM-1 Fox est un planeur biplace de voltige construit par Margański & Myslowski en matériaux composites avec train fixe et un empennage cruciforme. ', 'cc-by-sa', 'moule_fuseau_planeur-K6.jpg', 0, 15),
+(38, '', 'K6 des Alpilles.\r\nGrâce à ses caractéristiques de vol très dociles, le Ka-6 est le premier monoplace que pilotent les élèves de l\'AVVC (et de bien des clubs). Nombre de pilotes on fait leur premier vol de 50 km à bord d\'un Ka-6. Malgré sa construction en ', 'cc-by-sa', 'k6-al64.jpg', 13, NULL);
 
 -- --------------------------------------------------------
 
@@ -282,13 +295,13 @@ ALTER TABLE `bdm_modele`
 -- AUTO_INCREMENT pour la table `bdm_moule`
 --
 ALTER TABLE `bdm_moule`
-  MODIFY `idmoule` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
+  MODIFY `idmoule` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
 
 --
 -- AUTO_INCREMENT pour la table `bdm_photo`
 --
 ALTER TABLE `bdm_photo`
-  MODIFY `idphoto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `idphoto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT pour la table `bdm_realisation`
