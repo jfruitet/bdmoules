@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mar. 05 mars 2024 à 13:51
+-- Généré le : mer. 06 mars 2024 à 14:33
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -20,6 +20,8 @@ SET time_zone = "+00:00";
 --
 -- Base de données : `bdmoules`
 --
+CREATE DATABASE IF NOT EXISTS `bdmoules` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE `bdmoules`;
 
 -- --------------------------------------------------------
 
@@ -27,14 +29,16 @@ SET time_zone = "+00:00";
 -- Structure de la table `bdm_modele`
 --
 
-CREATE TABLE `bdm_modele` (
-  `id` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `bdm_modele`;
+CREATE TABLE IF NOT EXISTS `bdm_modele` (
+  `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `nom` varchar(80) NOT NULL,
   `descriptif` text NOT NULL,
   `dimension` varchar(80) NOT NULL COMMENT 'long x larg x haut',
   `categorie` varchar(50) NOT NULL,
-  `timestamp` date NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `timestamp` date NOT NULL DEFAULT current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `bdm_modele`
@@ -85,8 +89,9 @@ INSERT INTO `bdm_modele` (`id`, `nom`, `descriptif`, `dimension`, `categorie`, `
 -- Structure de la table `bdm_moule`
 --
 
-CREATE TABLE `bdm_moule` (
-  `idmoule` int(10) UNSIGNED NOT NULL,
+DROP TABLE IF EXISTS `bdm_moule`;
+CREATE TABLE IF NOT EXISTS `bdm_moule` (
+  `idmoule` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
   `ref_modele` int(10) UNSIGNED NOT NULL,
   `numero_inventaire` int(4) DEFAULT 0 COMMENT 'numéro d''enregistrement du moule',
   `mdescription` varchar(255) NOT NULL,
@@ -95,8 +100,9 @@ CREATE TABLE `bdm_moule` (
   `etat` varchar(80) NOT NULL,
   `longueur` smallint(6) DEFAULT NULL,
   `poids` tinyint(4) DEFAULT NULL,
-  `commentaire` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `commentaire` varchar(255) NOT NULL,
+  PRIMARY KEY (`idmoule`)
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `bdm_moule`
@@ -163,15 +169,17 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 -- Structure de la table `bdm_photo`
 --
 
-CREATE TABLE `bdm_photo` (
-  `idphoto` int(11) NOT NULL,
+DROP TABLE IF EXISTS `bdm_photo`;
+CREATE TABLE IF NOT EXISTS `bdm_photo` (
+  `idphoto` int(11) NOT NULL AUTO_INCREMENT,
   `auteur` varchar(50) NOT NULL,
   `legende` varchar(255) NOT NULL COMMENT 'légende photo',
   `copyright` varchar(80) NOT NULL,
   `fichier` varchar(255) NOT NULL,
   `refmodele` int(11) DEFAULT NULL COMMENT 'référence un modèle',
-  `refmoule` int(11) DEFAULT NULL COMMENT 'référence un élément'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  `refmoule` int(11) DEFAULT NULL COMMENT 'référence un élément',
+  PRIMARY KEY (`idphoto`)
+) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Déchargement des données de la table `bdm_photo`
@@ -212,12 +220,14 @@ INSERT INTO `bdm_photo` (`idphoto`, `auteur`, `legende`, `copyright`, `fichier`,
 -- Structure de la table `bdm_realisation`
 --
 
-CREATE TABLE `bdm_realisation` (
-  `realid` int(11) NOT NULL,
+DROP TABLE IF EXISTS `bdm_realisation`;
+CREATE TABLE IF NOT EXISTS `bdm_realisation` (
+  `realid` int(11) NOT NULL AUTO_INCREMENT,
   `realisateur` varchar(80) NOT NULL COMMENT 'auteur',
   `realdate` date NOT NULL COMMENT 'date de fabrication',
   `realelement` int(11) NOT NULL,
-  `realmaj` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `realmaj` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`realid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -226,14 +236,16 @@ CREATE TABLE `bdm_realisation` (
 -- Structure de la table `bdm_user`
 --
 
-CREATE TABLE `bdm_user` (
-  `userid` int(11) NOT NULL,
+DROP TABLE IF EXISTS `bdm_user`;
+CREATE TABLE IF NOT EXISTS `bdm_user` (
+  `userid` int(11) NOT NULL AUTO_INCREMENT,
   `usernom` varchar(80) NOT NULL,
   `userlogin` varchar(30) NOT NULL,
   `statut` tinyint(4) NOT NULL COMMENT '1: admin, 2:auteur, 3: lecteur\r\n',
   `pass` varchar(255) NOT NULL COMMENT 'pass crypté MD5',
   `telephone` varchar(30) NOT NULL,
-  `club` varchar(255) NOT NULL
+  `club` varchar(255) NOT NULL,
+  PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -242,78 +254,11 @@ CREATE TABLE `bdm_user` (
 -- Structure de la table `bdm_user_moule`
 --
 
-CREATE TABLE `bdm_user_moule` (
+DROP TABLE IF EXISTS `bdm_user_moule`;
+CREATE TABLE IF NOT EXISTS `bdm_user_moule` (
   `ref_user` int(10) NOT NULL,
   `ref_moule` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='associe un utilisateur à un moule pour modification';
-
---
--- Index pour les tables déchargées
---
-
---
--- Index pour la table `bdm_modele`
---
-ALTER TABLE `bdm_modele`
-  ADD PRIMARY KEY (`id`);
-
---
--- Index pour la table `bdm_moule`
---
-ALTER TABLE `bdm_moule`
-  ADD PRIMARY KEY (`idmoule`);
-
---
--- Index pour la table `bdm_photo`
---
-ALTER TABLE `bdm_photo`
-  ADD PRIMARY KEY (`idphoto`);
-
---
--- Index pour la table `bdm_realisation`
---
-ALTER TABLE `bdm_realisation`
-  ADD PRIMARY KEY (`realid`);
-
---
--- Index pour la table `bdm_user`
---
-ALTER TABLE `bdm_user`
-  ADD PRIMARY KEY (`userid`);
-
---
--- AUTO_INCREMENT pour les tables déchargées
---
-
---
--- AUTO_INCREMENT pour la table `bdm_modele`
---
-ALTER TABLE `bdm_modele`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
-
---
--- AUTO_INCREMENT pour la table `bdm_moule`
---
-ALTER TABLE `bdm_moule`
-  MODIFY `idmoule` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
-
---
--- AUTO_INCREMENT pour la table `bdm_photo`
---
-ALTER TABLE `bdm_photo`
-  MODIFY `idphoto` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
-
---
--- AUTO_INCREMENT pour la table `bdm_realisation`
---
-ALTER TABLE `bdm_realisation`
-  MODIFY `realid` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT pour la table `bdm_user`
---
-ALTER TABLE `bdm_user`
-  MODIFY `userid` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
