@@ -1,7 +1,9 @@
 # BdMoules
 ## Gestion des moules de l'ARBL
 *Version 0.2* - JF - 2024
+
 Cette application Web permet de recenser la listes des moules disponibles en prêt à l'ARBL.
+
 Ces moules sont disponibles pour les membre du club et en prêt extérieur selon des modalités à définir par le bureau de l'association.
 ### Installation
  - Charger les sources depuis le GitHub [https://github.com/jfruitet/bdmoules]
