@@ -554,23 +554,26 @@ function selectThatModeleMoules(response) {
 //-----------------------------------------
 // Affiche un formulaire de réservation
 function reserverThatMoules(){
-    console.debug("reserverThatMoule()");
-    console.debug("idmodele: "+idmodeleglobal);
-    console.debug("modeledescription: "+modeledescription);
-    console.debug("tidmoules: "+tidmoules);
-    console.debug("tdescription: "+tdescription);
+    //console.debug("reserverThatMoule()");
+    //console.debug("idmodele: "+idmodeleglobal);
+    //console.debug("modeledescription: "+modeledescription);
+    //console.debug("tidmoules: "+tidmoules);
+    //console.debug("tdescription: "+tdescription);
     
     if ((idmodeleglobal !== undefined) && (idmodeleglobal>0) && (tidmoules!==undefined) && (tidmoules.length>0)){ // idmodele=37; tidmoules=[46,47];
         let str='';
         // Creer un formulaire de réservation
         str+='<h4>Complétez ce formulaire de réservation</h4>';
-        str+='<form name="RegForm" action="" onsubmit="return validationReservationMultiple()" method="post">';
+        str+='<form name="RegForm" action="">';
+        str+='<div class="button"><button onclick="return validationReservationMultiple();">Réserver</button>'; 
+        str+='&nbsp; &nbsp; <button onclick="return resetForm();">Annuler</button></div>';        
+                      
         str+='<div><label for="Nom">NOM Prénom: </label><br /><input type="text" id="Nom" size="50" name="Nom" value="'+Nom+'" autocomplete="on" />';
         str+='<br /><label for="Adresse">Adresse: </label><br /><input type="text" id="Adresse" size="50" name="Adresse" value="'+Adresse+'" autocomplete="on" />';
         str+='<br /><label for="Courriel">Adresse électronique:</label><br /><input type="text" id="Courriel" size="50" name="Courriel" value="'+Courriel+'" autocomplete="on" />';
         str+='<br /><label for="Telephone">Téléphone: </label><br /><input type="text" id="Telephone" size="50" name="Telephone" value="'+Telephone+'" autocomplete="on" />';
         str+='<br /><label for="Commentaire">Commentaires: </label><br />(<i><span class="small">Motivez votre demande...</span></i>)<textarea cols="50" id="Commentaire" rows="3" name="Commentaire" autocomplete="on">'+Commentaire+'</textarea>';
-        str+='</div><div class="button"><input type="submit" value="Envoyer" name="Envoyer" /><input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+        str+='</div>';
         str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
         /*
         for (let i=0; i<tidmoules.length; i++){
@@ -579,7 +582,7 @@ function reserverThatMoules(){
         for (let i=0; i<tdescription.length; i++){
             str+='<type="hidden" id="description'+tdescription[i]+' name="description'+tdescription[i]+'" value="'+tdescription[i]+'">';
         }
-        */        
+        */  
         str+='</form>';
         
         str+='<p><b>Moules réservés</b></p><ul>';
@@ -591,6 +594,46 @@ function reserverThatMoules(){
         document.getElementById("myImage").innerHTML = str;
     }
 
+}
+
+// ----------------------------------
+function resetForm(){
+// Verifie que les champs du formualaire sont remplis
+    document.forms["RegForm"]["Nom"];               
+    email = document.forms["RegForm"]["Courriel"];    
+    phone = document.forms["RegForm"]["Telephone"];   
+    address = document.forms["RegForm"]["Adresse"];  
+    comment = document.forms["RegForm"]["Commentaire"];      
+
+    if (nom.value != "")                                  
+    { 
+        nom.value="";         
+    }    
+    if (address.value != "")                               
+    { 
+        address.value = "";
+    }        
+    if (email.value != "")                                   
+    { 
+        email.value = "";
+    }    
+    if (phone.value != "")                           
+    { 
+        phone.value = "";
+    }    
+    if (comment.value != "")                  
+    { 
+        comment.value = "";
+    } 
+    // Variables globales et Cookies
+    Nom = '';               
+    Courriel = '';    
+    Telephone = '';   
+    Adresse = '';  
+    Commentaire = '';
+    setCookies();        
+    nom.focus();
+    return true; 
 }
 
 // ----------------------------------
@@ -659,33 +702,30 @@ function validationReservationMultiple(){
 // ----------------------------------
 function redigeReservationMultiple(){
 // Redige un courriel envoyé par <a href="mailto: etc.
-    console.debug("redigeReservationMultiple()");
-    console.debug("idmodele: "+idmodeleglobal);
-    console.debug("modeledescription: "+modeledescription);
-    console.debug("tidmoules: "+tidmoules);
-    console.debug("tdescription: "+tdescription);
+    //console.debug("redigeReservationMultiple()");
+    //console.debug("idmodele: "+idmodeleglobal);
+    //console.debug("modeledescription: "+modeledescription);
+    //console.debug("tidmoules: "+tidmoules);
+    //console.debug("tdescription: "+tdescription);
 
     if ((tdescription!==undefined) && (tdescription.length>0)){        
         let str='';
         let strmsg='';
-        console.debug("Rédaction du courriel de réservation");        
-        str+='<b>Moules réservés</b><ul><li>'+modeledescription+'<ol>';
-        strmsg+='Moules réservés'+"\n"+modeledescription+"\n";
+        //console.debug("Rédaction du courriel de réservation");        
+        str+='<p><b>Modèle concerné</b><br />'+modeledescription+'</p><p><ol>Moules';
+        strmsg+='Modèle concerné: '+"\n"+modeledescription+"\nMoules:\n";
         for (let i=0; i<tdescription.length; i++){
             str+='<li>Moule ID:'+tdescription[i][0]+' Inventaire: '+tdescription[i][1]+' Description: '+tdescription[i][2]+', '+tdescription[i][3]+'</li>';
             strmsg+='Moule ID:'+tdescription[i][0]+' Inventaire: '+tdescription[i][1]+' Description: '+tdescription[i][2]+', '+tdescription[i][3]+"\n";
         }
-        str+='</ol></li></ul>';
+        str+='</ol><br />';
         
-        console.debug(str);        
+        //console.debug(str);        
         //let thatbody= 'Nom: '+Nom+'%0A%0ACourriel: '+Courriel+'%0A%0ATéléphone: '+Telephone+'%0A%0AAdresse: '+Adresse+'%0A%0ACommentaire '+Commentaire+'%0A%0A'+strmsg;
-        let thatbody= encodeURIComponent("Demande de réservation effectuée par \n\nNom: "+Nom+"\nCourriel: "+Courriel+"\nTéléphone: "+Telephone+"\nAdresse: "+Adresse+"\nCommentaire: "+Commentaire+"\n\n"+strmsg);
-        console.debug("Message body\n"+thatbody);
+        let thatbody= encodeURIComponent("Demande de réservation de moules effectuée par \nNom: "+Nom+"\nCourriel: "+Courriel+"\nTéléphone: "+Telephone+"\nAdresse: "+Adresse+"\nCommentaire: "+Commentaire+"\n\n"+strmsg);
+        //console.debug("Message body\n"+thatbody);
         document.getElementById("myImage").innerHTML = '<h4>Cliquez sur le lien pour envoyer cette demande de réservation</h4><p>'+str;
-        // Version opérationnelle
-        // document.getElementById("myImage").innerHTML +='<br /><a href="mailto:bureau-arbl@laposte.net?cc=jean.fruitet@free.fr&subject=RéservationMoules&body='+thatbody+'">Envoyer</a></p>';
-        // Version de test
-        document.getElementById("myImage").innerHTML +='<br /><a href="mailto:jean.fruitet@laposte.net?cc=jean.fruitet@free.fr&subject='+encodeURIComponent("Réservation Moules")+'&body='+thatbody+'">Envoyer</a></p>';                      
+        document.getElementById("myImage").innerHTML +='<br /><span class="surligne"><a href="mailto:'+courriel_reservation+'?cc='+courriel_webmaster+'&subject='+encodeURIComponent("Réservation Moules")+'&body='+thatbody+'">Envoyer</a></surligne></p>';                      
     }           
 }
 

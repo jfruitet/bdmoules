@@ -24,3 +24,7 @@ let adminspassmd5 = ["81dc9bdb52d04dc20036dbd8313ed055","674f3c2c1a8a6f90461e8a6
 let pageadmin='../administrer.html';
 let pageindex='../index.html';
 
+// let courriel_reservation='bureau-arbl@laposte.net'; // Version d'exploitation
+let courriel_reservation='jean.fruitet@laposte.net';  // Version de test
+let courriel_webmaster= 'jean.fruitet@free.fr';
+
