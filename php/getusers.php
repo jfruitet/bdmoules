@@ -31,22 +31,16 @@ connexion_db();
 if (!empty($iduser))
 {    
     $reponse = mysql_infos_user($iduser);
-    if (!empty($reponse)){
-        echo '{"ok":1, user":'.json_encode($reponse).'}';
-    }
-    else{
-        echo '{"ok":0}';
-    }    
 }
 else{
     $reponse = mysql_infos_all_users();
-    if (!empty($reponse)){
-        echo '{"ok":1, users":'.json_encode($reponse).'}';
-    }
-    else{
-        echo '{"ok":0}';
-    }        
 }    
+if (!empty($reponse)){
+    echo json_encode($reponse);
+}
+else{
+        echo '{"ok":0}';
+}        
 
 $mysqli -> close();
 
@@ -57,11 +51,11 @@ exit;
 function mysql_infos_user($iduser){ 
 global $debug;
 global $mysqli;
-$data = '';
+$data = array();
     if (!empty($iduser)){	
         // idmoule 	ref_user 	numero_inventaire mdescription 	mlieu 	matiere 	etat 	longueur 	poids 	commentaire
 //        if ($result = $mysqli->query("SELECT idmoule, ref_user, numero_inventaire, mdescription, mlieu, matiere, longueur	FROM bdmoules.bdm_moule WHERE ref_user=".$iduser." ORDER BY numero_inventaire")){
-        if ($result = $mysqli->query("SELECT * FROM bdmoules.bdm_user WHERE id=".$iduser)){
+        if ($result = $mysqli->query("SELECT * FROM bdmoules.bdm_user WHERE userid=".$iduser)){
             if ( $row = $result->fetch_assoc()) {
                 $data = $row;
             }
@@ -71,8 +65,7 @@ $data = '';
     if ($debug){
         echo "Data\n".$data."<br />\n";
     }    
-    //return json_encode($data);
-    return $data;                         
+    return $data;
 }
 
 //--------------------------
@@ -83,15 +76,15 @@ global $mysqli;
 $data = array();
     if ($result = $mysqli->query("SELECT * FROM bdmoules.bdm_user ORDER BY usernom;")){
         while($row = $result->fetch_assoc()) {
-                $data = $row;
+                $data[] = $row;
         }    
     }                           
         // Debug
     if ($debug){
-        echo "Data\n".$data."<br />\n";
+        echo "Data:<br />\n";
+        print_r($data); 
     }    
-    //return json_encode($data);
-    return $data;                         
+    return $data;                        
 }
 
 

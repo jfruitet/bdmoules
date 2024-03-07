@@ -59,7 +59,8 @@ $club='';
     var Contact = '';   // Telephone
     var Club = '';      // Club + ville
     var Statut = 0;     // 0:visiteur, 1:admin, 2:auteur, 3:lecteur
-          
+     
+    var iduserglobal=0;   // l'utilisateur courant  
 
 /************************
  * Cookies
@@ -124,15 +125,15 @@ function checkCookies() {
     }
 
     // Utilisateur pour lequel on veut créer / modifier le compte d'accès
-    /*
     let siduser = getCookie("siduser");
     if (siduser!=="" && siduser!==null) {
-        if (!isNaN(iduser=parseInt(sadmin,10))){
+        if (!isNaN(iduser=parseInt(siduser,10))){
             console.debug("Cookie siduser valide");
             console.debug("iduser: "+iduser);
+            iduserglobal=parseInt(siduser);
         }                              
     } 
-    */
+    
     
     // Données des personnes voulant réserver un moule
     // Ces données ne sont pas stockées dans la base de données
@@ -218,6 +219,7 @@ let myInitGet = {
 // Mes formulaires basiques POST fournissent une page de redirection aux scripts PHP gérant des appels POST
 // Voir le script ./php/adddmoulebypost.php
 
+// ---------------------------------
 let myInitPost = {
     method: 'POST',
     headers: {'Content-Type': 'application/json;charset=UTF-8',  'Access-Control-Allow-Origin' : '*'},
