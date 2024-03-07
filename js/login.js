@@ -59,7 +59,7 @@ function getUserAutorisation(){
     okadmin=false;
     if ((Courriel !== undefined) && (Courriel !== null) && (Courriel.length>0)){
         console.debug("Vérification des droits attachés à un utilisateur");
-        if (veriflogin(Courriel, '') === 0){ // Demander le mot de passe
+        if (verifLogin(Courriel, '') === 0){ // Demander le mot de passe
             return saisieLogin(Courriel); 
         }
     }     
