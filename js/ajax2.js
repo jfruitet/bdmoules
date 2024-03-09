@@ -108,7 +108,7 @@ function selectModelesMoulesAdmin(tModelesMoules){
     //console.debug("Sélection d'un modèle et des moules associés\n"); 
     let compteurmodele=0;
     let str='<p><b>Modèles</b> &nbsp; &nbsp;';
-    str+='<button id="btnaddmodele">Ajouter un modèle</button></p>';
+    str+='<button id="btnaddmodele">Ajouter un modèle</button> &nbsp; (<a target="_blank" href="help.html#Modèle">?</a>)</p>';
 
     str+='<table>';
     if ((tModelesMoules !== undefined) && (tModelesMoules.length>0)){ 

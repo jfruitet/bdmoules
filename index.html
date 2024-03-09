@@ -34,10 +34,10 @@ Quand vous avez sélectionné un modèle faites sa <a href="reservation.html">r�
 </div>
 <div class="rightscrolldown"><span id="infomodelessearch"></span></div>
 <div class="scrolldown"><span id="infomoules"></span></div>
-<div class="scrollleft">
+<div id="scrollleft">
 <span id="myImage"></span>
 </div>
-<div class="scrollright">    
+<div id="scrollright">    
     <span id="myListModeles"></span>
 </div>
 <div id="myInfo"></div>
@@ -56,6 +56,7 @@ Quand vous avez sélectionné un modèle faites sa <a href="reservation.html">r�
     // Cookies
     checkCookies(); 
     adminpage=false;
+    document.getElementById("scrollleft").style.display = "inline";
     getModelesSearch();
     // getMoules();
     getModelesMoules();   

@@ -491,7 +491,7 @@ function selectThatModeleMoules(response) {
     
     let str='';
     //str+='<p>Sélectionnez les moules à réserver</p>';
-    str+='<button id="btn">Réserver</button>';
+    str+='<p><button id="btn">Réserver</button>  &nbsp; (<a target="_blank" href="help.html#Prêt">?</a>)</p>';
     str+='<table><tr><th>Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
     
     if ((tThatModeleMoules !== undefined) && (tThatModeleMoules.length>0)){ 

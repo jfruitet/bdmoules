@@ -76,7 +76,7 @@ function selectUsersAdmin(response){
     //console.debug(tUsers);
     let str='';
     str+='<p><b>Utilisateurs</b> &nbsp; &nbsp;';
-    str+='<button id="btnadduser">Ajouter un utilisateur</button></p>';    
+    str+='<button id="btnadduser">Ajouter un utilisateur</button> &nbsp; (<a target="_blank" href="help.html#Rôles">?</a>)</p>';    
     str+='<table>';
     str+='<tr><th>ID User</th><th>Nom</th><th>Login</th><th>Statut</th><th>Mot de passe crypté</th><th>Téléphone</th><th>Club</th></tr>';
     if ((tUsers!== null) && (tUsers.length>0)){ 
@@ -90,7 +90,7 @@ function selectUsersAdmin(response){
              // statut
             if ((tUsers[i][3] !== null) && (parseInt(tUsers[i][3])>=0)){
                 switch (parseInt(tUsers[i][3])){
-                    case 1 : str+='Administrateur';
+                    case 1 : str+='<b>Administrateur</b>';
                                 break;
                    case 2 : str+='Auteur';
                                 break;
@@ -132,19 +132,27 @@ function newUser(){
         str+='<p>Complétez ce formulaire d\'édition</p>';
         // Formulaire de création
         str+='<form name="AddFormUser" action="'+url+'" method="post">';
-        str+='<div class="button"><input type="submit" value="Editer" name="Editer" onclick="return verifSaisieUser(false);" /> <input type="submit" value="Ajouter" name="Ajouter" onclick="return verifSaisieUser(true);" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+        str+='<div class="button"> <input type="submit" value="Ajouter" name="Ajouter" onclick="return verifSaisieUser(true);" /> <input type="reset" value="Réinitialiser" name="Reset" /> <input type="submit" name="Abandonner" value="Abandonner" /></div>';        
         // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
-        str+='<div><label for="unom">Nom prénom: </label><br /><input type="text" id="unom" size="50" name="unom" value="" autocomplete="on" />';
-        str+='<br /><label for="ulogin">Login: </label> <input type="text" id="ulogin" size="20" name="ulogin" value="" autocomplete="on" />';
-        str+='<br /><label for="ustatut">Statut: </label> <input type="text" id="ustatut" size="20" name="ustatut" value="" autocomplete="on" />';
-        str+='<br /><label for="upass">Mot de passe: </label> <input type="text" id="upass" size="20" name="upass" value="" />';
-        str+='<br /><label for="utelephone">Téléphone: </label> <input type="text" id="utelephone" size="20" name="utelephone" value="" autocomplete="on" />';
-        str+='<br /><label for="uclub">Club: </label>'; 
+        str+='<div><label for="unom"><b>NOM Prénom</b>: </label><br /><input type="text" id="unom" size="50" name="unom" value="" autocomplete="on" />';
+        str+='<br /><label for="ulogin"><b>Courriel</b>: </label> <input type="text" id="ulogin" size="20" name="ulogin" value="" autocomplete="on" /> (<i>Ce sera aussi le login</i>)';
+        str+='<br /><label for="ustatut"><b>Rôle</b>: </label> ';
+        str+='<select name="ustatut" id="ustatut">';
+        str+='<option value="">--Sélectionnez au moins un statut--</option>';
+            str+='<option value="0">Visiteur</option>';
+            str+='<option value="3">Lecteur</option>';
+            str+='<option value="2">Auteur</option>';
+            str+='<option value="1">Administrateur</option>';
+        str+='</select>';        
+        str+='<br /><label for="upass"><b>Mot de passe</b>: </label> <input type="text" id="upass" size="20" name="upass" value="" />';
+        str+='<br /><label for="utelephone"><b>Téléphone</b>: </label> <input type="text" id="utelephone" size="20" name="utelephone" value="" autocomplete="on" />';
+        str+='<br /><label for="uclub"><b>Club</b>: </label>'; 
         str+='<br /><textarea cols="50" id="uclub" rows="3" name="uclub"></textarea>';                
         str+='</div>';       
         str+='<input type="hidden" id="userid" name="userid" value="" />';                
-        str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
-        str+='</form>';      
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageuser+'" />';
+        str+='</form>'; 
+        document.getElementById("scrollleft").style.display = "inline";     
         document.getElementById("myImage").innerHTML = str;
 
 
@@ -191,22 +199,38 @@ function saisieThatUser(response) {
         str+='<p>Complétez ce formulaire d\'édition</p>';
         // Formulaire de création
         str+='<form name="AddFormUser" action="'+url+'" method="post">';
-        str+='<div class="button"><input type="submit" value="Editer" name="Editer" onclick="return verifSaisieUser(false);" /> <input type="submit" value="Ajouter" name="Ajouter" onclick="return verifSaisieUser(true);" /> <input type="reset" value="Réinitialiser" name="Reset" /></div>';        
+        str+='<div class="button"><input type="submit" value="Editer" name="Editer" onclick="return verifSaisieUser(false);" /> <input type="reset" value="Réinitialiser" name="Reset" /> <input type="submit" name="Abandonner" value="Abandonner" /></div>';        
 
         // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
-        str+='<div><label for="unom">Nom prénom: </label><br /><input type="text" id="unom" size="50" name="unom" value="'+thatuser.usernom+'" autocomplete="on" />';
-        str+='<br /><label for="ulogin">Login: </label> <input type="text" id="ulogin" size="20" name="ulogin" value="'+thatuser.userlogin+'" autocomplete="on" />';
-        str+='<br /><label for="ustatut">Statut: </label> <input type="text" id="ustatut" size="20" name="ustatut" value="'+thatuser.statut+'" autocomplete="on" />';
+        str+='<div><label for="unom"><b>NOM Prénom</b>: </label><br /><input type="text" id="unom" size="50" name="unom" value="'+thatuser.usernom+'" autocomplete="on" />';
+        str+='<br /><label for="ulogin"><b>Courriel</b>: </label> <input type="text" id="ulogin" size="20" name="ulogin" value="'+thatuser.userlogin+'" autocomplete="on" /> (<i>Ce sera aussi le login</i>)';
+        str+='<br /><label for="ustatut"><b>Rôle</b>: </label>';
+        str+='<select name="ustatut" id="ustatut">';
+        str+='<option value="">--Sélectionnez au moins un statut--</option>';
+        if ((thatuser.statut!==undefined) && (thatuser.statut.length>0)){
+            if (thatuser.statut=='0') {str+='<option value="0" selected>Visiteur</option>';} else { str+='<option value="0">Visiteur</option>';}
+            if (thatuser.statut=='3') {str+='<option value="3" selected>Lecteur</option>';} else {str+='<option value="3">Lecteur</option>';}
+            if (thatuser.statut=='2') {str+='<option value="2" selected>Auteur</option>';} else {str+='<option value="2">Auteur</option>';}
+            if (thatuser.statut=='1') {str+='<option value="1" selected>Administrateur</option>';} else {str+='<option value="1">Administrateur</option>';}        
+        }
+        else{
+            str+='<option value="0">Visiteur</option>';
+            str+='<option value="3">Lecteur</option>';
+            str+='<option value="2">Auteur</option>';
+            str+='<option value="1">Administrateur</option>';
+        }
+        str+='</select>';        
+        str+='</div>';        
         if ((thatuser.pass !== undefined) && (thatuser.pass !== null) && (thatuser.pass.length > 0 )){
-            str+='<br /><span class="surligne">Mot de passe non modifiable</span>';
+            str+='<br /><span class="surligne">Mot de passe non modifiable</span> (<a target="_blank" href="help.html#Password">?</a>)';
             str+='<input type="hidden" id="uoldpass" name="uoldpass" value="'+thatuser.pass+'" />';
         }
         else{
-            str+='<br /><label for="upass">Mot de passe: </label> <input type="text" id="upass" size="20" name="upass" value="" />';
+            str+='<br /><label for="upass"><b>Mot de passe</b>: </label> <input type="password" id="upass" size="20" name="upass" value="" />';
             str+='<input type="hidden" id="uoldpass" name="uoldpass" value="" />';
         }
-        str+='<br /><label for="utelephone">Téléphone: </label> <input type="text" id="utelephone" size="20" name="utelephone" value="'+thatuser.telephone+'" autocomplete="on" />';
-        str+='<br /><label for="uclub">Club: </label>'; 
+        str+='<br /><label for="utelephone"><b>Téléphone</b>: </label> <input type="text" id="utelephone" size="20" name="utelephone" value="'+thatuser.telephone+'" autocomplete="on" />';
+        str+='<br /><label for="uclub"><b>Club</b>: </label>'; 
         str+='<br /><textarea cols="50" id="uclub" rows="3" name="uclub">'+thatuser.club+'</textarea>'; 
         str+='</div>';       
         if ((thatuser.userid !== undefined) && (thatuser.userid !== null)){  
@@ -215,8 +239,10 @@ function saisieThatUser(response) {
         else{
             str+='<input type="hidden" id="userid" name="userid" value="" />';                
         }
-        str+='<input type="hidden" id="appel" name="appel" value="'+pageadmin+'" />';
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageuser+'" />';
+        str+='<input type="hidden" id="action" name="action" value="1" />'; // Edition
         str+='</form>';      
+        document.getElementById("scrollleft").style.display = "inline";
         document.getElementById("myImage").innerHTML = str;
     }
 }
@@ -247,6 +273,12 @@ function verifSaisieUser(add=false){
         ulogin.focus(); 
         return false; 
     }        
+    if (ustatut.value == "")                  
+    { 
+        alert("Sélectionnez un rôle."); 
+        ustatut.focus(); 
+        return false; 
+    } 
     if (utelephone.value == "")                  
     { 
         alert("Complétez le téléphone."); 
@@ -254,14 +286,14 @@ function verifSaisieUser(add=false){
         return false; 
     }     
     if (!add){
-        if ((upass.value==0) && (uoldpass.length==0)) {
+        if ((upass.value=="") && (uoldpass.length==0)) {
             alert("Complétez le mot de passe."); 
             upass.focus(); 
             return false;     
         }
     }
     else{
-        if (upass.value==0) {
+        if (upass.value=="") {
             alert("Complétez le mot de passe."); 
             upass.focus(); 
             return false;     

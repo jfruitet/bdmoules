@@ -5,13 +5,14 @@
 include ("./include/config.php");
 include ("./include/mysql.php");
 
-$debug = true;
+$debug = false;
 $appel='';  // Page appelante
 $userid=0;
 $usernom='';
 $userlogin='';
 $statut=0;
 $pass='';
+$passmd5='';
 $telephone='';
 $club='';
 
@@ -33,39 +34,54 @@ if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'appli
 //    mydata+='?ref_modele='+refmodele+'&mdescription='+mdescription.value+'&mlieu='+mlieu.value+'&matiere='+matiere.value
 // +'&etat='+metat.value+'&longueur='+mlongueur.value+'&poids='+mpoids.value+'&mcommentaire='+mcommentaire.value;
 
+// Array ( [Editer] => Editer [unom] => FRUITET Jean [ulogin] => jean.fruitet@gmail.com 
+// [ustatut] => 1 [uoldpass] => 81dc9bdb52d04dc20036dbd8313ed055 [utelephone] => 06 95 28 73 11 
+// [uclub] => ARBL, Association Radiomodéliste des Bords de Loire, 44980 Sainte luce sur Loire [userid] => 1 [appel] => ../administrer.html ) 
+
+
+if (!empty($_POST['Abandonner']) && !empty($_POST['appel'])){
+    header("Location: ".$_POST['appel']."?msg=Mise à jour abandonnée. ");
+    exit;
+}
+
 if (!empty($_POST['appel'])) {
     $appel = $_POST['appel'];  
 }
- 
+
+
 if (!empty($_POST['userid'])) {
     $userid = $_POST['userid'];  
 }
  
-if (!empty($_POST['usernom'])) {
-    $usernom = $_POST['usernom'];  
+if (!empty($_POST['unom'])) {
+    $usernom = $_POST['unom'];  
 }
 
-if (!empty($_POST['userlogin'])) {
-    $userlogin = $_POST['userlogin'];  
+if (!empty($_POST['ulogin'])) {
+    $userlogin = $_POST['ulogin'];  
 }
 
-if (!empty($_POST['statut'])) {
-    $statut = $_POST['statut'];  
+if (!empty($_POST['upass'])) {
+    $pass = $_POST['upass'];  
 }
 
-if (!empty($_POST['pass'])) {
-    $pass = $_POST['pass'];  
+if (isset($_POST['ustatut']) && (((int)$_POST['ustatut']) >= 0) && (((int)$_POST['ustatut']) < 4))  {
+    $statut = $_POST['ustatut'];  
 }
 
-if (!empty($_POST['telephone'])) {
-    $telephone = $_POST['telephone'];  
+if (!empty($_POST['uoldpass'])) {
+    $passmd5 = $_POST['uoldpass'];  
 }
 
-if (!empty($_POST['club'])) {
-    $club = $_POST['club'];  
+if (!empty($_POST['utelephone'])) {
+    $telephone = $_POST['utelephone'];  
 }
 
-if (!empty($userlogin){
+if (!empty($_POST['uclub'])) {
+    $club = $_POST['uclub'];  
+}
+
+if (!empty($userlogin)){
     connexion_db(); 
     
     if (empty($userid))
@@ -77,13 +93,16 @@ if (!empty($userlogin){
         $action=0;
         $reponse = mysql_add_user();
     }
-    else{
+    else if (!empty($passmd5)){
         // Debug
         if ($debug){
             echo "Mise à jour du compte Id: $userid, Nom: $usernom, Login: $userlogin, Rôle: $statut, Pass: $pass, Téléphone: $telephone, Club: $club<br />\n";                
         }    
         $action=1;       
-        $reponse = mysql_update_user();
+        $reponse = mysql_update_user($passmd5);
+    }
+    else{
+        $reponse = '';
     }
 }
 $mysqli -> close();
@@ -94,7 +113,7 @@ if (!$debug){
             header("Location: ".$appel."?msg=Nouveau compte enregistré. ".$reponse);
         }
         else{
-           header("Location: ".$appel."?msg=Compte modifié. ".$reponse;        
+           header("Location: ".$appel."?msg=Compte modifié. ".$reponse);        
         }
     }
     else{
@@ -112,10 +131,10 @@ else{
     }
     else{
         if (!$action){
-            echo "Erreur à l'enregistrement d'un compte ".$reponse;
+            echo "Erreur à l'enregistrement d'un compte. ";
         }
         else{
-            echo "Erreur à la modification d'un compte. ".$reponse;        
+            echo "Erreur à la modification d'un compte. ";        
         }
     }    
 }    
@@ -139,7 +158,7 @@ $sql='';
 $reponse='';
 
     if (!empty($userlogin)){
-        $sql='INSERT INTO `bdm_user` (`usernom`, `userlogin`, `statut`, `pass`, `telephone`, `club`) VALUES ('.addslashes($usernom).'", '.addslashes($userlogin).'", '.$statut.', '.md5($pass).', "'.$telephone.'", "'.addslashes($club).'")';
+        $sql='INSERT INTO `bdm_user` (`usernom`, `userlogin`, `statut`, `pass`, `telephone`, `club`) VALUES ("'.addslashes($usernom).'", "'.addslashes($userlogin).'", '.$statut.', "'.md5($pass).'", "'.$telephone.'", "'.addslashes($club).'")';
         // Debug
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                
@@ -155,7 +174,7 @@ $reponse='';
 
 
 //--------------------------
-function mysql_update_user(){ 
+function mysql_update_user($passmd5){ 
 global $debug;
 
 global $mysqli;
@@ -163,7 +182,6 @@ global $userid;
 global $usernom;
 global $userlogin;
 global $statut;
-global $pass;
 global $telephone;
 global $club;
 // userid 	usernom 	userlogin 	statut [1: admin, 2:auteur, 3: lecteur] pass [pass crypté MD5] 	telephone 	club	
@@ -171,19 +189,41 @@ $sql='';
 $reponse='';
 
     if (!empty($userid)){
-        $sql = 'UPDATE `bdm_user` SET `usernom`="'.addslashes($usernom).'", `userlogin`="'.addslashes($userlogin).'", `statut`='.$statut.', `pass`="'.md5($pass).'", `telephone`="'.addslashes($telephone).'", `club`="'.addslashes($club).'" WHERE `userid`='.$userid.';';
+        $sql = 'UPDATE `bdm_user` SET `usernom`="'.addslashes($usernom).'", `userlogin`="'.addslashes($userlogin).'", `statut`='.$statut.', `telephone`="'.addslashes($telephone).'", `club`="'.addslashes($club).'" WHERE `userid`='.$userid.' AND `pass`="'.$passmd5.'";';
         // Debug
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                
         }           
 
-        if ($result = $mysqli->query($sql){         
+        if ($result = $mysqli->query($sql)){         
             $reponse = '{"ok"=1, "userid":'.$userid.'}';  
         }                    
     }
     return $reponse;
 }
 
+//--------------------------
+function mysql_update_user_pass(){ 
+global $debug;
+global $pass;
+
+// userid 	usernom 	userlogin 	statut [1: admin, 2:auteur, 3: lecteur] pass [pass crypté MD5] 	telephone 	club	
+$sql='';
+$reponse='';
+
+    if (!empty($userid)){
+        $sql = 'UPDATE `bdm_user` SET `pass`="'.md5($pass).'" WHERE `userid`='.$userid.';';
+        // Debug
+        if ($debug){
+            echo "SQL: ".$sql."<br />\n";                
+        }           
+
+        if ($result = $mysqli->query($sql)){         
+            $reponse = '{"ok"=1, "userid":'.$userid.'}';  
+        }                    
+    }
+    return $reponse;
+}
 
 ?>
 

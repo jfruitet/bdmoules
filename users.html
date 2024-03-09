@@ -6,14 +6,14 @@
   <meta name="author" content="Jean Fruitet">
   <!-- base href="http://localhost/robonav/" target="_blank" -->
   <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
-  <title>Gestion des moules ARBL</title>
+  <title>BdMoules : Gestion des utilisateurs</title>
   <!-- Feuilles de style -->
 <link rel="stylesheet" href="./css/style.css"> 
 <link rel="stylesheet" href="./css/style1.css">
 <!-- link rel="stylesheet" href="./css/w3docs.css" -->
 </head>
 <body>
-<h2><a target="_blank" href="http://www.arbl.fr"><img src="./images/logo_arbl.png" alt="logo ARBL" title="logo ARBL"></a>Gestion des moules de l'ARBL</h2>
+<h2><a target="_blank" href="http://www.arbl.fr"><img src="./images/logo_arbl.png" alt="logo ARBL" title="logo ARBL"></a>Gestion des utilisateurs de la BdMoules de l'ARBL</h2>
 <p><a href="mailto:jean.fruitet@free.fr?subject=Moules ARBL">jean.fruitet@free.fr</a></p>
 <table>
 <tr><th>Documentation</th><th>Consulter</th><th colspan="2">Administrer</th><th colspan="2">Administrateur</th></tr>
@@ -29,13 +29,13 @@
 <p><span id="msg">Identifiez-vous pour accéder à l'enregistrement des moules...</span>
 <span id="loginform"><span></p>
 <div class="left">
-<h3>Liste des modèles et de leurs moules associés</h3>
-<p><span id="consigne">Sélectionnez un modèle.<span></p>
+<h3>Liste des utilisateurs</h3>
+<p><span id="consigne">Sélectionnez un utilisateur.<span></p>
 </div>
 <div class="rightscrolldown"><span id="infomodelessearch"></span></div>
-<div class="scrolldown"><span id="infomoules"></span></div>
+<!-- div class="scrolldown"><span id="infomoules"></span></div -->
 <div id="scrollleft">
-<span id="myFile">Pour chaque modèle enregistrez au moins une photo d'au plus 1200 x 800 au format .JPG ou .PNG</span>
+<span id="myFile">Pour chaque utilisateur renseignez son rôle et son tétéphone</span>
 <span id="myButton"></span>
 <span id="myPhoto"></span>
 <span id="myImage"></span>
@@ -53,7 +53,8 @@
 <script src="js/myscript.js"></script>
 <script src="js/ajax.js"></script>
 <script src="js/ajax2.js"></script>
-<script src="js/photos.js"></script>
+<script src="js/ajax3.js"></script>
+
 
 <script>
 // Chargement de la liste des fichiers de données vérifiées
@@ -64,8 +65,7 @@
         //console.debug("Administrateur : "+admin);
         adminpage =true;
     }
-    document.getElementById("scrollleft").style.display = "inline";
-    getModelesSearch();
+    //getModelesSearch();
     
     // Paramètres
     let msg = ''; 
@@ -82,28 +82,25 @@
         document.getElementById("msg").innerHTML += 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
 
         //console.debug("Admin reconnu. Afficher les modeles");
-        getModelesMoulesAdmin();
-        if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
-            // Affiche le bouton d'ajout d'une image pour ce modèle 
-            document.getElementById("myButton").innerHTML = '<button id="btnaddphoto">Ajouter une photo pour ce modèle</button>';
-            // Affiche le moule sélectionné 
-            getModeleMoulesImages(idmodeleglobal); 
-            editerThatModeleMoules(idmodeleglobal);
+        document.getElementById("scrollleft").style.display = "none";
+        document.getElementById("scrollright").style.display = "block";
+        getUsersAdmin();
+        if ((iduserglobal!==undefined) && (iduserglobal!==null) && (iduserglobal>0)){
+            // Affiche le bouton d'edition pour cet utilisateur 
+            document.getElementById("myButton").innerHTML = '<button id="btnedituser">Editer les informations pour cet utilisateur</button>';
+            getThatUser(iduserglobal); 
+            editerThatUser(iduserglobal);
             // Nouvelle photo
-            const btnaddphoto = document.querySelector('#btnaddphoto');       
-            btnaddphoto.addEventListener('click', (event) => { newPhoto();});                  
+            const btnedituser = document.querySelector('#btnedituser');       
+            btnedituser.addEventListener('click', (event) => { editUser();});                  
         }               
     }
     else { 
         if (!oklogin()) {
             document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>'; 
             document.getElementById("msg").innerHTML += 'Pour administrer la base de données identifiez-vous avec votre compte administrateur.';
-            getModelesMoules(); 
-            if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
-                // Affiche le moule sélectionné 
-                getModeleMoulesImages(idmodeleglobal); 
-                reserverModeleMoules(idmodeleglobal);
-            }
+            document.getElementById("scrollleft").style.display = "none";
+            document.getElementById("scrollright").style.display = "none";
         }
         else{
             formlogout();
