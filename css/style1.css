@@ -9,6 +9,15 @@
     font-weight: bold;
 }
 
+.button_alerte {
+    margin: 2px;
+    padding: 2px; 
+    background-color: red; 
+    color: white;
+    text-align: center;
+    font-weight: normal;
+}
+
 .input {
   float: none;
   background-color: navy; 

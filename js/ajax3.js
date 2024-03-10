@@ -200,9 +200,10 @@ function saisieThatUser(response) {
         // Edition   
         let url= url_serveur+'adduser.php';               
         str+='<h4>Utilisateur</h4>';
-        str+='<div><button class="button" id="btndeluser" name="btndeluser" onclick="confimerDeleteUser();">Supprimer</button></div>';
+        str+='<div class="button"><button class="button_alerte" id="btndeluser" name="btndeluser" onclick="confimerDeleteUser();">Supprimer</button></div>';
         
         // Creer un formulaire d'édition
+        str+='<h5>Edition</h5>';
         str+='<p>Complétez ce formulaire d\'édition</p>';
         // Formulaire de création
         str+='<form name="AddFormUser" action="'+url+'" method="post">';
