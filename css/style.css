@@ -86,7 +86,7 @@ th:nth-child(even),td:nth-child(even) {
   background-color: rgba(100, 212, 212, 0.4);
 }
 
-img {
+.imgright {
   float: right;
 }
 

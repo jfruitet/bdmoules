@@ -52,6 +52,7 @@ On distinguera dans la version définitive
 
 ### Ce qui reste à faire
 Renforcer la sûreté en implantant des fonctions de connexion basées sur l'utilisation de sessions enregistrées dans la BD.
+
 Implanter les rôles.
 
 ## License
