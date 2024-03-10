@@ -110,7 +110,7 @@ function selectUsersAdmin(response){
     str+='</table>';
     document.getElementById("myListModeles").innerHTML = str;
     
-        // Nouvel user
+    // Nouvel user
     const btnadduser = document.querySelector('#btnadduser');       
     btnadduser.addEventListener('click', (event) => {
         newUser();
@@ -190,16 +190,25 @@ function saisieThatUser(response) {
     // console.debug("Affichage des infos associées\n"+ response);
     // Traitement de la réponse 
     const thatuser = JSON.parse(response); 
-    if ((thatuser !== undefined) && (thatuser !== null) ){       
-        let url= url_serveur+'adduser.php';
-        let str='';
+    if ((thatuser !== undefined) && (thatuser !== null) ){    
+        iduser=thatuser.userid;
+        nomuser=thatuser.usernom;
+        courrieluser=thatuser.userlogin;
+        roleuser=thatuser.statut;    
         
+        let str='';             
+        // Edition   
+        let url= url_serveur+'adduser.php';               
         str+='<h4>Utilisateur</h4>';
-         // Creer un formulaire de réservation
+        str+='<div><button class="button" id="btndeluser" name="btndeluser" onclick="confimerDeleteUser();">Supprimer</button></div>';
+        
+        // Creer un formulaire d'édition
         str+='<p>Complétez ce formulaire d\'édition</p>';
         // Formulaire de création
         str+='<form name="AddFormUser" action="'+url+'" method="post">';
-        str+='<div class="button"><input type="submit" value="Editer" name="Editer" onclick="return verifSaisieUser(false);" /> <input type="reset" value="Réinitialiser" name="Reset" /> <input type="submit" name="Abandonner" value="Abandonner" /></div>';        
+        str+='<div class="button"><input type="submit" value="Editer" name="Editer" onclick="return verifSaisieUser(false);" />';
+        str+=' <input type="reset" value="Réinitialiser" name="Reset" />';
+        str+=' &nbsp; &nbsp; <input type="submit" name="Abandonner" value="Abandonner" /></div>';        
 
         // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
         str+='<div><label for="unom"><b>NOM Prénom</b>: </label><br /><input type="text" id="unom" size="50" name="unom" value="'+thatuser.usernom+'" autocomplete="on" />';
@@ -244,7 +253,7 @@ function saisieThatUser(response) {
         str+='</form>';      
         document.getElementById("scrollleft").style.display = "inline";
         document.getElementById("myImage").innerHTML = str;
-    }
+    }        
 }
 
 
@@ -302,4 +311,37 @@ function verifSaisieUser(add=false){
     return true;
 }
 
-
+// -----------------------------------------
+// Vérification des données
+function confimerDeleteUser(){
+console.debug("Suppression demandée");           
+    if ((courrieluser !== undefined) && (courrieluser.length > 0) && (iduser !== undefined) &&  (parseInt(iduser) > 0))                                  
+    { 
+        console.debug("Suppression demandée: "+courrieluser);
+        let str='';
+        let url= url_serveur+'deleteuser.php';
+        // Formulaire de confirmation
+        str+='<h4>Confirmez la suppression de cet utilisateur</h4>';
+        str+='<p>Toutes les informations de connexion le concernant seront supprimées...</p>';
+        str+='<form name="DelUserForm" action="'+url+'" method="post">';
+        str+='<div><b>NOM Prénom:</b> '+nomuser;
+        str+='<br /><b>Courriel:</b> '+courrieluser;
+        
+        str+='<br /><b>Rôle:</b> ';
+        if ((roleuser!==undefined) && (roleuser.length>0)){
+            if (roleuser=='3') {str+='Lecteur';} 
+            else if (roleuser=='2') {str+='Auteur';}
+            else if (roleuser=='1') {str+='<b>Administrateur</b>';} 
+            else {str+='Visiteur';}        
+        }
+        else {str+='Visiteur';}
+        str+='</div>';        
+        str+='<input type="hidden" id="iduser" name="iduser" value="'+iduser+'" />';
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageuser+'" />';
+        str+='<div class="button"><input type="submit" name="delete" value="Confirmer" /> &nbsp; &nbsp; <input type="submit" name="delete" value="Annuler" /></div>';                
+        str+='</form>';
+           
+        document.getElementById("myImage").innerHTML = str;         
+    }   
+    return true;
+}

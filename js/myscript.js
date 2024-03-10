@@ -36,7 +36,13 @@ let tVignettes=[]; // Tableau des fichiers vignettes
     let admin = '';
     let adminpassword = '';
     let okadmin = false;     
+
+// User    
     let iduser=0;
+    let nomuser='';
+    let courrieluser='';
+    let roleuser='';
+    
     /*  $appel='';  // Page appelante
 $userid=0;
 $usernom='';
