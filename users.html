@@ -53,6 +53,7 @@
 <script src="js/myscript.js"></script>
 <script src="js/ajax.js"></script>
 <script src="js/ajax2.js"></script>
+<script src="js/photos.js"></script>
 <script src="js/ajax3.js"></script>
 
 
@@ -61,10 +62,7 @@
  window.onload = function(){
     // Cookies
     checkCookies();
-    if (okadmin){
-        //console.debug("Administrateur : "+admin);
-        adminpage =true;
-    }
+    adminpage = 2;
     //getModelesSearch();
     
     // Paramètres
@@ -79,7 +77,7 @@
     if (okadmin) {
         document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
         formlogout();
-        document.getElementById("msg").innerHTML += 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
+        //document.getElementById("msg").innerHTML += 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
 
         //console.debug("Admin reconnu. Afficher les modeles");
         document.getElementById("scrollleft").style.display = "none";

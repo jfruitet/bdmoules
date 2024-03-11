@@ -24,14 +24,14 @@ function oklogin(){
 function formlogout(){
     // console.debug("Bouton Logout");
     let str='';
-    str+='<p>&nbsp; <button class="button" id="btnlogout" onclick="return logout();">Déconnexion</button></p>';
+    str+='<p>&nbsp; <button class="button" id="btnlogout" onclick="return logout(adminpage);">Déconnexion</button></p>';
     document.getElementById("logout").innerHTML = str;
 }
  
 // --------------------------------
-function logout(){
-            //console.debug("Logout confirmé");
-            dellCookie("sadmin");
+function logout(adminpage){
+    //console.debug("Logout confirmé");
+    dellCookie("sadmin");
             if (admin==Courriel) {
                 dellCookie("scourriel")
             }; 
@@ -46,12 +46,16 @@ function logout(){
             document.getElementById("logout").innerHTML = '&nbsp;';
             document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
             document.getElementById("msg").innerHTML = 'Pour administrer la base de données identifiez-vous avec votre compte administrateur.';
-            saisieLogin();
+    saisieLogin('', adminpage);
+    if (adminpage==2){
+        document.getElementById("scrollleft").style.display = "none";
+        document.getElementById("scrollright").style.display = "none";    
+    }            
     return true;   
 }
 
 // --------------------------------
-function getUserAutorisation(){
+function getUserAutorisation(adminpage=0){
 // Le courriel fourni par le cookie est-il reconnu ?
     //console.debug("Login : vérification Courriel: "+Courriel);
     admin='';
@@ -60,7 +64,7 @@ function getUserAutorisation(){
     if ((Courriel !== undefined) && (Courriel !== null) && (Courriel.length>0)){
         //console.debug("Vérification des droits attachés à un utilisateur");
         if (verifLogin(Courriel, '') === 0){ // Demander le mot de passe
-            return saisieLogin(Courriel); 
+            return saisieLogin(Courriel,adminpage); 
         }
     }     
     return false;  
@@ -92,7 +96,7 @@ function getUserAutorisation(){
  
  
 // --------------------------------
-function saisieLogin(mail=''){
+function saisieLogin(mail='',adminpage=0){
 // Saisie d'une adresse mail 
 
     //console.debug("Saisie du Login");
@@ -116,7 +120,7 @@ function saisieLogin(mail=''){
         if ((adminmail !== undefined) && (adminmail !== null) && (adminmail.value !== '')
             && (adminpass !== undefined) && (adminpass !== null) && (adminpass.value !== '')){
             if (verifLogin(adminmail.value, adminpass.value) === 1){
-                afficheAdminEnv();
+                afficheAdminEnv(adminpage);
                 return true;
             }
         } 
@@ -125,25 +129,50 @@ function saisieLogin(mail=''){
 }
 
 // ------------------------------
-function afficheAdminEnv(){
+function afficheAdminEnv(adminpage=0){
+    console.debug("AfficheAdminEnv() adminpage: "+adminpage);
     if ((admin !== undefined) && (admin !== null) && (admin.length > 0)
         && (adminpassword !== undefined) && (adminpassword !== null) && (adminpassword.length > 0)
         && (okadmin !== undefined) && (okadmin !== null) && (okadmin === true)){
         //console.debug("Admin reconnu: "+admin);
-        adminpage=true;
         setCookie("sadmin", admin, 1); // 1 jour
         setCookie("sadminpass", adminpassword, 1); // 1 jour  
         document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
         document.getElementById("msg").innerHTML = 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
         document.getElementById("loginform").innerHTML = '';    
         formlogout();
-        getModelesMoulesAdmin();
-        if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
-            // Affiche le bouton d'ajout d'une image pour ce modèle 
-            document.getElementById("myButton").innerHTML = '<button id="btnaddphoto">Ajouter une photo pour ce modèle</button>';        
-            // Affiche le moule sélectionné 
-            getModeleMoulesImages(idmodeleglobal); 
-            editerThatModeleMoules(idmodeleglobal);
+        if (adminpage==1){
+            // administrer.html
+            getModelesMoulesAdmin();
+            if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+                // Affiche le bouton d'ajout d'une image pour ce modèle 
+                document.getElementById("myButton").innerHTML = '<button id="btnaddphoto">Ajouter une photo pour ce modèle</button>';        
+                // Affiche le moule sélectionné 
+                getModeleMoulesImages(idmodeleglobal); 
+                editerThatModeleMoules(idmodeleglobal);
+            }
+        }
+        else if (adminpage==2){
+            // user.html
+            document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+            formlogout();
+            document.getElementById("msg").innerHTML = '';
+            
+            console.debug("Admin reconnu. Afficher les utilisateurs");
+            document.getElementById("scrollleft").style.display = "none";
+            document.getElementById("scrollright").style.display = "block";
+            getUsersAdmin();
+            /*
+            if ((iduserglobal!==undefined) && (iduserglobal!==null) && (iduserglobal>0)){
+                // Affiche le bouton d'edition pour cet utilisateur 
+                document.getElementById("myButton").innerHTML = '<button id="btnedituser">Editer les informations pour cet utilisateur</button>';
+                getThatUser(iduserglobal); 
+                editerThatUser(iduserglobal);
+                // Nouvel utilisateur
+                const btnedituser = document.querySelector('#btnedituser');       
+                btnedituser.addEventListener('click', (event) => { editUser();});                  
+            }               
+            */
         }
     }
 }                                                
