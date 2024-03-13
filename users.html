@@ -16,16 +16,16 @@
 <h2><a target="_blank" href="http://www.arbl.fr"><img class="imgright" src="./images/logo_arbl.png" alt="logo ARBL" title="logo ARBL"></a>Gestion des utilisateurs de la BdMoules de l'ARBL</h2>
 <p><a href="mailto:jean.fruitet@free.fr?subject=Moules ARBL">jean.fruitet@free.fr</a></p>
 <table>
-<tr><th>Documentation</th><th>Consulter</th><th colspan="2">Administrer</th><th colspan="2">Administrateur</th></tr>
+<tr><th>Documentation</th><th>Consulter</th><th colspan="2">Administrer</th><th colspan="2">Connexion</th></tr>
 <tr><td><a href="./documentation.html">Documentation</a></td>
 <td><a href="./index.html">Rechercher / Réserver</a></td>
-<td><a href="./administrer.html">Ajouter des modèles, des moules et des photos</a></td>
-<td><a href="./users.html">Gérer les utilisateurs</a></td>
+<td><a href="./administrer.php">Ajouter des modèles, des moules et des photos</a></td>
+<td><a href="./users.php">Gérer les utilisateurs</a></td>
 <td><span id="login">&nbsp;<span></td>
 <td><span id="logout">&nbsp;<span></td>
 </tr>
 </table>
-<h3>Administration de la base de données</h3>
+<h3>Administration des utilisateurs</h3>
 <p><span id="msg">Identifiez-vous pour accéder à l'enregistrement des moules...</span>
 <span id="loginform"><span></p>
 <div class="left">
@@ -33,7 +33,7 @@
 <p><span id="consigne">Sélectionnez un utilisateur.<span></p>
 </div>
 <div class="rightscrolldown"><span id="infomodelessearch"></span></div>
-<!-- div class="scrolldown"><span id="infomoules"></span></div -->
+<div class="scrolldown"><span id="infomoules"></span></div>
 <div id="scrollleft">
 <span id="myFile">Pour chaque utilisateur renseignez son rôle et son tétéphone</span>
 <span id="myButton"></span>
@@ -45,7 +45,8 @@
 </div>
 <div class="scrollleft">
 </div>
-<div id="basdepage">Version 0.2 (<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>) <a href="mailto:jean.fruitet@.free.fr?subject=Moules ARBL">JF</a></div>
+
+<div id="basdepage">Version 0.3 (<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>) <a href="mailto:jean.fruitet@.free.fr?subject=Moules ARBL">JF</a></div>
 </body>
 
 <script src="js/config.js"></script>
@@ -77,6 +78,7 @@
     if (okadmin) {
         document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
         formlogout();
+        
         //document.getElementById("msg").innerHTML += 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
 
         //console.debug("Admin reconnu. Afficher les modeles");
@@ -93,6 +95,17 @@
             btnedituser.addEventListener('click', (event) => { editUser();});                  
         }               
     }
+    else if (okauteur || oklecteur) {
+            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
+            formlogout(); 
+            document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet de réserver des moules mais pas d\'administrer la base de données.';
+            getModelesMoules(); 
+            if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+                // Affiche le moule sélectionné 
+                getModeleMoulesImages(idmodeleglobal); 
+                reserverModeleMoules(idmodeleglobal);
+            }
+    }    
     else { 
         if (!oklogin()) {
             document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>'; 

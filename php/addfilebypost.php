@@ -1,6 +1,6 @@
 <?php
 
-// Enregistre une image codée base64 au format mime ad hoc
+// Enregistre une image codée base64 au format mime ad hoc dans un dossier ad hoc et crée une vignette
 // Dépose un fichier 
 include ("./include/config.php");
 $debug=false;

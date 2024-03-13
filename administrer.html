@@ -16,11 +16,11 @@
 <h2><a target="_blank" href="http://www.arbl.fr"><img class="imgright" src="./images/logo_arbl.png" alt="logo ARBL" title="logo ARBL"></a>Gestion des moules de l'ARBL</h2>
 <p><a href="mailto:jean.fruitet@free.fr?subject=Moules ARBL">jean.fruitet@free.fr</a></p>
 <table>
-<tr><th>Documentation</th><th>Consulter</th><th colspan="2">Administrer</th><th colspan="2">Administrateur</th></tr>
+<tr><th>Documentation</th><th>Consulter</th><th colspan="2">Administrer</th><th colspan="2">Connexion</th></tr>
 <tr><td><a href="./documentation.html">Documentation</a></td>
 <td><a href="./index.html">Rechercher / Réserver</a></td>
-<td><a href="./administrer.html">Ajouter des modèles, des moules et des photos</a></td>
-<td><a href="./users.html">Gérer les utilisateurs</a></td>
+<td><a href="./administrer.php">Ajouter des modèles, des moules et des photos</a></td>
+<td><a href="./users.php">Gérer les utilisateurs</a></td>
 <td><span id="login">&nbsp;<span></td>
 <td><span id="logout">&nbsp;<span></td>
 </tr>
@@ -45,7 +45,7 @@
 </div>
 <div class="scrollleft">
 </div>
-<div id="basdepage">Version 0.2 (<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>) <a href="mailto:jean.fruitet@.free.fr?subject=Moules ARBL">JF</a></div>
+<div id="basdepage">Version 0.3 (<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>) <a href="mailto:jean.fruitet@.free.fr?subject=Moules ARBL">JF</a></div>
 </body>
 
 <script src="js/config.js"></script>
@@ -59,7 +59,7 @@
 // Chargement de la liste des fichiers de données vérifiées
  window.onload = function(){
     // Cookies
-    checkCookies();
+    checkCookies(); // Initialise les variables globales 
     adminpage = 1;
     document.getElementById("scrollleft").style.display = "inline";
     getModelesSearch();
@@ -73,7 +73,7 @@
     }
     document.getElementById("msg").innerHTML = '<span class="surligne">'+msg+'</span> ';        
 
-    if (okadmin) {
+    if (okadmin || okauteur) {
         document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
         formlogout();
         document.getElementById("msg").innerHTML += 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
@@ -91,19 +91,25 @@
             btnaddphoto.addEventListener('click', (event) => { newPhoto();});                  
         }               
     }
-    else { 
-        if (!oklogin()) {
-            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>'; 
-            document.getElementById("msg").innerHTML += 'Pour administrer la base de données identifiez-vous avec votre compte administrateur.';
+    else if (oklecteur) {
+            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
+            formlogout(); 
+            document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet de réserver des moules mais pas d\'administrer la base de données.';
             getModelesMoules(); 
             if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
                 // Affiche le moule sélectionné 
                 getModeleMoulesImages(idmodeleglobal); 
                 reserverModeleMoules(idmodeleglobal);
             }
-        }
-        else{
-            formlogout();
+    }
+    else{
+        document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
+        document.getElementById("msg").innerHTML += 'Vous pouvez lister nos modèles et leurs moules mais ni en réserver ni en ajouter.';
+        listModelesMoules(); 
+        if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+                // Affiche le moule sélectionné 
+                listModeleMoulesImages(idmodeleglobal); 
+                listModeleMoules(idmodeleglobal);
         }
     }
  

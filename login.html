@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <meta charset="UTF-8">  
+  <meta name="keywords" content="HTML, CSS, JavaScript">
+  <meta name="description" content="Gestion des Moules ARBL">
+  <meta name="author" content="Jean Fruitet">
+  <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+  <title>Gestion des moules ARBL</title>
+  <!-- Feuilles de style -->
+<link rel="stylesheet" href="./css/style.css"> 
+<link rel="stylesheet" href="./css/style1.css">
+</head>
+<body>
+<h2><a target="_blank" href="http://www.arbl.fr"><img class="imgright" src="./images/logo_arbl.png" alt="logo ARBL" title="logo ARBL"></a>Moules de l'ARBL</h2>
+<p><a href="mailto:jean.fruitet@free.fr?subject=Moules ARBL">jean.fruitet@free.fr</a></p>
+<table>
+<tr><th>Documentation</th><th>Consulter</th><th colspan="2">Administrer</th><th colspan="2">Connexion</th></tr>
+<tr><td><a href="./documentation.html">Documentation</a></td>
+<td><a href="./index.html">Rechercher / Réserver</a></td>
+<td><a href="./administrer.php">Ajouter des modèles, des moules et des photos</a></td>
+<td><a href="./users.php">Gérer les utilisateurs</a></td>
+<td><span id="login">&nbsp;<span></td>
+<td><span id="logout">&nbsp;<span></td>
+</tr>
+</table>
+<h3>Connexion</h3>
+<p><span id="msg">Identifiez-vous pour accéder à la réservation des moules...</span>
+<span id="loginform"><span></p>
+<div class="left">
+<p><span id="consigne"><span></p>
+</div>
+<div id="basdepage">Version 0.3 (<a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.fr">CC BY-SA 4.0</a>) <a href="mailto:jean.fruitet@.free.fr?subject=Moules ARBL">JF</a></div>
+</body>
+<script src="js/config.js"></script>
+<script src="js/login.js"></script>
+<script src="js/myscript.js"></script>
+
+<script>
+// Chargement de la liste des fichiers de données vérifiées
+ window.onload = function(){
+    // Cookies
+    checkCookies();
+    adminpage = 0;
+    // Paramètres
+    let msg = ''; 
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.has('msg')){
+        msg = urlParams.get('msg');
+    }
+    document.getElementById("msg").innerHTML = '<span class="surligne">'+msg+'</span> ';        
+    if (!oklogin()) {
+            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>'; 
+            document.getElementById("msg").innerHTML += 'Identifiez-vous avec votre compte utilisateur.';
+    }
+    else{
+        document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+        formlogout();
+    }
+}    
+</script>
+</html>

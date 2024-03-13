@@ -32,28 +32,25 @@ let tVignettes=[]; // Tableau des fichiers vignettes
     var Commentaire = '';
           
 // Admin
-    let adminpage = 0; // pour distinguer la page admin.html: 1 et la page user.html: 2 de la page index.html : 0
-    let admin = '';
-    let adminpassword = '';
-    let okadmin = false;     
+    let adminpage = 0; // pour distinguer la page adminisrer.html: 1 et la page users.html: 2 de la page index.html : 0
+    let admin = '';  // Le login, c'est à dire le mail de connexion de l'utilisateur
+    let role = 0;   // Le rôle de la personne logée
+    // let adminpassword = ''; // Obsolète
+    let okadmin = false;    
+    let okauteur = false;
+    let oklecteur = false;
+    
+    let okvisiteur = true;       
 
-// User    
+// User  pour les créations / édition d'utilisateurs  
     let iduser=0;
     let nomuser='';
     let courrieluser='';
     let roleuser='';
     
-    /*  $appel='';  // Page appelante
-$userid=0;
-$usernom='';
-$userlogin='';
-$statut=0;
-$pass='';
-$telephone='';
-$club='';
-*/
     var usernom = null;               
-    var userlogin = null;    
+    var userlogin = null; 
+    // var usermail = null; // le mail est la valeur de login   
     var userphone = null;   
     var userpass = null;  
     var userstatut = null;
@@ -114,19 +111,32 @@ function checkCookies() {
         }    
     }
     
-    // Compte utilisateur permettant l'accès à la gestion des données
+    // Compte utilisateur permettant l'accès ou pas à la gestion des données en fonction du rôle
     // Admin
-    let sadmin = getCookie("sadmin");
-    let sadminpass = getCookie("sadminpass");
+    let sadmin = getCookie("usermail"); // Positionné au moment de la connexion
+    //let sadminpass = getCookie("sadminpass"); // Obsolète ; la vérification est déportée vers des sessions PHP
+    let srole = getCookie("role");
+    
+    // Valeurs par défaut
     okadmin=false;
-    if ((sadmin!=="" && sadmin!==null) && (sadminpass!=="" && sadminpass!==null)) {
+    okauteur=false;
+    oklecteur=false;
+    okvisiteur=true;    
+    admin='';
+    role=0;
+    if ((sadmin!=="" && sadmin!==null) && (srole!=="" && srole!==null)) {
         // Verifier si c'est un admin autorisé
-        // console.debug("Vérification des droits attachés à un utilisateur");
-        okadmin=false;
-        if (verifLogin(sadmin, sadminpass) === 1){ // OK
-            okadmin=true;
-            admin=sadmin;
-            adminpassword=sadminpass;
+        console.debug("Vérification des droits attachés à un utilisateur");
+        admin=sadmin; 
+        role=parseInt(srole); 
+        if ((role > 0) && (role < 4)){ 
+            // Statut de connexion à 1 pour admin, 2 pour auteur, 3 pour lecteur sinon 0: visiteur
+            okvisiteur=false;
+            switch (role) {
+                case 1 : okadmin=true; break;
+                case 2 : okauteur=true; break;
+                default : oklecteur=true; break;  
+            }                   
         }
     }
 
@@ -139,8 +149,7 @@ function checkCookies() {
             iduserglobal=parseInt(siduser);
         }                              
     } 
-    
-    
+        
     // Données des personnes voulant réserver un moule
     // Ces données ne sont pas stockées dans la base de données
     // User
@@ -232,7 +241,7 @@ let myInitPost = {
     body:"",
     referrer: "about:client", //ou "" (pas de réferanr) ou une url de l'origine
     referrerPolicy: "no-referrer-when-downgrade", //ou no-referrer, origin, same-origin...
-    mode: "cors", //ou same-origin, no-cors
+    mode: "same-origin", // cors, same-origin, no-cors
     credentials: "include", //ou same-origin ou omit, include
     cache: "default", //ou no-store, reload, no-cache, force-cache, ou only-if-cached
     redirect: "follow", //ou manual ou error

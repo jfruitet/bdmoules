@@ -168,7 +168,10 @@ function setMoules(response) {
  * 
  *********************************************/
  
-// Récupère et affiche tous les modèles et leurs moules associés
+
+
+// Récupère et affiche tous les modèles et leurs moules associés avec les boutons de réservation
+// si ce n'est pas un visiteur
 // ------------------------
 function getModelesMoules() {    
         //console.debug("Chargement des modeles et de leurs moules");
@@ -215,39 +218,6 @@ function setModelesMoules(response) {
     document.getElementById("myListModeles").innerHTML = selectModelesMoules();
 }
 
-/*
-// N'est pas utilisée
-// -----------------------
-function affModelesMoules(){
-    //console.debug("Affichage des modèles et des moules associés\n");
-    let str='';
-    str='<table><tr><th>&nbsp;</th><th>ID Modèle</th><th>Nom</th><th>Descriptif</th><th>Dimensions</th><th>Catégorie</th><th>ID Moule</th><th>N°</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
-    if ((tModelesMoules !== undefined) && (tModelesMoules.length>0)){ 
-        for (let i in tModelesMoules) {
-            // str+='<tr><td colspan="14">'+tModelesMoules[i]+'</td></tr>'; 
-            str+='<tr>';
-            for (let j in tModelesMoules[i]) {  
-                //console.debug(tModelesMoules[i]+"\n");
-                if (j==6) { // idmoule
-                    str+='<td><a href="reservation.html?idmoule='+tModelesMoules[i][j]+'">'+tModelesMoules[i][j]+'</a></td>';
-                }
-                else
-                if (tModelesMoules[i][j] != null){
-                    str+='<td>'+tModelesMoules[i][j]+'</td>';
-                }
-                else{
-                    str+='<td>&nbsp;</td>';
-                }                
-            }     
-            str+='</tr>';
-        }
-    }  
-    str+='</table>';      
-    return str;        
-}
-*/
-
-
 // -----------------------
 function selectModelesMoules(){
 // Affiche une table de modèles et de leurs moules
@@ -276,7 +246,7 @@ function selectModelesMoules(){
                     if ((i==0) || (i>0) && (tModelesMoules[i][0] !== tModelesMoules[i-1][0])){
                         // Nouvelle ligne de modèle                             
                         if (j==0) { // idmodele
-                            str+='<td><button name="modele'+idmodele+'" onclick="getModeleMoulesImages('+idmodele+'); reserverModeleMoules('+idmodele+'); setModeleSearch('+idmodele+');">'+idmodele+'</button></td>';                    
+                            str+='<td><button name="modele'+idmodele+'" onclick="getModeleMoulesImages('+idmodele+'); reserverModeleMoules('+idmodele+'); setModeleSearch('+idmodele+');">'+idmodele+'</button></td>';
                             compteurmodele++;  
                         }
                         else {
@@ -399,8 +369,14 @@ function affThatMoule(tMoule){
                 var idmoule=tMoule[i][1];
                 var idmodele=tMoule[i][0];
                 if (j==0) { // checkbox
-                    str+='<td><button name="reservationmoule'+idmoule+'" onclick="reserverMoule('+idmodele+','+idmoule+');">Réserver</button></td>';
+                    if (!okvisiteur){
+                        str+='<td><button name="reservationmoule'+idmoule+'" onclick="reserverMoule('+idmodele+','+idmoule+');">Réserver</button></td>';
+                    }
+                    else{
+                        str+='<td>&nbsp;</td>';
+                    }              
                 }
+                
                 else
                 if (tMoule[i][j] != null){
                     str+='<td>'+tMoule[i][j]+'</td>';
@@ -491,7 +467,12 @@ function selectThatModeleMoules(response) {
     
     let str='';
     //str+='<p>Sélectionnez les moules à réserver</p>';
-    str+='<p><button id="btn">Réserver</button>  &nbsp; (<a target="_blank" href="help.html#Prêt">?</a>)</p>';
+    if (!okvisiteur){
+        str+='<p><button id="btn">Réserver</button>  &nbsp; (<a target="_blank" href="help.html#Prêt">?</a>)</p>';
+    }
+    else{
+        str+='<p><b>Moules</b> <a href="login.php">Identifiez-vous</a> pour accéder au <a target="_blank" href="help.html#Prêt">prêt</a></p>';    
+    }
     str+='<table><tr><th>Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
     
     if ((tThatModeleMoules !== undefined) && (tThatModeleMoules.length>0)){ 
@@ -502,7 +483,12 @@ function selectThatModeleMoules(response) {
                 var idmodele=tThatModeleMoules[i][0];
                 var idmoule=tThatModeleMoules[i][1];
                 if (j==0) { // checkbox
-                    str+='<td><input type="checkbox" id="idmoule'+idmoule+'" name="idmoule" value="'+idmoule+'" checked /></td>';
+                    if (!okvisiteur){
+                        str+='<td><input type="checkbox" id="idmoule'+idmoule+'" name="idmoule" value="'+idmoule+'" checked /></td>';
+                    }
+                    else{
+                        str+='<td>(<a target="_blank" href="help.html#Prêt">?</a>)</td>';
+                    }
                 }
                 else
                 if (tThatModeleMoules[i][j] != null){
@@ -956,7 +942,7 @@ function ajax_GetInfoModeleMoules(url){
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
         JSON.parse(response);
-        if ((response.Ok==1) && (respnse.data!==undefined) && (response.data.length>0)){
+        if ((response.Ok==1) && (response.data!==undefined) && (response.data.length>0)){
             redigeReservation(response);
         }         
                     })  // tout le boulot se fait ici  dans le script  setModeles.js              
