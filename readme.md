@@ -1,6 +1,6 @@
 # BdMoules
 ## Gestion des moules de l'ARBL
-*Version 0.2* - JF - 2024
+*Version 0.3* - JF - 2024
 
 Cette application Web permet de recenser la listes des moules disponibles en prêt à l'ARBL.
 
@@ -51,9 +51,11 @@ On distinguera dans la version définitive
 - les administrateurs, qui gérent les connexions et les ajouts / suppressions de modèles, moules, photos et utilisateurs.
 
 ### Ce qui reste à faire
-Renforcer la sûreté en implantant des fonctions de connexion basées sur l'utilisation de sessions enregistrées dans la BD.
+Les fonctions de connexion sont désormais basées sur l'utilisation de sessions.
 
-Implanter les rôles.
+La table des utilisateurs bdm_user stocke les informations permettant la connexion.
+
+Les rôles sont implantés.
 
 ## License
 MIT
