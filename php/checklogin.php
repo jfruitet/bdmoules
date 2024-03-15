@@ -1,5 +1,7 @@
 <?php
 // Vérification des droits de connexion et du rôle
+// On démarre une nouvelle session
+include ("./include/session.php");
 include ("./include/mysql.php");
 $debug=false;
 $mysqli=NULL; // BD class data
@@ -40,18 +42,7 @@ if (isset($data) && (!empty($data)))
         //echo "UserMail: ".$mydata['usermail']." UserPass: ".$mydata['userpass']."<br />\n";
         connexion_db();
         if ($role=connexion($mydata['usermail'], $mydata['userpass'])) // on vérifie que les identifiants sont bons
-        {
-            session_start(); 
-        
-            $domain = ($_SERVER['HTTP_HOST'] != 'localhost') ? $_SERVER['HTTP_HOST'] : false;   // Localhost pas forcément supporté par les navigateurs    
-            $arr_cookie_options = array (
-                'expires' => time() + 60*60*24*1, // 1 jour
-                'path' => '/bdmoules/', // pas ailleurs que le dossier ad hoc
-                'domain' => $domain, // leading dot for compatibility or use subdomain
-                'secure' => false,     // or true : forcément HTTPS
-                'httponly' => false,    // or true : uniquement HTML et pas de javascript
-                'samesite' => 'Strict' // None || Lax  || Strict
-            );             
+        {      
             setcookie('usermail', $mydata['usermail'], $arr_cookie_options);
             setcookie('role', $role, $arr_cookie_options);
             $reponse =  '{"ok":1, "role":'.$role.'}';

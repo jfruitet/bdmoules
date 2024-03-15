@@ -105,11 +105,11 @@
     else{
         document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
         document.getElementById("msg").innerHTML += 'Vous pouvez lister nos modèles et leurs moules mais ni en réserver ni en ajouter.';
-        listModelesMoules(); 
+        getModelesMoules(); 
         if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
                 // Affiche le moule sélectionné 
-                listModeleMoulesImages(idmodeleglobal); 
-                listModeleMoules(idmodeleglobal);
+                getModeleMoulesImages(idmodeleglobal); 
+                reserverModeleMoules(idmodeleglobal);
         }
     }
  

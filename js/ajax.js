@@ -507,34 +507,36 @@ function selectThatModeleMoules(response) {
 
     document.getElementById("infomoules").innerHTML = str;
     document.getElementById("consigne").innerHTML = 'Modèle sélectionné: <b>'+idmodeleglobal+'</b>. Sélectionnez les moules à réserver';
- 
-    // Collecte des ID des moules sélectionnés
-    const btn = document.querySelector('#btn');
+    
+    if (!okvisiteur){
+        // Collecte des ID des moules sélectionnés
+        const btn = document.querySelector('#btn');
         
-    btn.addEventListener('click', (event) => {
-        let checkboxes = document.querySelectorAll('input[name="idmoule"]:checked');
-        tidmoules = [];        
-        checkboxes.forEach((checkbox) => {
+        btn.addEventListener('click', (event) => {
+            let checkboxes = document.querySelectorAll('input[name="idmoule"]:checked');
+            tidmoules = [];        
+            checkboxes.forEach((checkbox) => {
                 tidmoules.push(checkbox.value);
-        });
-        //console.debug("idmoules\n"+idmoulesvalues);
+            });
+            //console.debug("idmoules\n"+idmoulesvalues);
         
-        // Collecte des descriptions de moules sélectionnés
-        tdescription = [];
-        if (tidmoules.length>0){
-            for (let j in tidmoules){
-                for (let i in tThatModeleMoules){    
-                    if (tidmoules[j]==tThatModeleMoules[i][1]){                       
-                        //idmouleglobal=tidmoules[j];
-                        tAux= [];
-                        tAux.push(tThatModeleMoules[i][1],tThatModeleMoules[i][2],tThatModeleMoules[i][3],tThatModeleMoules[i][4]);
-                        tdescription.push(tAux);
-                    }           
-                }
-            }        
-        }    
-        reserverThatMoules();
-    });    
+            // Collecte des descriptions de moules sélectionnés
+            tdescription = [];
+            if (tidmoules.length>0){
+                for (let j in tidmoules){
+                    for (let i in tThatModeleMoules){    
+                        if (tidmoules[j]==tThatModeleMoules[i][1]){                       
+                            //idmouleglobal=tidmoules[j];
+                            tAux= [];
+                            tAux.push(tThatModeleMoules[i][1],tThatModeleMoules[i][2],tThatModeleMoules[i][3],tThatModeleMoules[i][4]);
+                            tdescription.push(tAux);
+                        }           
+                    }
+                }        
+            }    
+            reserverThatMoules();
+        });
+    }                
 } 
  
 //-----------------------------------------

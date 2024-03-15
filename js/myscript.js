@@ -1,5 +1,5 @@
 // JavaScript Document
-
+let version = '0.3';
 var fichieracharger='';
 let tModeles = []; // Tableau du contenu des modeles chargés
 let tModele = []; // Tableau du contenu du modele sélectionné
@@ -126,7 +126,7 @@ function checkCookies() {
     role=0;
     if ((sadmin!=="" && sadmin!==null) && (srole!=="" && srole!==null)) {
         // Verifier si c'est un admin autorisé
-        console.debug("Vérification des droits attachés à un utilisateur");
+        //console.debug("Vérification des droits attachés à un utilisateur");
         admin=sadmin; 
         role=parseInt(srole); 
         if ((role > 0) && (role < 4)){ 

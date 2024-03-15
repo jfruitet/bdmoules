@@ -116,7 +116,7 @@ function getUserAutorisation(adminpage=0){
 function saisieLogin(mail='',adminpage=0){
 // Saisie d'une adresse mail 
 
-    console.debug("Saisie du Login");
+    //console.debug("Saisie du Login");
     okadmin=false;
     admin=''; // toute saisie annule les autorisations antérieures
     let str='';
@@ -145,14 +145,14 @@ function saisieLogin(mail='',adminpage=0){
   // Valuer de retour : -1 : non logé; 0 : verifier password ; 1: OK
  // -------------------------------
  function verifLoginAjax(usermail, userpass, adminpage=0){
-    console.debug("UserMail: "+usermail+", UsePass: "+userpass+" AdminPage:"+adminpage);
+    //console.debug("UserMail: "+usermail+", UsePass: "+userpass+" AdminPage:"+adminpage);
     if ((usermail !== undefined) && (usermail !== '') && (userpass !== undefined) && (userpass !== '')){
         let url = "./php/checklogin.php";
         myInitPost.body = '{"usermail":"'+usermail+'", "userpass":"'+userpass+'"}';
         fetch(url, myInitPost)
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
-                console.debug(response);
+                //console.debug(response);
                 response = JSON.parse(response);
                 if (response.ok==1){    // ça s'est ma cuisine interne                    
                     document.getElementById("consigne").innerHTML='Connexion effectuée <span class="surligne">&lt;'+usermail+'&gt; Rôle: <i>'+response.role+'</i></span> effectué.';
@@ -166,7 +166,7 @@ function saisieLogin(mail='',adminpage=0){
 
 // ------------------------------
 function afficheAdminEnv(usermail, role, adminpage){
-    console.debug("AfficheAdminEnv() Mail: "+usermail+" Rôle: "+role+" Adminpage: "+adminpage);
+    //console.debug("AfficheAdminEnv() Mail: "+usermail+" Rôle: "+role+" Adminpage: "+adminpage);
     if ((role > 0) && (role < 4))
     {
         // Statut de connexion à 1 pour admin, 2 pour auteur, 3 pour lecteur sinon 0: visiteur
@@ -198,7 +198,7 @@ function afficheAdminEnv(usermail, role, adminpage){
             formlogout();
             document.getElementById("msg").innerHTML = '';
             
-            console.debug("Admin reconnu. Afficher les utilisateurs");
+            //console.debug("Admin reconnu. Afficher les utilisateurs");
             document.getElementById("scrollleft").style.display = "none";
             document.getElementById("scrollright").style.display = "block";
             getUsersAdmin();

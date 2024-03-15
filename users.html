@@ -29,7 +29,7 @@
 <p><span id="msg">Identifiez-vous pour accéder à l'enregistrement des moules...</span>
 <span id="loginform"><span></p>
 <div class="left">
-<h3>Liste des utilisateurs</h3>
+<h3 id="titre">Liste des utilisateurs</h3>
 <p><span id="consigne">Sélectionnez un utilisateur.<span></p>
 </div>
 <div class="rightscrolldown"><span id="infomodelessearch"></span></div>
@@ -98,7 +98,9 @@
     else if (okauteur || oklecteur) {
             document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
             formlogout(); 
+            document.getElementById("titre").innerHTML = 'Liste des modèles et de leurs moules associés';
             document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet de réserver des moules mais pas d\'administrer la base de données.';
+            getModelesSearch();
             getModelesMoules(); 
             if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
                 // Affiche le moule sélectionné 
