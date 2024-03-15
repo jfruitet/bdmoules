@@ -33,7 +33,7 @@
 <p><span id="consigne">Sélectionnez un utilisateur.<span></p>
 </div>
 <div class="rightscrolldown"><span id="infomodelessearch"></span></div>
-<div class="scrolldown"><span id="infomoules"></span></div>
+<div id="scrolldown"><span id="infomoules"></span></div>
 <div id="scrollleft">
 <span id="myFile">Pour chaque utilisateur renseignez son rôle et son tétéphone</span>
 <span id="myButton"></span>
@@ -82,6 +82,7 @@
         //document.getElementById("msg").innerHTML += 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
 
         //console.debug("Admin reconnu. Afficher les modeles");
+        document.getElementById("scrolldown").style.display = "none";
         document.getElementById("scrollleft").style.display = "none";
         document.getElementById("scrollright").style.display = "block";
         getUsersAdmin();
@@ -96,10 +97,19 @@
         }               
     }
     else if (okauteur || oklecteur) {
+            document.getElementById("login").innerHTML += ' <span class="surligne">Accès réservé.</span>';
+            formlogout(); 
+            document.getElementById("titre").innerHTML = 'Liste des modèles et de leurs moules associés';
+            
             document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
             formlogout(); 
             document.getElementById("titre").innerHTML = 'Liste des modèles et de leurs moules associés';
-            document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet de réserver des moules mais pas d\'administrer la base de données.';
+            if (oklecteur) {
+                document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet de réserver des moules mais pas d\'administrer la base de données.';
+            }
+            else{
+                document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet d\'ajouter des moules mais pas d\'administrer les utilisateurs.';
+            }
             getModelesSearch();
             getModelesMoules(); 
             if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
