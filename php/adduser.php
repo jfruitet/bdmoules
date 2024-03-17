@@ -1,8 +1,15 @@
 <?php
 // Création d'un pass crypté MD5
 
-
+// Session activée 
 include ("./include/config.php");
+include ("./include/session.php");
+
+if (!isset($role) || ($role<ADMIN)){
+    echo '{"Ok":0, "msg":"Vous n\'avez pas accès à cette fonction"}';
+    die();    
+}
+
 include ("./include/mysql.php");
 
 $debug = false;

@@ -169,9 +169,9 @@ function afficheAdminEnv(usermail, role, adminpage){
     //console.debug("AfficheAdminEnv() Mail: "+usermail+" Rôle: "+role+" Adminpage: "+adminpage);
     if ((role > 0) && (role < 4))
     {
-        // Statut de connexion à 1 pour admin, 2 pour auteur, 3 pour lecteur sinon 0: visiteur
+        // Statut de connexion à 1 pour lecteur, 2 pour auteur, 3 pour admin sinon 0: visiteur
         switch (role) {
-            case 1 : okadmin=true; break;
+            case 3 : okadmin=true; break;
             case 2 : okauteur=true; break;
             default : oklecteur=true; break;  
         }                   

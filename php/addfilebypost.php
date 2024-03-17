@@ -1,10 +1,16 @@
 <?php
 
 // Enregistre une image codée base64 au format mime ad hoc dans un dossier ad hoc et crée une vignette
-// Dépose un fichier 
+// Session activée 
 include ("./include/config.php");
-$debug=false;
+include ("./include/session.php");
 
+if (!isset($role) || ($role<AUTEUR)){
+    echo '{"Ok":0, "msg":"Vous n\'avez pas accès à cette fonction"}';
+    die();    
+}
+
+$debug=false;
 $imagebase64='';
 $filename='';
 $extension='';

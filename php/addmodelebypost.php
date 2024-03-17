@@ -3,8 +3,15 @@
 // Ajoute un modele à la Base de données
 // datas du formulaire en input, redirection vers la page appelante en sortie
 // Eviter touts les affichages avant la fin du script
-
+// Session activée 
 include ("./include/config.php");
+include ("./include/session.php");
+
+if (!isset($role) || ($role<AUTEUR)){
+    echo '{"Ok":0, "msg":"Vous n\'avez pas accès à cette fonction"}';
+    die();    
+}
+
 include ("./include/mysql.php");
 
 $debug = false;

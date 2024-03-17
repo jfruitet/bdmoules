@@ -11,7 +11,7 @@ let tVignettes=[]; // Tableau des fichiers vignettes
 
 // Réservation de moules
     var idmouleglobal=0;
-    var idmodeleglobal=0;
+    var idmodeleglobal=37; // Excalibur
     var modeledescription='';
     var idmoule=0;
     var tidmoules=[];   // Selection de ID de moules
@@ -34,7 +34,7 @@ let tVignettes=[]; // Tableau des fichiers vignettes
 // Admin
     let adminpage = 0; // pour distinguer la page adminisrer.html: 1 et la page users.html: 2 de la page index.html : 0
     let admin = '';  // Le login, c'est à dire le mail de connexion de l'utilisateur
-    let role = 0;   // Le rôle de la personne logée
+    let role = 0;   // Le rôle de la personne logée 0: visiteur, 1: lecteur, 2: auteur, 3: admin
     // let adminpassword = ''; // Obsolète
     let okadmin = false;    
     let okauteur = false;
@@ -133,7 +133,7 @@ function checkCookies() {
             // Statut de connexion à 1 pour admin, 2 pour auteur, 3 pour lecteur sinon 0: visiteur
             okvisiteur=false;
             switch (role) {
-                case 1 : okadmin=true; break;
+                case 3 : okadmin=true; break;
                 case 2 : okauteur=true; break;
                 default : oklecteur=true; break;  
             }                   

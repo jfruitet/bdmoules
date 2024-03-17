@@ -31,6 +31,8 @@ let uclub = '';
 // ------------------------
 function getUsersAdmin() {    
     console.debug("Chargement des utilisateurs");
+    console.debug("Courriel : "+mailuser);
+    console.debug("Rôle : "+role);
     if ((admin!==undefined) && (admin!==null) && (admin.length>0)) {
             //var url= url_serveur+'getmodelesmoulesadmin.php';
             var url= url_serveur+'getusers.php';

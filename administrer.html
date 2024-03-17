@@ -103,14 +103,19 @@
             }
     }
     else{
-        document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
-        document.getElementById("msg").innerHTML += 'Vous pouvez lister nos modèles et leurs moules mais ni en réserver ni en ajouter.';
-        getModelesMoules(); 
-        if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+        if (!oklogin()) {
+            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
+            document.getElementById("msg").innerHTML += 'Vous pouvez lister nos modèles et leurs moules mais ni en réserver ni en ajouter.';
+            getModelesMoules(); 
+            if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
                 // Affiche le moule sélectionné 
                 getModeleMoulesImages(idmodeleglobal); 
                 reserverModeleMoules(idmodeleglobal);
+            }
         }
+        else{
+            formlogout();
+        }        
     }
  
  }   

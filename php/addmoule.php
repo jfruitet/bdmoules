@@ -3,7 +3,15 @@
 // Ajoute un moule à la Base de données
 // data en input, et chaîne JSON en sortie
 // localhost/bdmoules/php/addmoule.php?refmodele=10&mdescription=Plan de l'Alpha 27&mlieu=La Minais&matiere=Papier&etat=Correct&longueur=80&poids=100&mcommentaire=Format A2, échelle 1/2
+// Session activée 
 include ("./include/config.php");
+include ("./include/session.php");
+
+if (!isset($role) || ($role<AUTEUR)){
+    echo '{"Ok":0, "msg":"Vous n\'avez pas accès à cette fonction"}';
+    die();    
+}
+
 include ("./include/mysql.php");
 
 $debug = false;

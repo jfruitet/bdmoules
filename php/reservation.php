@@ -7,7 +7,15 @@
 // https://www.journaldunet.fr/developpeur/developpement/1202761-comment-configurer-xampp-pour-envoyer-des-mails-depuis-un-localhost/
 // Fichier C:/xampp/php.ini et C:/xampp/sendmail/sendmail.ini modifiés
 
+// Session activée 
 include ("./include/config.php");
+include ("./include/session.php");
+
+if (!isset($role) || ($role<LECTEUR)){
+    echo '{"Ok":0, "msg":"Vous n\'avez pas accès à cette fonction"}';
+    die();    
+}
+
 
 $debug = true;
 $mydata = new stdClass();

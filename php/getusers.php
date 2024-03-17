@@ -4,7 +4,15 @@
 // Id du modèle en paramètre GET et chaîne JSON en sortie
 // http://localhost/bdmoules/php/getmodelemoules.php?idmodele=37
 
+// Session activée 
 include ("./include/config.php");
+include ("./include/session.php");
+
+if (!isset($role) || ($role<ADMIN)){
+    echo '{"Ok":0, "msg":"Vous n\'avez pas accès à cette fonction"}';
+    die();    
+}
+
 include ("./include/mysql.php");
 
 $debug = false;
