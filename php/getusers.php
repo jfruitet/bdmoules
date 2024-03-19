@@ -8,11 +8,6 @@
 include ("./include/config.php");
 include ("./include/session.php");
 
-if (!isset($role) || ($role<ADMIN)){
-    echo '{"Ok":0, "msg":"Vous n\'avez pas accès à cette fonction"}';
-    die();    
-}
-
 include ("./include/mysql.php");
 
 $debug = false;
@@ -25,6 +20,7 @@ $mysqli=NULL; // BD class data
 if (isset($_SERVER['REQUEST_METHOD']) && (strtoupper($_SERVER['REQUEST_METHOD']) !== 'GET')) {
   throw new Exception('Only GET requests are allowed');
 }
+
 /*
 if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'application/json') === false)) {
   throw new Exception('Content-Type must be application/json');
@@ -34,6 +30,13 @@ if (!empty($_GET['iduser'])) {
     $iduser = $_GET['iduser'];  
 }
 
+// Fourni par session.php
+// echo ("Usermail: ".$usermail." Rôle: ".$role);
+// exit;
+if (!isset($role) || ($role<ADMIN)){
+    echo '{"Ok":0, "msg":"Vous n\'avez pas accès à cette fonction"}';
+    die();    
+}
 
 connexion_db();
 if (!empty($iduser))

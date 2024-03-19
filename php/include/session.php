@@ -29,11 +29,9 @@
  **/
  
     $id_session = session_id();
-    if (!empty($id_session) && !empty($_SESSION['usermail']) && !empty($_SESSION['role'])){    
-        setcookie('usermail', $_SESSION['usermail'], $arr_cookie_options);
-        setcookie('role', $_SESSION['role'], $arr_cookie_options);
-        $usermail=$_SESSION['usermail'];
-        $role=$_SESSION['role'];
+    if (!empty($id_session)){ 
+        $usermail=$_COOKIE['usermail'];
+        $role=$_COOKIE['role'];
     }
 ?>
 

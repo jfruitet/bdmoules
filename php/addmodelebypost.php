@@ -64,7 +64,7 @@ if (!empty($_POST['modelecategorie'])) {
 
 if (!$debug){
     if (!empty($reponse)){ 
-        header("Location: ".$appel."?msg=Nouveau modele enregistré. ".$reponse);
+        header("Location: ".$appel."?msg=Nouveau modèle enregistré. ".$reponse);
     }
     else{
         header("Location: ".$appel."?msg=Erreur à l'enregistrement du modele.");   

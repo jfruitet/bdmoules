@@ -2,12 +2,12 @@
 
 /** 
  * 
- *  Authentification des admin
- *  A remplacer par un appel à la BD et une session
+ *  Authentification des utilisateurs 
+ *  fait un appel à checklogine.php
  * 
  */
 
-
+//----------------------------------
 function oklogin(){
     // Utilise la session
     if (okvisiteur){    // On lui demande de se loger 
@@ -52,7 +52,15 @@ function logout(adminpage){
     return true;   
 }
 
- /**********
+ 
+/********************************************
+ * Version obsloète n'utilisant pas la table bdm_user
+ * 
+ * Inconvénient : peu sûr
+ * 
+ * *****************************************/
+
+/***********************
 // --------------------------------
 // Obsolète
 
@@ -85,7 +93,7 @@ function getUserAutorisation(adminpage=0){
     return false;  
 } 
  
-
+// Obsolète
  // Valuer de retour : -1 : non logé; 0 : verifier password ; 1: OK
  // -------------------------------
  function verifLogin(adminmail, adminpass=''){
@@ -109,11 +117,76 @@ function getUserAutorisation(adminpage=0){
     }  
     return -1;                     
  }
- *****/
  
+ 
+ **********************/
+ 
+ 
+/********************************************
+ * Version utilisant un formulaire Post
+ * 
+ * Avantage : mise à jour la page appelante
+ * 
+ * *****************************************/
  
  // --------------------------------
-function saisieLogin(mail='',adminpage=0){
+function saisieLogin(mail='', adminpage=0){
+// Saisie d'une adresse mail 
+
+    //console.debug("Saisie du Login");
+    switch(adminpage){
+        case 1 : pageretour=pageadmin; break;
+        case 2 : pageretour=pageuser; break;     
+        default : pageretour=pageindex; break;      
+    }
+    
+    okadmin=false;
+    admin=''; // toute saisie annule les autorisations antérieures
+    let str='';
+    
+    str+='<p>Saisissez votre identifiant d\'utilisateur (votre <i>courriel</i>).</p>';
+        
+    str+='<form name="formLogin" action="./php/checklogin.php" method="post" onsubmit="return verifLogin();">';
+    str+='<label for="usermail">Courriel</label> <input type="text" id="usermail" name="usermail" value="'+mail+'" />';
+    str+='&nbsp; &nbsp; <label for="userpass">Mot de passe</label> <input type="password" id="userpass" name="userpass" size="10" value="" />';
+    str+='<input type="hidden" name="appel" id="appel" value="'+pageretour+'"';
+    str+='<div class="button">&nbsp; &nbsp; <input type="submit" value="Envoyer" onclick="return verifLogin();" /> &nbsp; &nbsp; <input type="reset" value="Réinitialiser"  /></div>';        
+    str+='</form>';
+    document.getElementById("loginform").innerHTML = str;
+ 
+}
+
+// Valuer de retour : vrai ou faux
+ // -------------------------------
+ function verifLogin(){
+    fusermail=document.forms["formLogin"]["usermail"];               
+    fuserpass=document.forms["formLogin"]["userpass"];               
+          
+    if (fusermail.value == "")                                  
+    { 
+        alert("Complétez le courriel."); 
+        fusermail.focus(); 
+        return false; 
+    }    
+    if (fuserpass.value == "")                               
+    { 
+        alert("Complétez le mot de passe"); 
+        fuserpass.focus(); 
+        return false; 
+    }        
+    return true;                     
+ }
+ 
+
+/********************************************
+ * Version utilisant un appel Ajax Post
+ * 
+ * Inconvenient : plus difficile de mettre à jour la page appelante
+ * 
+ * *****************************************/
+
+// --------------------------------
+function saisieLoginAjax(mail='',adminpage=0){
 // Saisie d'une adresse mail 
 
     //console.debug("Saisie du Login");
@@ -123,6 +196,7 @@ function saisieLogin(mail='',adminpage=0){
     str+='<p><i>Votre identifiant est votre adresse courriel.</i></p>';
     str+='<label for="usermail">Courriel</label> <input type="text" id="usermail" name="usermail" value="'+mail+'" />';
     str+='&nbsp; &nbsp; <label for="userpass">Mot de passe</label> <input type="password" id="userpass" name="userpass" size="10" value="" />';
+    str+='<input type="hidden" name="appel" id="appel" value="'+adminpage+'"';
     str+='&nbsp; &nbsp; <button id="btnlogin">Valider</button></p>';
     document.getElementById("loginform").innerHTML = str;
  
@@ -140,7 +214,6 @@ function saisieLogin(mail='',adminpage=0){
         return false;
     });    
 }
-
 
   // Valuer de retour : -1 : non logé; 0 : verifier password ; 1: OK
  // -------------------------------
@@ -206,89 +279,5 @@ function afficheAdminEnv(usermail, role, adminpage){
     }
 }                                                
 
-
-
-/*
-
-    $str='<p>Saisissez votre identifiant d\'utilisateur (votre <i>courriel</i>).</p>'."\n";
-    $str.='<form action="./php/checklogin.php" method="post"><label for="usermail">Courriel</label> <input type="text" id="usermail" name="usermail" value="" />'."\n";
-    $str.='&nbsp; &nbsp; <label for="userpass">Mot de passe</label> <input type="password" id="userpass" name="userpass" size="10" value="" />'."\n";
-    $str.='<input type="hidden" id="appel" name="appel" value="'.$pageuser.'" />';
-    $str.='<input type="submit" name="Valider" value="Valider" /></form></p>'."\n";
-
- 
-// --------------------------------
-function saisieLogin(mail='',adminpage=0){
-// Saisie d'une adresse mail 
-
-    //console.debug("Saisie du Login");
-    okadmin=false;
-    admin=''; // toute saisie annule les autorisations antérieures
-    let str='';
-    str+='<p>Saisissez votre identifiant d\'administrateur.</p>';
-    str+='<label for="adminmail">Courriel</label> <input type="text" id="adminmail" name="adminmail" value="'+mail+'" />';
-    str+='&nbsp; &nbsp; <label for="adminpass">Mot de passe</label> <input type="password" id="adminpass" name="adminpass" size="10" value="" />';
-    str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
-    str+='&nbsp; &nbsp; <button id="btnlogin">Valider</button></p>';
-
-    document.getElementById("loginform").innerHTML = str;
- 
-    // Collecte des ID des moules sélectionnés
-    const btnlogin = document.querySelector('#btnlogin');
-        
-    btnlogin.addEventListener('click', (event) => {
-        let adminmail = document.querySelector('input[name="adminmail"]');
-        let adminpass = document.querySelector('input[name="adminpass"]');
-        if ((adminmail !== undefined) && (adminmail !== null) && (adminmail.value !== '')
-            && (adminpass !== undefined) && (adminpass !== null) && (adminpass.value !== '')){
-            if (verifLogin(adminmail.value, adminpass.value) === 1){
-                afficheAdminEnv(adminpage);
-                return true;
-            }
-        } 
-        return false;
-    });    
-}
-
-
-// ------------------------------
-function afficheAdminEnv(adminpage=0){
-    console.debug("AfficheAdminEnv() adminpage: "+adminpage);
-    if ((admin !== undefined) && (admin !== null) && (admin.length > 0)
-        && (adminpassword !== undefined) && (adminpassword !== null) && (adminpassword.length > 0)
-        && (okadmin !== undefined) && (okadmin !== null) && (okadmin === true)){
-        //console.debug("Admin reconnu: "+admin);
-        setCookie("sadmin", admin, 1); // 1 jour
-        setCookie("sadminpass", adminpassword, 1); // 1 jour  
-        document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
-        document.getElementById("msg").innerHTML = 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
-        document.getElementById("loginform").innerHTML = '';    
-        formlogout();
-        if (adminpage==1){
-            // administrer.html
-            getModelesMoulesAdmin();
-            if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
-                // Affiche le bouton d'ajout d'une image pour ce modèle 
-                document.getElementById("myButton").innerHTML = '<button id="btnaddphoto">Ajouter une photo pour ce modèle</button>';        
-                // Affiche le moule sélectionné 
-                getModeleMoulesImages(idmodeleglobal); 
-                editerThatModeleMoules(idmodeleglobal);
-            }
-        }
-        else if (adminpage==2){
-            // user.html
-            document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
-            formlogout();
-            document.getElementById("msg").innerHTML = '';
-            
-            console.debug("Admin reconnu. Afficher les utilisateurs");
-            document.getElementById("scrollleft").style.display = "none";
-            document.getElementById("scrollright").style.display = "block";
-            getUsersAdmin();
-        }
-    }
-}        
-
-*/                                        
 
 

@@ -31,7 +31,7 @@ let uclub = '';
 // ------------------------
 function getUsersAdmin() {    
     console.debug("Chargement des utilisateurs");
-    console.debug("Courriel : "+mailuser);
+    console.debug("Courriel : "+admin);
     console.debug("Rôle : "+role);
     if ((admin!==undefined) && (admin!==null) && (admin.length>0)) {
             //var url= url_serveur+'getmodelesmoulesadmin.php';
@@ -50,8 +50,8 @@ function ajax_GetUsers(url){
         fetch(url, myInitGet)
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
-                //console.debug("Affichage des utilisateurs enregistrés\n");
-                //console.debug(response.users);                
+                console.debug("Affichage des utilisateurs enregistrés\n");
+                console.debug(response.users);                
                 selectUsersAdmin(response);         
             })                
         .catch(error => console.debug("Erreur : "+error));

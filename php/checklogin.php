@@ -5,9 +5,11 @@ include ("./include/session.php");
 include ("./include/mysql.php");
 $debug=false;
 $mysqli=NULL; // BD class data
-$reponse='{"ok":0}';
+$reponse_not_ok='{"ok":0}';
+$reponse='';
 $mydata = new stdClass();
 $data = null;
+$appel='';  // Page appelante
 
 // Get the JSON contents
 if (isset($_SERVER['REQUEST_METHOD']) && (strtoupper($_SERVER['REQUEST_METHOD']) !== 'POST')) {
@@ -18,6 +20,7 @@ if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'appli
   throw new Exception('Content-Type must be application/json');
 }
 */
+
 if (isset($_POST) && !empty($_POST)) {
     $data = $_POST;  
 }
@@ -28,7 +31,13 @@ else {
 
 if (isset($data) && (!empty($data)))
 {
-    $mydata = json_decode($data,true);
+    if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'application/json') === true)) {
+        $mydata = json_decode($data,true);
+    }
+    else{
+        $mydata = $data;
+    }
+    
     if ($debug){
         print_r($data);
         echo "<br />";
@@ -37,7 +46,7 @@ if (isset($data) && (!empty($data)))
         echo "UserMail: ".$mydata['usermail']." UserPass: ".$mydata['userpass']."<br />\n";
         //exit;
     }
-    
+
     if (!empty($mydata['usermail']) && !empty($mydata['userpass'])){
         //echo "UserMail: ".$mydata['usermail']." UserPass: ".$mydata['userpass']."<br />\n";
         connexion_db();
@@ -45,12 +54,29 @@ if (isset($data) && (!empty($data)))
         {      
             setcookie('usermail', $mydata['usermail'], $arr_cookie_options);
             setcookie('role', $role, $arr_cookie_options);
-            $reponse =  '{"ok":1, "role":'.$role.'}';
+            $reponse =  '{"ok":1, "usermail":"'.$mydata['usermail'].', "role":'.$role.'}';
         }
         $mysqli -> close();
     }
 }
-echo $reponse;
+//echo $reponse;
+if (!$debug){
+    if (!empty($reponse)){ 
+        header("Location: ".$mydata['appel']."?msg=Connexion valide. ".$reponse);
+    }
+    else{
+        header("Location: ".$mydata['appel']."?msg=Connexion invalide. ".$reponse_not_ok);   
+    }    
+}
+else{
+    if (!empty($reponse)){ 
+        echo "Connexion valide. ".$reponse;
+    }
+    else{
+        echo "Connexion invalide. "; 
+    }    
+}    
+
 die();
 
 // Retourne le rôle de l'utilisateur
