@@ -26,33 +26,6 @@ function formlogout(){
     document.getElementById("logout").innerHTML = str;
 }
  
- /*
-// --------------------------------
-function logout(adminpage){
-    //console.debug("Logout confirmé");
-    dellCookie("sadmin");
-            if (admin==Courriel) {
-                dellCookie("scourriel")
-            }; 
-            dellCookie("sadminpass");
-            if (admin==Courriel) {
-                dellCookie("scourriel")
-            }; 
-
-            admin='';
-            adminpassword='';
-            okadmin=false;            
-            document.getElementById("logout").innerHTML = '&nbsp;';
-            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
-            document.getElementById("msg").innerHTML = 'Pour administrer la base de données identifiez-vous avec votre compte administrateur.';
-    saisieLogin('', adminpage);
-    if (adminpage==2){
-        document.getElementById("scrollleft").style.display = "none";
-        document.getElementById("scrollright").style.display = "none";    
-    }            
-    return true;   
-}
-*/
 
 // --------------------------------
 function logout(adminpage){

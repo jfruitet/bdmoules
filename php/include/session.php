@@ -30,8 +30,12 @@
  
     $id_session = session_id();
     if (!empty($id_session)){ 
-        $usermail=$_COOKIE['usermail'];
-        $role=$_COOKIE['role'];
+        if (!empty($_COOKIE['usermail'])){
+            $usermail=$_COOKIE['usermail'];
+        }
+        if (!empty($_COOKIE['role'])){
+            $role=$_COOKIE['role'];
+        }
     }
 ?>
 

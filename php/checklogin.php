@@ -54,7 +54,19 @@ if (isset($data) && (!empty($data)))
         {      
             setcookie('usermail', $mydata['usermail'], $arr_cookie_options);
             setcookie('role', $role, $arr_cookie_options);
-            $reponse =  '{"ok":1, "usermail":"'.$mydata['usermail'].', "role":'.$role.'}';
+            $reponse =  '{"ok":1, "usermail":"'.$mydata['usermail'].'", "role":'.$role.'}';
+        }
+        else{
+            // Créer un compte ?
+            if ($role=addconnexion($mydata['usermail'], $mydata['userpass'])) // on voit si on peut créer un nouveau compte
+            {      
+                setcookie('usermail', $mydata['usermail'], $arr_cookie_options);
+                setcookie('role', $role, $arr_cookie_options);
+                $reponse =  '{"ok":1, "usermail":"'.$mydata['usermail'].'", "role":'.$role.'}';
+            }
+            else{
+                $reponse =  ''; // {"msg":"Erreur de mot de passe", "ok":0, "usermail":'.$mydata['usermail'].', "role":'.$role.'}';            
+            }            
         }
         $mysqli -> close();
     }
@@ -99,5 +111,39 @@ global $debug;
     }
     return 0;
 }
+
+// Retourne le rôle de l'utilisateur
+// Statut de connexion à 1 pour admin, 2 pour auteur, 3 pour lecteur sinon 0: visiteur
+//-----------------------
+function addconnexion($usermail, $userpass){
+global $mysqli;
+global $debug;
+    if (!empty($usermail) && !empty($userpass)){                
+        // récupérer le login et mot de passe
+        $sql="SELECT * FROM `bdm_user` WHERE `userlogin`='".$usermail."';";
+        if ($debug){
+            echo $sql;
+        }
+        if ($result = $mysqli->query($sql)){
+            if ($row = $result->fetch_assoc()) {
+                if ($row['pass'] != md5($userpass)){    // Compte existant mais Mot de pass incorrect
+                    return 0;
+                }                
+            }
+            else { // Mail Inconnu
+                $usernom=substr($usermail,0,strpos($usermail,'@'));
+                $sql2="INSERT INTO `bdm_user`  (`usernom`, `userlogin`, `statut`, `pass`, `telephone`, `club`) VALUES ('".$usernom."', '".$usermail."', 1, '".md5($userpass)."', '', '');";    
+                if ($debug){
+                    echo $sql2;
+                }
+                if ($result2 = $mysqli->query($sql2)){
+                    return 1; // Rôle visiteur
+                }
+            }                
+        }             
+    }
+    return 0;
+}
+
 
 ?>
