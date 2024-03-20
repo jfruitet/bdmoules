@@ -26,6 +26,7 @@ function formlogout(){
     document.getElementById("logout").innerHTML = str;
 }
  
+ /*
 // --------------------------------
 function logout(adminpage){
     //console.debug("Logout confirmé");
@@ -48,6 +49,31 @@ function logout(adminpage){
     if (adminpage==2){
         document.getElementById("scrollleft").style.display = "none";
         document.getElementById("scrollright").style.display = "none";    
+    }            
+    return true;   
+}
+*/
+
+// --------------------------------
+function logout(adminpage){
+    console.debug("Logout confirmé");
+    dellCookie("sadmin");
+    dellCookie("role");
+    dellCookie("usermail");
+    
+    if (admin==Courriel) {
+        dellCookie("scourriel")
+    }; 
+    
+    checkCookies(); 
+                        
+    document.getElementById("logout").innerHTML = '&nbsp;';
+    document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
+    boutonLogin(adminpage);
+    document.getElementById("logout").innerHTML = '&nbsp; &nbsp;';
+    if (adminpage==2){
+                document.getElementById("scrollleft").style.display = "none";
+                document.getElementById("scrollright").style.display = "none";    
     }            
     return true;   
 }
@@ -130,6 +156,14 @@ function getUserAutorisation(adminpage=0){
  * *****************************************/
  
  // --------------------------------
+ function boutonLogin(mail='', adminpage=0){
+    //console.debug("Saisie du Login");
+    let str='';
+    str+='<p>&nbsp; <button class="button" id="btnlogin" onclick="return saisieLogin(\'\',adminpage);">Connexion</button></p>';
+    document.getElementById("login").innerHTML = str;
+ }
+  
+// --------------------------------
 function saisieLogin(mail='', adminpage=0){
 // Saisie d'une adresse mail 
 

@@ -70,16 +70,16 @@ let tVignettes=[]; // Tableau des fichiers vignettes
  * **********************/
 // ---------------------------------- 
 function setCookie(cname, cvalue, exdays) {
-  const d = new Date();
-  d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-  let expires = "expires="+d.toUTCString();
-  document.cookie = cname + "=" + cvalue + "; SameSite=Strict; " + expires + ";path=/";
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires="+d.toUTCString();
+    document.cookie = cname + "=" + cvalue + "; SameSite=Strict; " + expires + ";path=/bdmoules/";
 }
 
 // supprime un cookie
 // ---------------------------------
 function dellCookie(cname) {
-    document.cookie = cname + "=; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    document.cookie = cname + "=; SameSite=Strict; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/bdmoules/";
 }
 
 // --------------------------------- 

@@ -17,10 +17,12 @@
 <p><a href="mailto:jean.fruitet@free.fr?subject=Moules ARBL">jean.fruitet@free.fr</a></p>
 
 <table>
-<tr><th>Documentation</th><th>Consulter</th><th>Administrer</th></tr>
+<tr><th>Documentation</th><th>Consulter</th><th>Administrer</th><th colspan="2">Connexion</th></tr>
 <tr><td><a href="./documentation.html">Documentation</a></td>
 <td><a href="./index.html">Rechercher / Réserver</a></td>
-<td><a href="./administrer.php">Ajouter des modèles, des moules et des photos</a></td>
+<td><a href="./administrer.html">Ajouter des modèles, des moules et des photos</a></td>
+<td><span id="login">&nbsp;<span></td>
+<td><span id="logout">&nbsp;<span></td>
 </tr>
 </table>
 <h3>Présentation</h3>
@@ -29,6 +31,8 @@
 <!-- Quand vous avez sélectionné un modèle faites sa <a href="reservation.html">réservation</a> auprès du bureau de l'association. -->
 Quand vous avez sélectionné un modèle faites sa <b>réservation</b> auprès du bureau de l'association.
 </p>
+<p><span id="msg">Identifiez-vous pour accéder à l'enregistrement des moules...</span>
+<span id="loginform"><span></p>
 <div class="left">
 <h3>Liste des modèles et de leurs moules associés</h3>
 <p><span id="consigne">Sélectionnez un modèle dans la liste.<span></p>
@@ -57,6 +61,15 @@ Quand vous avez sélectionné un modèle faites sa <b>réservation</b> auprès d
     // Cookies
     checkCookies(); 
     adminpage=0;
+    if (okadmin || okauteur || oklecteur) {
+        document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+        formlogout();
+    }
+    else {
+        boutonLogin(adminpage);
+        document.getElementById("logout").innerHTML = '&nbsp; &nbsp;';
+    }
+    
     document.getElementById("scrollleft").style.display = "inline";
     getModelesSearch();
     // getMoules();
