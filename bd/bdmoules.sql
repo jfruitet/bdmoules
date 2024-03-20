@@ -3,10 +3,11 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 06 mars 2024 à 14:33
+-- Généré le : mer. 20 mars 2024 à 11:33
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
+SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
 SET time_zone = "+00:00";
@@ -159,7 +160,6 @@ INSERT INTO `bdm_moule` (`idmoule`, `ref_modele`, `numero_inventaire`, `mdescrip
 (48, 10, 35, 'Maquette de démonstration Alpha 27', 'La Minais', 'Bois, toile et composite', 'Bon', 90, 127, 'Modèle pour exposition ; échelle 1/3 ; NON DISPONIBLE'),
 (49, 38, 25, 'Moule de capot moteur, avion modèle N°10', 'La Minais', 'Composite', '', NULL, NULL, 'Modèle à préciser'),
 (50, 8, 19, 'Fuselage blanc de planeur Le Pointu (petit)', 'La Minais', 'Composite', '', NULL, NULL, ''),
-(53, 37, 51, 'Maquette de démonstration', 'La Minais', 'Bois et toile', 'Excellent', 135, 127, 'Réalisation échelle 1/2'),
 (61, 37, 52, 'Fuseau planeur Excalibur', 'La Minais', 'Composite', '?', 120, 0, 'Disponible.'),
 (62, 23, 53, 'Moule de fuseau de planeur Ventus', 'La Minais', 'Composite', 'Bon', 150, 0, 'Disponible.');
 
@@ -211,7 +211,7 @@ INSERT INTO `bdm_photo` (`idphoto`, `auteur`, `legende`, `copyright`, `fichier`,
 (34, '', 'Le Ventus 2cx De Luxe Topmodel CZ est une \"grande plume\" semi-maquette de 4.50m à l\'échelle 1/4e.La construction est magnifique et élégante. ', 'cc-by-sa', 'planeur_ventus_01.gif', NULL, 62),
 (35, '', 'L\'Alexander Schleicher Ka 6 Rhönsegler est un planeur de compétition allemand de Classe Standard qui a dominé la compétition au début des années 1960. 1400 exemplaires ont été construits. ', 'cc-by-sa', 'K6_Grandeur&RC.jpg', 13, NULL),
 (36, 'ARBL', 'Disponible.', 'cc-by-sa', 'K6_moule_bulle.jpg', NULL, 2),
-(37, '', 'Le MDM-1 Fox est un planeur biplace de voltige construit par Margański & Myslowski en matériaux composites avec train fixe et un empennage cruciforme. ', 'cc-by-sa', 'moule_fuseau_planeur-K6.jpg', 0, 15),
+(37, '', 'Le MDM-1 Fox est un planeur biplace de voltige construit par Margański & Myslowski en matériaux composites avec train fixe et un empennage cruciforme. ', 'cc-by-sa', 'moule_fuseau_planeur-K6.jpg', 0, 23),
 (38, '', 'K6 des Alpilles.\r\nGrâce à ses caractéristiques de vol très dociles, le Ka-6 est le premier monoplace que pilotent les élèves de l\'AVVC (et de bien des clubs). Nombre de pilotes on fait leur premier vol de 50 km à bord d\'un Ka-6. Malgré sa construction en ', 'cc-by-sa', 'k6-al64.jpg', 13, NULL);
 
 -- --------------------------------------------------------
@@ -246,7 +246,18 @@ CREATE TABLE IF NOT EXISTS `bdm_user` (
   `telephone` varchar(30) NOT NULL,
   `club` varchar(255) NOT NULL,
   PRIMARY KEY (`userid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `bdm_user`
+--
+
+INSERT INTO `bdm_user` (`userid`, `usernom`, `userlogin`, `statut`, `pass`, `telephone`, `club`) VALUES
+(1, 'FRUITET Jean', 'jean.fruitet@gmail.com', 3, '81dc9bdb52d04dc20036dbd8313ed055', '06 95 28 73 11', 'ARBL, Association Radiomodéliste des Bords de Loire, 44980 Sainte luce sur Loire'),
+(2, 'FRUITET Jean', 'jean.fruitet@free.fr', 2, '81dc9bdb52d04dc20036dbd8313ed055', '06 95 28 73 11', 'ARBL, Association Radiomodéliste des Bords de Loire, 44980 Sainte luce sur Loire'),
+(3, 'DESCHAMPS Dominique', 'domi.desch@free.fr', 2, '674f3c2c1a8a6f90461e8a66fb5550ba', '06 68 54 01 04', 'ARBL, 44980, Sainte Luce / Loire'),
+(4, 'DESCHAMPS Dominique', 'domi.d@arbl.fr', 3, '674f3c2c1a8a6f90461e8a66fb5550ba', '06 68 54 01 04', 'ARBL, 44115 Sainte Luce sur Loire.\r\nWebmaster du site arbl.fr'),
+(5, 'jean.fruitet', 'jean.fruitet@laposte.net', 1, '81dc9bdb52d04dc20036dbd8313ed055', '', '');
 
 -- --------------------------------------------------------
 
@@ -259,6 +270,7 @@ CREATE TABLE IF NOT EXISTS `bdm_user_moule` (
   `ref_user` int(10) NOT NULL,
   `ref_moule` int(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='associe un utilisateur à un moule pour modification';
+SET FOREIGN_KEY_CHECKS=1;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
