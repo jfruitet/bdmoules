@@ -44,18 +44,23 @@ L'administration est réservée à quelques personnes du club. Les fonctionnalit
 Concernant les photos de moules et de modèles, j'ai fonctionné un peu à l'aveugle car les moules sont très mal identifiés à la Minais. Je verrai avec Ludovic comment corriger ça.
 
 ### Rôles
-On distinguera dans la version définitive
+On distingue dans la version définitive
 - les visiteurs, qui peuvent seulement consulter la liste des modèles et des moules ;
 - les lecteurs (membres du club) en mesure de faire des réservations ;
 - les auteurs  (membres du club) autorisés à ajouter, éditer, réassigner des photos de modèles et de moules ;
 - les administrateurs, qui gérent les connexions et les ajouts / suppressions de modèles, moules, photos et utilisateurs.
 
-### Ce qui reste à faire
-Les fonctions de connexion sont désormais basées sur l'utilisation de sessions.
+### Connexion
+Les fonctions de connexion sont désormais basées sur l'utilisation de sessions et de cookies.
 
 La table des utilisateurs bdm_user stocke les informations permettant la connexion.
 
-Les rôles sont implantés.
+Les utilisateurs peuvent créer un compte avec le rôle lecteur en fournissant une adresss mail.
+
+### Ce qui reste à faire
+Intégrer les mails des adhérents de l'ARBL.
+
+Permettre aux utilisateurs d'accéder à leur compte pour le renseigner ou le supprimer. 
 
 ## License
 MIT
