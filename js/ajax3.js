@@ -51,7 +51,7 @@ function ajax_GetUsers(url){
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
                 console.debug("Affichage des utilisateurs enregistrés\n");
-                console.debug(response.users);                
+                console.debug(response);                
                 selectUsersAdmin(response);         
             })                
         .catch(error => console.debug("Erreur : "+error));
@@ -348,3 +348,58 @@ console.debug("Suppression demandée");
     }   
     return true;
 }
+
+// ---------------------------------
+function getInfoUser(mail){
+    if ((mail !== undefined) && (mail.length>0)){
+        console.debug("GetInfoUser");
+        console.debug("Courriel : "+mail);
+            //var url= url_serveur+'getmodelesmoulesadmin.php';
+            var url= url_serveur+'getuser.php?mail='+mail;
+            var mydata="";    
+            ajax_GetUser(url, mydata);         
+    }    
+}
+
+// Lance l'appel Ajax et transmet les données reçues à 
+// 
+// -----------------------
+function ajax_GetUser(url){ 
+    if ((url !== undefined) && (url.length>0)){        
+        // GET avec fetch()
+        fetch(url, myInitGet)
+        .then(response => response.text())  // Le retour est aussi une chaîne
+        .then(response => {
+            console.debug("Données utilisateurs\n");
+            console.debug(response);                
+            setUser(response);  // renseigne les valeurs globales         
+        })                
+        .catch(error => console.debug("Erreur : "+error));
+    }
+}
+
+/*****************
+ * 
+ *     // String
+    var Nom = '';               
+    var Courriel = '';    
+    var Telephone = '';   
+    var Adresse = '';  
+    var Commentaire = '';
+ */
+// -----------------------------
+function setUser(response){
+    let ObjUser=JSON.parse(response);
+    if ((ObjUser.ok!==undefined) && (ObjUser.ok==1) && (ObjUser.user!==undefined)){
+        // 
+        Nom=ObjUser.user.usernom;
+        Courriel=ObjUser.user.userlogin;
+        Telephone=ObjUser.user.telephone;
+        if (Commentaire.length==0){
+            Commentaire="Club\n"+ObjUser.user.club;
+        }
+    }
+    reserverThatMoules(); 
+}
+
+

@@ -248,7 +248,8 @@ function newPhoto(idmodele=0, idmoule=0){
 
     //console.debug ("Id modele: "+idmodele);
     //console.debug ("Id moule: "+idmoule);
-    
+    document.getElementById("myFile").innerHTML = 'Pour chaque modèle enregistrez au moins une photo d\'au plus 1200 x 800 au format .JPG ou .PNG';
+
         let str='';
         // Formulaire de création
         str+='<h4>Chargez une image</h4>';

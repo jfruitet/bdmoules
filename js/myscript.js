@@ -183,7 +183,9 @@ function setCookies(){
     }   
     // User
     if (Commentaire.length>0) {
-        setCookie("scommentaire", Commentaire, 30); // 30 jours
+        // Supprimer les sauts de ligne
+        let scomment = Commentaire.replace(/\n/g, "\t");
+        setCookie("scommentaire", scomment, 30); // 30 jours
     }   
     if (Telephone.length>0) {
         setCookie("stelephone", Telephone, 30); // 30 jours

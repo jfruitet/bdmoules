@@ -471,7 +471,7 @@ function selectThatModeleMoules(response) {
         str+='<p><button id="btn">Réserver</button>  &nbsp; (<a target="_blank" href="help.html#Prêt">?</a>)</p>';
     }
     else{
-        str+='<p><b>Moules</b> <a href="login.php">Identifiez-vous</a> pour accéder au <a target="_blank" href="help.html#Prêt">prêt</a></p>';    
+        str+='<p><b>Moules</b> <a href="login.html">Identifiez-vous</a> pour accéder au <a target="_blank" href="help.html#Prêt">prêt</a></p>';    
     }
     str+='<table><tr><th>Choisir</th><th>ID Moule</th><th>Num. inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
     
@@ -534,7 +534,11 @@ function selectThatModeleMoules(response) {
                     }
                 }        
             }    
-            reserverThatMoules();
+            // Charger les informations sur l'utilisateur connecté
+            if ((admin !==undefined) && (admin.length>0)){
+                getInfoUser(admin);
+            }
+            // reserverThatMoules(); // Déplacé dans ajax3.js 
         });
     }                
 } 
@@ -549,6 +553,8 @@ function reserverThatMoules(){
     //console.debug("tdescription: "+tdescription);
     
     if ((idmodeleglobal !== undefined) && (idmodeleglobal>0) && (tidmoules!==undefined) && (tidmoules.length>0)){ // idmodele=37; tidmoules=[46,47];
+        document.getElementById("myFile").innerHTML = ''; // A n'utiliser que si des recommandations sont nécessaires
+        
         let str='';
         // Creer un formulaire de réservation
         str+='<h4>Complétez ce formulaire de réservation</h4>';
