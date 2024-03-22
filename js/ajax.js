@@ -568,6 +568,7 @@ function reserverThatMoules(){
         str+='<br /><label for="Telephone">Téléphone: </label><br /><input type="text" id="Telephone" size="50" name="Telephone" value="'+Telephone+'" autocomplete="on" />';
         str+='<br /><label for="Commentaire">Commentaires: </label><br />(<i><span class="small">Motivez votre demande...</span></i>)<textarea cols="50" id="Commentaire" rows="3" name="Commentaire" autocomplete="on">'+Commentaire+'</textarea>';
         str+='</div>';
+        str+='<input type="hidden" id="userid" name="userid" value="'+userid+'">';
         str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
         /*
         for (let i=0; i<tidmoules.length; i++){
@@ -633,6 +634,8 @@ function resetForm(){
 // ----------------------------------
 function validationReservationMultiple(){
 // Verifie que les champs du formualaire sont remplis
+
+    // Variables globales
     nom = document.forms["RegForm"]["Nom"];               
     email = document.forms["RegForm"]["Courriel"];    
     phone = document.forms["RegForm"]["Telephone"];   
@@ -687,8 +690,13 @@ function validationReservationMultiple(){
     Telephone = document.forms["RegForm"]["Telephone"].value;   
     Adresse = document.forms["RegForm"]["Adresse"].value;  
     Commentaire = document.forms["RegForm"]["Commentaire"].value;
-    setCookies();      
-    
+    setCookies();
+    // Mise à jour de la BD   
+    if ((document.forms["RegForm"]["userid"] !== undefined) && (document.forms["RegForm"]["userid"].value>0)){
+        let userid = document.forms["RegForm"]["userid"].value;
+        let majUser = '{"userid":'+userid+', "usernom":"'+Nom+'", "userlogin":"'+Courriel+'", "telephone":"'+Telephone+'", "adresse":"'+Adresse+'"}';
+        ajax_MajUser(majUser);  // Mise à jour de la table bdm_user
+    }
     redigeReservationMultiple();
     return true; 
 }
@@ -719,9 +727,33 @@ function redigeReservationMultiple(){
         let thatbody= encodeURIComponent("Demande de réservation de moules effectuée par \nNom: "+Nom+"\nCourriel: "+Courriel+"\nTéléphone: "+Telephone+"\nAdresse: "+Adresse+"\nCommentaire: "+Commentaire+"\n\n"+strmsg);
         //console.debug("Message body\n"+thatbody);
         document.getElementById("myImage").innerHTML = '<h4>Cliquez sur le lien pour envoyer cette demande de réservation</h4><p>'+str;
-        document.getElementById("myImage").innerHTML +='<br /><span class="surligne"><a href="mailto:'+courriel_reservation+'?cc='+courriel_webmaster+'&subject='+encodeURIComponent("Réservation Moules")+'&body='+thatbody+'">Envoyer</a></surligne></p>';                      
+        //document.getElementById("myImage").innerHTML +='<br /><span class="surligne"><a href="mailto:'+courriel_reservation+'?cc='+courriel_webmaster+'&subject='+encodeURIComponent("Réservation Moules")+'&body='+thatbody+'">Envoyer</a></surligne></p>';                      
+        document.getElementById("myImage").innerHTML +='<br /><a class "button" href="mailto:'+courriel_reservation+'?cc='+courriel_webmaster+'&subject='+encodeURIComponent("Réservation Moules")+'&body='+thatbody+'">Envoyer</a></p>';                      
     }           
 }
+
+
+// ----------------------- 
+function ajax_MajUser(mystrjson){ 
+let url='./php/setuser.php';    
+    if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){        
+        // POST avec fetch()
+        // myInitPost.body: JSON.stringify(mystrjson), // turn the JS object literal into a JSON string
+        myInitPost.body= mystrjson; // mystrjson est déjà une chaîne
+        fetch(url, myInitPost)
+        .then(response => response.text())  // Le retour est aussi une chaîne
+        .then(response => {
+                console.debug("Mise à jour table bdm_user");
+                console.debug(response);
+                response=JSON.parse(response);
+                if (response.ok==1){    // ça s'est ma cuisine interne                    
+                    document.getElementById("consigne").innerHTML=" <span class=\"surligne\">Mise à jour de la table utilisateur effectuée (Utilisateur ID <i>"+response.userid+"</i>).</span>  ";
+                }
+            })
+        .catch(error => console.debug("Erreur : "+error));
+    }
+}
+    
 
 
 /**********************************************

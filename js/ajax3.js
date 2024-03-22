@@ -30,9 +30,9 @@ let uclub = '';
 // Récupère et affiche tous les comptes utilisateurs
 // ------------------------
 function getUsersAdmin() {    
-    console.debug("Chargement des utilisateurs");
-    console.debug("Courriel : "+admin);
-    console.debug("Rôle : "+role);
+    //console.debug("Chargement des utilisateurs");
+    //console.debug("Courriel : "+admin);
+    //console.debug("Rôle : "+role);
     if ((admin!==undefined) && (admin!==null) && (admin.length>0)) {
             //var url= url_serveur+'getmodelesmoulesadmin.php';
             var url= url_serveur+'getusers.php';
@@ -395,6 +395,12 @@ function setUser(response){
         Nom=ObjUser.user.usernom;
         Courriel=ObjUser.user.userlogin;
         Telephone=ObjUser.user.telephone;
+        if ((ObjUser.user.userid !== undefined) && (ObjUser.user.userid !== null) && (ObjUser.user.userid > 0)){
+            userid=ObjUser.user.userid;
+        }
+          if ((ObjUser.user.adresse !== undefined) && (ObjUser.user.adresse !== null) && (ObjUser.user.adresse.length > 0)){
+            Adresse=ObjUser.user.adresse;
+        }
         if (Commentaire.length==0){
             Commentaire="Club\n"+ObjUser.user.club;
         }

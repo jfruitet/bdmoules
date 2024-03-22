@@ -50,6 +50,7 @@ let tVignettes=[]; // Tableau des fichiers vignettes
     
     var usernom = null;               
     var userlogin = null; 
+    var userid = null;
     // var usermail = null; // le mail est la valeur de login   
     var userphone = null;   
     var userpass = null;  

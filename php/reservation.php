@@ -1,7 +1,7 @@
 <?php
 // reservation.php
 // module de réservation d'un moule
-
+// Utilise SMTP
 // Paramètre entrant par POST
 // Envoi du message par mail
 // https://www.journaldunet.fr/developpeur/developpement/1202761-comment-configurer-xampp-pour-envoyer-des-mails-depuis-un-localhost/
