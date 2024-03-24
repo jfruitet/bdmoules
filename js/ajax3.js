@@ -184,20 +184,16 @@ function ajax_GetThatUser(url){
     }
 }
 
-
+// Callback 
 // Appelé par ajax_GetThatUser();
 // Appelle saisieThatUser();
 // ----------------------- 
 function saisieThatUser(response) {
-    // console.debug("Affichage des infos associées\n"+ response);
+    // console.debug("saisieThatUser()");
+    // Affichage des infos associées\n"+ response);
     // Traitement de la réponse 
     const thatuser = JSON.parse(response); 
-    if ((thatuser !== undefined) && (thatuser !== null) ){    
-        iduser=thatuser.userid;
-        nomuser=thatuser.usernom;
-        courrieluser=thatuser.userlogin;
-        roleuser=thatuser.statut;    
-        
+    if ((thatuser !== undefined) && (thatuser !== null) ){           
         let str='';             
         // Edition   
         let url= url_serveur+'adduser.php';               
@@ -244,6 +240,8 @@ function saisieThatUser(response) {
         str+='<br /><label for="utelephone"><b>Téléphone</b>: </label> <input type="text" id="utelephone" size="20" name="utelephone" value="'+thatuser.telephone+'" autocomplete="on" />';
         str+='<br /><label for="uclub"><b>Club</b>: </label>'; 
         str+='<br /><textarea cols="50" id="uclub" rows="3" name="uclub">'+thatuser.club+'</textarea>'; 
+        str+='<br /><label for="uadresse"><b>Adresse</b>: </label>'; 
+        str+='<br /><textarea cols="50" id="uadresse" rows="3" name="uadresse">'+thatuser.adresse+'</textarea>'; 
         str+='</div>';       
         if ((thatuser.userid !== undefined) && (thatuser.userid !== null)){  
             str+='<input type="hidden" id="userid" name="userid" value="'+thatuser.userid+'" />';
@@ -354,10 +352,9 @@ function getInfoUser(mail){
     if ((mail !== undefined) && (mail.length>0)){
         console.debug("GetInfoUser");
         console.debug("Courriel : "+mail);
-            //var url= url_serveur+'getmodelesmoulesadmin.php';
             var url= url_serveur+'getuser.php?mail='+mail;
             var mydata="";    
-            ajax_GetUser(url, mydata);         
+            ajax_GetUser(url, mydata, myCallBack);         
     }    
 }
 
@@ -372,7 +369,7 @@ function ajax_GetUser(url){
         .then(response => {
             console.debug("Données utilisateurs\n");
             console.debug(response);                
-            setUser(response);  // renseigne les valeurs globales         
+            setUserReserverMoule(response);  // traite la réponse         
         })                
         .catch(error => console.debug("Erreur : "+error));
     }
@@ -388,7 +385,7 @@ function ajax_GetUser(url){
     var Commentaire = '';
  */
 // -----------------------------
-function setUser(response){
+function setUserReserverMoule(response){
     let ObjUser=JSON.parse(response);
     if ((ObjUser.ok!==undefined) && (ObjUser.ok==1) && (ObjUser.user!==undefined)){
         // 
@@ -407,5 +404,166 @@ function setUser(response){
     }
     reserverThatMoules(); 
 }
+
+
+/****************************************
+ * 
+ * Profil utilisateur
+ * 
+ * 
+ * 
+ * **************************************/
+
+// ---------------------------------
+function getInfoUserByMail(mail){
+    if ((mail !== undefined) && (mail.length>0)){
+        console.debug("getInfoUserByMail");
+        console.debug("Courriel : "+mail);
+            var url= url_serveur+'getuser.php?mail='+mail;
+            var mydata="";    
+            ajax_GetUserByMail(url, mydata);         
+    }    
+}
+
+// Lance l'appel Ajax et transmet les données reçues à 
+// 
+// -----------------------
+function ajax_GetUserByMail(url){ 
+    if ((url !== undefined) && (url.length>0)){        
+        // GET avec fetch()
+        fetch(url, myInitGet)
+        .then(response => response.text())  // Le retour est aussi une chaîne
+        .then(response => {
+            console.debug("Données utilisateurs\n");
+            console.debug(response);                
+            saisieUser(response);  // traite la réponse         
+        })                
+        .catch(error => console.debug("Erreur : "+error));
+    }
+}
+
+// Callback 
+// Appelé par ajax_GetUserByMail();
+// Appelle saisieUser();
+
+// {"ok":1, "user":{"userid":"2","usernom":"FRUITET Jean","userlogin":"jean.fruitet@free.fr","statut":"2","pass":"81dc9bdb52d04dc20036dbd8313ed055","telephone":"06 95 28 73 11","club":"ARBL, Association Radiomod\u00e9liste des Bords de Loire, 44980 Sainte Luce sur Loire","adresse":""}}
+
+// ----------------------- 
+function saisieUser(response) {
+    // console.debug("saisieThatUser()");
+    // Affichage des infos associées\n"+ response);
+    // Traitement de la réponse 
+    // Page de retour après appel par formulaire POST
+    switch(adminpage){
+        case 1 : pageretour=pageadmin; break;
+        case 2 : pageretour=pageuser; break;     
+        default : pageretour=pageindex; break;      
+    }    
+    
+    const thatuser = JSON.parse(response); 
+    //console.debug(thatuser);
+    
+    if ((thatuser !== undefined) && (thatuser !== null) && (thatuser.ok !== undefined) && (thatuser.ok !== null) && (thatuser.ok == 1)
+        && (thatuser.user !== undefined) && (thatuser.user !== null)){ 
+        console.debug(thatuser.user);           
+        let str='';             
+        // Edition   
+        let url= url_serveur+'adduser.php';               
+        str+='<h4>Utilisateur</h4>';     
+        // Creer un formulaire d'édition
+        str+='<p>Complétez votre profil</p>';
+        str+='<form name="FormUser" action="">';
+        str+='<div class="button"><button onclick="return validationUser();">Valider</button></div>';        
+        // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
+        str+='<div><label for="unom"><b>NOM Prénom</b>: </label><br /><input type="text" id="unom" size="50" name="unom" value="'+thatuser.user.usernom+'" autocomplete="on" />';
+        str+='<br /><i>'+thatuser.user.userlogin+'</i> (Votre login)';
+        str+='<br /><span class="surligne">Courriel et Mot de passe non modifiables</span> (<a target="_blank" href="help.html#Password">?</a>)';
+        str+='<br /><b>Rôle</b>: ';
+        if ((thatuser.user.statut!==undefined) && (thatuser.user.statut.length>0)){
+            if (thatuser.user.statut=='0') {str+='Visiteur';}
+            if (thatuser.user.statut=='3') {str+='Lecteur';}
+            if (thatuser.user.statut=='2') {str+='Auteur';}
+            if (thatuser.user.statut=='1') {str+='Administrateur';}        
+        }
+        else{
+            str+='Visiteur';
+        }       
+        str+='</div>';        
+        str+='<br /><label for="utelephone"><b>Téléphone</b>: </label> <input type="text" id="utelephone" size="20" name="utelephone" value="'+thatuser.user.telephone+'" autocomplete="on" />';
+        str+='<br /><label for="uclub"><b>Club</b>: </label>'; 
+        str+='<br /><textarea cols="50" id="uclub" rows="3" name="uclub">'+thatuser.user.club+'</textarea>'; 
+        str+='<br /><label for="uadresse"><b>Adresse</b>: </label>'; 
+        str+='<br /><textarea cols="50" id="uadresse" rows="3" name="uadresse">'+thatuser.user.adresse+'</textarea>'; 
+        str+='</div>';       
+        if ((thatuser.user.userid !== undefined) && (thatuser.user.userid !== null)){  
+            str+='<input type="hidden" id="userid" name="userid" value="'+thatuser.user.userid+'" />';
+        }
+        else{
+            str+='<input type="hidden" id="userid" name="userid" value="" />';                
+        }
+        str+='<input type="hidden" id="ulogin" name="ulogin" value="'+thatuser.user.userlogin+'" />';
+        str+='<input type="hidden" id="passmd5" name="passmd5" value="'+thatuser.user.pass+'" />' 
+        str+='<input type="hidden" id="statut" name="statut" value="'+thatuser.user.statut+'" />' 
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageuser+'" />';
+        str+='</form>';      
+        document.getElementById("scrollleft").style.display = "inline";
+        document.getElementById("myImage").innerHTML = str;
+    }        
+}
+
+
+// ----------------------------------
+function validationUser(){
+// Verifie que les champs du formualaire sont remplis
+
+    let nom = document.forms["FormUser"]["unom"];               
+    let email = document.forms["FormUser"]["ulogin"];    
+    let phone = document.forms["FormUser"]["utelephone"];   
+    let adresse = document.forms["FormUser"]["uadresse"];  
+    let club = document.forms["FormUser"]["uclub"];      
+
+    if (nom.value == "")                                  
+    { 
+        alert("Mettez votre nom."); 
+        nom.focus(); 
+        return false; 
+    }    
+    if (adresse.value == "")                               
+    { 
+        alert("Mettez votre adresse."); 
+        adresse.focus(); 
+        return false; 
+    }        
+    if (phone.value == "")                           
+    { 
+        alert("Mettez votre numéro de téléphone."); 
+        phone.focus(); 
+        return false; 
+    }    
+    if (club.value == "")                  
+    { 
+        alert("Complétez votre club."); 
+        comment.focus(); 
+        return false; 
+    } 
+  
+    // Variables globales et Cookies
+    Nom = nom.value;               
+    Courriel = email.value;    
+    Telephone = phone.value;   
+    Adresse = adresse.value;  
+    Club = club.value;  
+
+    setCookies();
+    
+    // Mise à jour de la BD   
+    if ((document.forms["FormUser"]["userid"] !== undefined) && (document.forms["FormUser"]["userid"].value>0)){
+        let userid = document.forms["FormUser"]["userid"].value;
+        let majUser = '{"userid":'+userid+', "usernom":"'+Nom+'", "userlogin":"'+Courriel+'", "telephone":"'+Telephone+'", "adresse":"'+Adresse+'", "club":"'+Club+'"}';
+        ajax_MajUser(majUser);  // Mise à jour de la table bdm_user
+    }
+    return true; 
+}
+
 
 

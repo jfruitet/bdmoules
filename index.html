@@ -64,7 +64,7 @@ Quand vous avez sélectionné un modèle faites sa <b>réservation</b> auprès d
     checkCookies(); 
     adminpage=0;
     if (okadmin || okauteur || oklecteur) {
-        document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+        boutonProfil(admin, adminpage);
         formlogout();
     }
     else {

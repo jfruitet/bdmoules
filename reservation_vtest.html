@@ -46,7 +46,7 @@ function validationReservation()  {
     var name = document.forms["RegForm"]["Nom"];               
     var email = document.forms["RegForm"]["Email"];    
     var phone = document.forms["RegForm"]["Telephone"];   
-    var address = document.forms["RegForm"]["Adresse"];  
+    var adresse = document.forms["RegForm"]["Adresse"];  
     var comment = document.forms["RegForm"]["Commentaire"];  
 
     if (name.value == "")                                  
@@ -55,10 +55,10 @@ function validationReservation()  {
         name.focus(); 
         return false; 
     }    
-    if (address.value == "")                               
+    if (adresse.value == "")                               
     { 
         alert("Mettez votre adresse."); 
-        address.focus(); 
+        adresse.focus(); 
         return false; 
     }        
     if (email.value == "")                                   
@@ -106,12 +106,12 @@ function envoiReservation(){
     var name = document.forms["RegForm"]["Nom"].value;               
     var email = document.forms["RegForm"]["Email"].value;    
     var phone = document.forms["RegForm"]["Telephone"].value;   
-    var address = document.forms["RegForm"]["Adresse"].value;  
+    var adresse = document.forms["RegForm"]["Adresse"].value;  
     var comment = document.forms["RegForm"]["Commentaire"].value; 
     var idmodele = document.forms["RegForm"]["idmodele"].value;               
     var idmoule = document.forms["RegForm"]["idmoule"].value;               
 
-    mystrjson+='{"idmodele":"'+idmodele+'", "idmoule":"'+idmoule+'", Nom":"'+name+'", "Email":"'+email+'", "Telephone":"'+phone+'", "Adresse":"'+address+'", "Commentaire":"'+comment+'"}';
+    mystrjson+='{"idmodele":"'+idmodele+'", "idmoule":"'+idmoule+'", Nom":"'+name+'", "Email":"'+email+'", "Telephone":"'+phone+'", "Adresse":"'+adresse+'", "Commentaire":"'+comment+'"}';
     console.debug("JSON: "+mystrjson+"\n");
         
     var url= url_serveur+'reservation.php';

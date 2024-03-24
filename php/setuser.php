@@ -2,7 +2,7 @@
 // Mise à jour de la table user par l'utilisateur identifié
 // userid 	usernom 	userlogin 	statut [1: admin, 2:auteur, 3: lecteur] pass [pass crypté MD5] 	telephone 	club	adresse
 // Mise à jour depuis le formulaire de réservation :
-// '{"userid":'+userid+', "usernom":"'+Nom+'", "userlogin":"'+Courriel+'", "telephone":"'+Telephone+'", "adresse":"'+adresse+'"}';
+// '{"userid":'+userid+', "usernom":"'+Nom+'", "userlogin":"'+Courriel+'", "telephone":"'+Telephone+'", "club":"'+club+'", "adresse":"'+adresse+'"}';
 
 // Session activée 
 include ("./include/config.php");

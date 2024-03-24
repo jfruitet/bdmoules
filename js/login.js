@@ -7,16 +7,6 @@
  * 
  */
 
-//----------------------------------
-function oklogin(){
-    // Utilise la session
-    if (okvisiteur){    // On lui demande de se loger 
-        return saisieLogin();           
-    }        
-    else{
-        return true;
-    }    
-}
 
 // --------------------------------
 function formlogout(){
@@ -45,8 +35,8 @@ function logout(adminpage){
     boutonLogin(adminpage);
     document.getElementById("logout").innerHTML = '&nbsp; &nbsp;';
     if (adminpage==2){
-                document.getElementById("scrollleft").style.display = "none";
-                document.getElementById("scrollright").style.display = "none";    
+        document.getElementById("scrollleft").style.display = "none";
+        document.getElementById("scrollright").style.display = "none";    
     }            
     return true;   
 }
@@ -128,16 +118,42 @@ function getUserAutorisation(adminpage=0){
  * 
  * *****************************************/
  
- // --------------------------------
- function boutonLogin(mail='', adminpage=0){
-    //console.debug("Saisie du Login");
+  // --------------------------------
+ function boutonProfil(mail, adminpage){
+    //console.debug("Saisie du profil");
     let str='';
-    str+='<p>&nbsp; <button class="button" id="btnlogin" onclick="return saisieLogin(\'\',adminpage);">Connexion</button></p>';
+    str+='<button class="button" id="btnprofil" onclick="return saisieProfil();">'+mail+'</button>';
     document.getElementById("login").innerHTML = str;
  }
   
+// -------------------------------
+function saisieProfil(){
+    console.debug("Saisie du profil");
+    
+    console.debug("Courriel: ",admin);
+    /*
+    switch(adminpage){
+        case 1 : pageretour=pageadmin; break;
+        case 2 : pageretour=pageuser; break;     
+        default : pageretour=pageindex; break;      
+    }
+    */
+    if ((admin !== undefined) && (admin !== null) && (admin.length > 0)){
+        getInfoUserByMail(admin);    
+    }
+}
+
+
 // --------------------------------
-function saisieLogin(mail='', adminpage=0){
+function boutonLogin(adminpage){
+    //console.debug("Saisie du Login");
+    let str='';
+    str+='<button class="button" id="btnlogin" onclick="return saisieLogin(adminpage);">Connexion</button>';
+    document.getElementById("login").innerHTML = str;
+}
+  
+// --------------------------------
+function saisieLogin(adminpage=0){
 // Saisie d'une adresse mail 
 
     //console.debug("Saisie du Login");
@@ -154,7 +170,7 @@ function saisieLogin(mail='', adminpage=0){
     str+='<p>Saisissez votre identifiant d\'utilisateur (votre <i>courriel</i>).</p>';
         
     str+='<form name="formLogin" action="./php/checklogin.php" method="post" onsubmit="return verifLogin();">';
-    str+='<label for="usermail">Courriel</label> <input type="text" id="usermail" name="usermail" value="'+mail+'" />';
+    str+='<label for="usermail">Courriel</label> <input type="text" id="usermail" name="usermail" value="" />';
     str+='&nbsp; &nbsp; <label for="userpass">Mot de passe</label> <input type="password" id="userpass" name="userpass" size="10" value="" />';
     str+='<input type="hidden" name="appel" id="appel" value="'+pageretour+'"';
     str+='<div class="button">&nbsp; &nbsp; <input type="submit" value="Envoyer" onclick="return verifLogin();" /> &nbsp; &nbsp; <input type="reset" value="Réinitialiser"  /></div>';        

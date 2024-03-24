@@ -75,7 +75,8 @@
     document.getElementById("msg").innerHTML = '<span class="surligne">'+msg+'</span> ';        
 
     if (okadmin || okauteur) {
-        document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+        //document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+		boutonProfil(admin,adminpage);
         formlogout();
         document.getElementById("msg").innerHTML += 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
 
@@ -93,7 +94,8 @@
         }               
     }
     else if (oklecteur) {
-            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
+            //document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
+			boutonProfil(admin,adminpage);
             formlogout(); 
             document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet de réserver des moules mais pas d\'administrer la base de données.';
             getModelesMoules(); 
@@ -104,19 +106,14 @@
             }
     }
     else{
-        if (!oklogin()) {
-            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
-            document.getElementById("msg").innerHTML += 'Vous pouvez lister nos modèles et leurs moules mais ni en réserver ni en ajouter.';
-            getModelesMoules(); 
-            if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
-                // Affiche le moule sélectionné 
-                getModeleMoulesImages(idmodeleglobal); 
-                reserverModeleMoules(idmodeleglobal);
-            }
-        }
-        else{
-            formlogout();
-        }        
+        boutonLogin(adminpage);
+        document.getElementById("logout").innerHTML = '&nbsp; &nbsp;';
+        document.getElementById("msg").innerHTML += 'Vous pouvez lister nos modèles et leurs moules mais ni en réserver ni en ajouter.';
+        getModelesMoules(); 
+        if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+			// Affiche le moule sélectionné 
+            getModeleMoulesImages(idmodeleglobal); 
+        }      
     }
  
  }   

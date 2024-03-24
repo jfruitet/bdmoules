@@ -1,7 +1,7 @@
 <?php
 // Script à ne pas supprimer
 // Retourne les infos concernant les moules d'un modèle lues dans la Base de données
-// Id du modèle en paramètre GET et chaîne JSON en sortie
+// mail du modèle en paramètre GET et chaîne JSON en sortie
 // http://localhost/bdmoules/php/getmodelemoules.php?idmodele=37
 
 // Session activée 

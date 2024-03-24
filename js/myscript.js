@@ -22,7 +22,7 @@ let tVignettes=[]; // Tableau des fichiers vignettes
     var nom = null;               
     var courriel = null;    
     var phone = null;   
-    var address = null;  
+    var adresse = null;  
     var comment = null;     
     // String
     var Nom = '';               
@@ -158,10 +158,14 @@ function checkCookies() {
     if (snom!="" && snom!=null) {
         Nom=snom;
     }
+    let sclub = getCookie("sclub");
+    if (sclub!="" && sclub!=null) {
+        Club=sclub;
+    }
     let sadresse = getCookie("sadresse");
     if (sadresse!="" && sadresse!=null) {
         Adresse=sadresse;
-    }
+    }    
     let scourriel = getCookie("scourriel");
     if (scourriel!="" && scourriel!=null) {
         Courriel=scourriel;
@@ -186,6 +190,7 @@ function setCookies(){
     if (Commentaire.length>0) {
         // Supprimer les sauts de ligne
         let scomment = Commentaire.replace(/\n/g, "\t");
+        scomment = scomment.replace(/\r/g, ",");
         setCookie("scommentaire", scomment, 30); // 30 jours
     }   
     if (Telephone.length>0) {
@@ -195,8 +200,15 @@ function setCookies(){
         setCookie("scourriel", Courriel, 30); // 30 jours
     }   
     if (Adresse.length>0) {
-        setCookie("sadresse", Adresse, 30); // 30 jours
-    }     
+        let sadresse = Adresse.replace(/\n/g, "\t");
+        sadresse = sadresse.replace(/\r/g, ", ");
+        setCookie("sadresse", sadresse, 30); // 30 jours
+    }   
+    if (Club.length>0) {
+        let sclub = Club.replace(/\n/g, "\t");
+        sclub = sclub.replace(/\r/g, ", ");
+        setCookie("sclub", sclub, 30); // 30 jours
+    }            
     if (Nom.length>0) {
         setCookie("snom", Nom, 30); // 30 jours
     } 

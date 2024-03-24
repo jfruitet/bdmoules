@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1
--- Généré le : mer. 20 mars 2024 à 11:33
+-- Généré le : ven. 22 mars 2024 à 13:50
 -- Version du serveur : 10.4.28-MariaDB
 -- Version de PHP : 8.2.4
 
@@ -245,6 +245,7 @@ CREATE TABLE IF NOT EXISTS `bdm_user` (
   `pass` varchar(255) NOT NULL COMMENT 'pass crypté MD5',
   `telephone` varchar(30) NOT NULL,
   `club` varchar(255) NOT NULL,
+  `adresse` varchar(255) NOT NULL,
   PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -252,12 +253,12 @@ CREATE TABLE IF NOT EXISTS `bdm_user` (
 -- Déchargement des données de la table `bdm_user`
 --
 
-INSERT INTO `bdm_user` (`userid`, `usernom`, `userlogin`, `statut`, `pass`, `telephone`, `club`) VALUES
-(1, 'FRUITET Jean', 'jean.fruitet@gmail.com', 3, '81dc9bdb52d04dc20036dbd8313ed055', '06 95 28 73 11', 'ARBL, Association Radiomodéliste des Bords de Loire, 44980 Sainte luce sur Loire'),
-(2, 'FRUITET Jean', 'jean.fruitet@free.fr', 2, '81dc9bdb52d04dc20036dbd8313ed055', '06 95 28 73 11', 'ARBL, Association Radiomodéliste des Bords de Loire, 44980 Sainte luce sur Loire'),
-(3, 'DESCHAMPS Dominique', 'domi.desch@free.fr', 2, '674f3c2c1a8a6f90461e8a66fb5550ba', '06 68 54 01 04', 'ARBL, 44980, Sainte Luce / Loire'),
-(4, 'DESCHAMPS Dominique', 'domi.d@arbl.fr', 3, '674f3c2c1a8a6f90461e8a66fb5550ba', '06 68 54 01 04', 'ARBL, 44115 Sainte Luce sur Loire.\r\nWebmaster du site arbl.fr'),
-(5, 'jean.fruitet', 'jean.fruitet@laposte.net', 1, '81dc9bdb52d04dc20036dbd8313ed055', '', '');
+INSERT INTO `bdm_user` (`userid`, `usernom`, `userlogin`, `statut`, `pass`, `telephone`, `club`, `adresse`) VALUES
+(1, 'FRUITET Jean', 'jean.fruitet@gmail.com', 3, '81dc9bdb52d04dc20036dbd8313ed055', '06 95 28 73 11', 'ARBL, Association Radiomodéliste des Bords de Loire, 44980 Sainte luce sur Loire', ''),
+(2, 'FRUITET Jean', 'jean.fruitet@free.fr', 2, '81dc9bdb52d04dc20036dbd8313ed055', '06 95 28 73 11', 'ARBL, Association Radiomodéliste des Bords de Loire, 44980 Sainte Luce sur Loire', ''),
+(3, 'DESCHAMPS Dominique', 'domi.desch@free.fr', 2, '674f3c2c1a8a6f90461e8a66fb5550ba', '06 68 54 01 04', 'ARBL, 44980, Sainte Luce / Loire', ''),
+(4, 'DESCHAMPS Dominique', 'domi.d@arbl.fr', 3, '674f3c2c1a8a6f90461e8a66fb5550ba', '06 68 54 01 04', 'ARBL, 44115 Sainte Luce sur Loire.\r\nWebmaster du site arbl.fr', ''),
+(5, 'FRUITET Jean', 'jean.fruitet@laposte.net', 1, '81dc9bdb52d04dc20036dbd8313ed055', '06 95 28 73 11', '', '5 Impasse Paul Edouard Lynch, 44114 Basse Goulaine');
 
 -- --------------------------------------------------------
 

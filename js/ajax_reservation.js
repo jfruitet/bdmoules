@@ -7,7 +7,7 @@
     var name = '';               
     var email = '';    
     var phone = '';   
-    var address = '';  
+    var adresse = '';  
     var comment = '';     
     
 // Requête par GET
@@ -34,7 +34,7 @@ function validationReservation()  {
     name = document.forms["RegForm"]["Nom"];               
     email = document.forms["RegForm"]["Email"];    
     phone = document.forms["RegForm"]["Telephone"];   
-    address = document.forms["RegForm"]["Adresse"];  
+    adresse = document.forms["RegForm"]["Adresse"];  
     comment = document.forms["RegForm"]["Commentaire"];  
 
     if (name.value == "")                                  
@@ -43,10 +43,10 @@ function validationReservation()  {
         name.focus(); 
         return false; 
     }    
-    if (address.value == "")                               
+    if (adresse.value == "")                               
     { 
         alert("Mettez votre adresse."); 
-        address.focus(); 
+        adresse.focus(); 
         return false; 
     }        
     if (email.value == "")                                   
@@ -128,7 +128,7 @@ function redigeReservation(response){
 // 
     console.debug("redigeReservation()");
     
-    let body='%0A%0ANom: '+name+'%0A%0AEmail: '+email+'%0A%0ATéléphone: '+phone+'%0A%0AAdresse: '+address+'%0A%0ACommentaire '+comment;
+    let body='%0A%0ANom: '+name+'%0A%0AEmail: '+email+'%0A%0ATéléphone: '+phone+'%0A%0AAdresse: '+adresse+'%0A%0ACommentaire '+comment;
     body+='%0A%0A'+JSON.stringify(response);
     
     console.debug("body\n");
@@ -148,13 +148,13 @@ function envoiReservation(){
     name = document.forms["RegForm"]["Nom"].value;               
     email = document.forms["RegForm"]["Email"].value;    
     phone = document.forms["RegForm"]["Telephone"].value;   
-    address = document.forms["RegForm"]["Adresse"].value;  
+    adresse = document.forms["RegForm"]["Adresse"].value;  
     var comment = document.forms["RegForm"]["Commentaire"].value; 
     var idmodele = document.forms["RegForm"]["idmodele"].value;               
     var idmoule = document.forms["RegForm"]["idmoule"].value;               
 
-    mystrjson+='{"idmodele":"'+idmodele+'", "idmoule":"'+idmoule+'", Nom":"'+name+'", "Email":"'+email+'", "Telephone":"'+phone+'", "Adresse":"'+address+'", "Commentaire":"'+comment+'"}';
-    //mystr+='idmodele='+idmodele+'&idmoule='+idmoule+'&Nom='+name+'&Email='+email+'&Telephone='+phone+'&Adresse='+address+'&Commentaire='+comment;
+    mystrjson+='{"idmodele":"'+idmodele+'", "idmoule":"'+idmoule+'", Nom":"'+name+'", "Email":"'+email+'", "Telephone":"'+phone+'", "Adresse":"'+adresse+'", "Commentaire":"'+comment+'"}';
+    //mystr+='idmodele='+idmodele+'&idmoule='+idmoule+'&Nom='+name+'&Email='+email+'&Telephone='+phone+'&Adresse='+adresse+'&Commentaire='+comment;
         
     console.debug("JSON: "+mystrjson+"\n");
     //console.debug("STR: "+mystr+"\n");

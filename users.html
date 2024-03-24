@@ -76,7 +76,8 @@
     document.getElementById("msg").innerHTML = '<span class="surligne">'+msg+'</span> ';        
 
     if (okadmin) {
-        document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+        //document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
+        boutonProfil(admin,adminpage);
         formlogout();
         
         //document.getElementById("msg").innerHTML += 'Complétez chaque enregistrement par une photo et un numéro d\'inventaire unique.';
@@ -96,20 +97,12 @@
             btnedituser.addEventListener('click', (event) => { editUser();});                  
         }               
     }
-    else if (okauteur || oklecteur) {
-            document.getElementById("login").innerHTML += ' <span class="surligne">Accès réservé.</span>';
+    else if (okauteur ) {
+            //document.getElementById("login").innerHTML += ' <span class="surligne">Accès réservé.</span>';
+            boutonProfil(admin,adminpage);
             formlogout(); 
             document.getElementById("titre").innerHTML = 'Liste des modèles et de leurs moules associés';
-            
-            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
-            formlogout(); 
-            document.getElementById("titre").innerHTML = 'Liste des modèles et de leurs moules associés';
-            if (oklecteur) {
-                document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet de réserver des moules mais pas d\'administrer la base de données.';
-            }
-            else{
-                document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet d\'ajouter des moules mais pas d\'administrer les utilisateurs.';
-            }
+            document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet d\'ajouter des moules mais pas d\'administrer les utilisateurs.';
             getModelesSearch();
             getModelesMoules(); 
             if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
@@ -118,18 +111,26 @@
                 reserverModeleMoules(idmodeleglobal);
             }
     }    
+    else if (oklecteur) {
+            //document.getElementById("login").innerHTML += ' <span class="surligne">Accès réservé.</span>';
+            boutonProfil(admin,adminpage);
+            formlogout(); 
+            document.getElementById("titre").innerHTML = 'Liste des modèles et de leurs moules associés';
+            document.getElementById("msg").innerHTML += 'Ce compte d\'accès vous permet de réserver des moules mais pas d\'administrer la base de données.';
+            getModelesSearch();
+            getModelesMoules(); 
+            if ((idmodeleglobal!==undefined) && (idmodeleglobal!==null) && (idmodeleglobal>0)){
+                // Affiche le moule sélectionné 
+                getModeleMoulesImages(idmodeleglobal); 
+            }
+    }    
     else { 
-        if (!oklogin()) {
-            document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>'; 
-            document.getElementById("msg").innerHTML += 'Pour administrer la base de données identifiez-vous avec votre compte administrateur.';
-            document.getElementById("scrollleft").style.display = "none";
-            document.getElementById("scrollright").style.display = "none";
-        }
-        else{
-            formlogout();
-        }
-    }
- 
+        boutonLogin(adminpage);
+        document.getElementById("logout").innerHTML = '&nbsp; &nbsp;';
+        document.getElementById("msg").innerHTML += 'Pour réserver des moules identifiez-vous.';
+        document.getElementById("scrollleft").style.display = "none";
+        document.getElementById("scrollright").style.display = "none";
+    } 
  }   
 </script>
 </html>
