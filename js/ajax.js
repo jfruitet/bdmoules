@@ -745,8 +745,8 @@ let url='./php/setuser.php';
         fetch(url, myInitPost)
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
-                console.debug("Mise à jour table bdm_user");
-                console.debug(response);
+                //console.debug("Mise à jour table bdm_user");
+                //console.debug(response);
                 response=JSON.parse(response);
                 if (response.ok==1){    // ça s'est ma cuisine interne                    
                     document.getElementById("consigne").innerHTML=" <span class=\"surligne\">Mise à jour de la table utilisateur effectuée (Utilisateur ID <i>"+response.userid+"</i>).</span>  ";

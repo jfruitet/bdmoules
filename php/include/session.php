@@ -18,7 +18,7 @@
     ini_set("session.use_strict_mode", 1);
     ini_set("session.cookie_domain", $domain);
     ini_set("session.cookie_path",  "/bdmoules/");    
-    ini_set("session.cookie_httponly", "0");
+    ini_set("session.cookie_httponly", 0);
     ini_set("session.cookie_samesite", "Strict");
     session_start();
 

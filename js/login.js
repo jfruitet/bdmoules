@@ -10,9 +10,9 @@
 
 // --------------------------------
 function formlogout(){
-    // console.debug("Bouton Logout");
+    //console.debug("Bouton Logout");
     let str='';
-    str+='<p>&nbsp; <button class="button" id="btnlogout" onclick="return logout(adminpage);">Déconnexion</button></p>';
+    str+='<p>&nbsp; <button class="button" id="btnlogout" onclick="return logout('+adminpage+');">Déconnexion</button></p>';
     document.getElementById("logout").innerHTML = str;
 }
  
@@ -28,7 +28,12 @@ function logout(adminpage){
         dellCookie("scourriel")
     }; 
     
-    checkCookies(); 
+    admin='';
+    role=0;
+    okvisiteur=true;
+    okadmin=false;
+    okauteur=false;
+    oklecteur=false;
                         
     document.getElementById("logout").innerHTML = '&nbsp;';
     document.getElementById("login").innerHTML = '<span class="surligne">Accès réservé.</span>';
@@ -128,9 +133,8 @@ function getUserAutorisation(adminpage=0){
   
 // -------------------------------
 function saisieProfil(){
-    console.debug("Saisie du profil");
-    
-    console.debug("Courriel: ",admin);
+    //console.debug("Saisie du profil");    
+    //console.debug("Courriel: ",admin);
     /*
     switch(adminpage){
         case 1 : pageretour=pageadmin; break;

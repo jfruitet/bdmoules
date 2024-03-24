@@ -22,6 +22,7 @@ $pass='';
 $passmd5='';
 $telephone='';
 $club='';
+$adresse='';
 
 $action=0;
 $reponse='';
@@ -88,6 +89,10 @@ if (!empty($_POST['uclub'])) {
     $club = $_POST['uclub'];  
 }
 
+if (!empty($_POST['uadresse'])) {
+    $adresse = $_POST['uadresse'];  
+}
+
 if (!empty($userlogin)){
     connexion_db(); 
     
@@ -95,7 +100,7 @@ if (!empty($userlogin)){
     {
         // Debug
         if ($debug){
-            echo "Création d'un nouveau compte, Nom: $usernom, Login: $userlogin, Rôle: $statut, Pass: $pass, Téléphone: $telephone, Club: $club<br />\n";                
+            echo "Création d'un nouveau compte, Nom: $usernom, Login: $userlogin, Rôle: $statut, Pass: $pass, Téléphone: $telephone, Club: $club, Adresse: $adresse<br />\n";                
         }           
         $action=0;
         $reponse = mysql_add_user();
@@ -103,7 +108,7 @@ if (!empty($userlogin)){
     else if (!empty($passmd5)){
         // Debug
         if ($debug){
-            echo "Mise à jour du compte Id: $userid, Nom: $usernom, Login: $userlogin, Rôle: $statut, Pass: $pass, Téléphone: $telephone, Club: $club<br />\n";                
+            echo "Mise à jour du compte Id: $userid, Nom: $usernom, Login: $userlogin, Rôle: $statut, Pass: $pass, Téléphone: $telephone, Club: $club, Adresse: $adresse<br />\n";                
         }    
         $action=1;       
         $reponse = mysql_update_user($passmd5);
@@ -159,13 +164,15 @@ global $statut;
 global $pass;
 global $telephone;
 global $club;
-// userid 	usernom 	userlogin 	statut [1: admin, 2:auteur, 3: lecteur] pass [pass crypté MD5] 	telephone 	club
+global $adresse;
+
+// userid 	usernom 	userlogin 	statut [1: admin, 2:auteur, 3: lecteur] pass [pass crypté MD5] 	telephone 	club adresse
  	
 $sql='';
 $reponse='';
 
     if (!empty($userlogin)){
-        $sql='INSERT INTO `bdm_user` (`usernom`, `userlogin`, `statut`, `pass`, `telephone`, `club`) VALUES ("'.addslashes($usernom).'", "'.addslashes($userlogin).'", '.$statut.', "'.md5($pass).'", "'.$telephone.'", "'.addslashes($club).'")';
+        $sql='INSERT INTO `bdm_user` (`usernom`, `userlogin`, `statut`, `pass`, `telephone`, `club`, `adresse`) VALUES ("'.addslashes($usernom).'", "'.addslashes($userlogin).'", '.$statut.', "'.md5($pass).'", "'.$telephone.'", "'.addslashes($club).'", "'.addslashes($adresse).'")';
         // Debug
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                
@@ -191,12 +198,14 @@ global $userlogin;
 global $statut;
 global $telephone;
 global $club;
-// userid 	usernom 	userlogin 	statut [1: admin, 2:auteur, 3: lecteur] pass [pass crypté MD5] 	telephone 	club	
+global $adresse;
+
+// userid 	usernom 	userlogin 	statut [1: admin, 2:auteur, 3: lecteur] pass [pass crypté MD5] 	telephone 	club  adresse	
 $sql='';
 $reponse='';
 
     if (!empty($userid)){
-        $sql = 'UPDATE `bdm_user` SET `usernom`="'.addslashes($usernom).'", `userlogin`="'.addslashes($userlogin).'", `statut`='.$statut.', `telephone`="'.addslashes($telephone).'", `club`="'.addslashes($club).'" WHERE `userid`='.$userid.' AND `pass`="'.$passmd5.'";';
+        $sql = 'UPDATE `bdm_user` SET `usernom`="'.addslashes($usernom).'", `userlogin`="'.addslashes($userlogin).'", `statut`='.$statut.', `telephone`="'.addslashes($telephone).'", `club`="'.addslashes($club)'", `adresse`="'.addslashes($adresse).'" WHERE `userid`='.$userid.' AND `pass`="'.$passmd5.'";';
         // Debug
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                
@@ -214,7 +223,7 @@ function mysql_update_user_pass(){
 global $debug;
 global $pass;
 
-// userid 	usernom 	userlogin 	statut [1: admin, 2:auteur, 3: lecteur] pass [pass crypté MD5] 	telephone 	club	
+// userid 	usernom 	userlogin 	statut [1: admin, 2:auteur, 3: lecteur] pass [pass crypté MD5] 	telephone 	club	adresse
 $sql='';
 $reponse='';
 

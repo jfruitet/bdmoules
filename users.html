@@ -63,6 +63,9 @@
  window.onload = function(){
     // Cookies
     checkCookies();
+    console.debug('Rôle: '+role);
+    
+    
     adminpage = 2;
     //getModelesSearch();
     
@@ -74,7 +77,8 @@
         msg = urlParams.get('msg');
     }
     document.getElementById("msg").innerHTML = '<span class="surligne">'+msg+'</span> ';        
-
+    console.debug('Rôle: '+role);
+    
     if (okadmin) {
         //document.getElementById("login").innerHTML = '<span class="surligne">'+admin+'</span>';
         boutonProfil(admin,adminpage);

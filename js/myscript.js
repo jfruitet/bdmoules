@@ -62,7 +62,7 @@ let tVignettes=[]; // Tableau des fichiers vignettes
     var Pass = '';  // crypté MD5 dans la base
     var Contact = '';   // Telephone
     var Club = '';      // Club + ville
-    var Statut = 0;     // 0:visiteur, 1:admin, 2:auteur, 3:lecteur
+    var Statut = 0;     // 0:visiteur, 3:admin, 2:auteur, 1:lecteur
      
     var iduserglobal=0;   // l'utilisateur courant  
 
@@ -123,15 +123,16 @@ function checkCookies() {
     okauteur=false;
     oklecteur=false;
     okvisiteur=true;    
-    admin='';
+    
+    admin='';    
     role=0;
-    if ((sadmin!=="" && sadmin!==null) && (srole!=="" && srole!==null)) {
+    if (sadmin!=="" && sadmin!==null  && sadmin.length>0 && srole!=="" && srole!==null && srole.length>0) {
         // Verifier si c'est un admin autorisé
-        //console.debug("Vérification des droits attachés à un utilisateur");
+        console.debug("Vérification des droits attachés à un utilisateur");
         admin=sadmin; 
         role=parseInt(srole); 
         if ((role > 0) && (role < 4)){ 
-            // Statut de connexion à 1 pour admin, 2 pour auteur, 3 pour lecteur sinon 0: visiteur
+            // Statut de connexion à 3 pour admin, 2 pour auteur, 1 pour lecteur sinon 0: visiteur
             okvisiteur=false;
             switch (role) {
                 case 3 : okadmin=true; break;
@@ -183,7 +184,7 @@ function checkCookies() {
 // positionne les cookies utiles
 // ---------------------------------
 function setCookies(){     
-    if (idmodele>0) {
+    if ((idmodeleglobal!==undefined) && (idmodeleglobal>0)) {
         setCookie("sidmodele", idmodeleglobal, 30); // 30 jours
     }   
     // User

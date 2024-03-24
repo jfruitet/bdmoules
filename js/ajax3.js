@@ -50,8 +50,8 @@ function ajax_GetUsers(url){
         fetch(url, myInitGet)
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
-                console.debug("Affichage des utilisateurs enregistrés\n");
-                console.debug(response);                
+                //console.debug("Affichage des utilisateurs enregistrés\n");
+                //console.debug(response);                
                 selectUsersAdmin(response);         
             })                
         .catch(error => console.debug("Erreur : "+error));
@@ -71,7 +71,7 @@ function selectUsersAdmin(response){
     let tAux = [];
     for(let i in objUsers ) { 
         tAux = [];
-        tAux.push(objUsers[i].userid, objUsers[i].usernom, objUsers[i].userlogin, objUsers[i].statut, objUsers[i].pass, objUsers[i].telephone, objUsers[i].club);       
+        tAux.push(objUsers[i].userid, objUsers[i].usernom, objUsers[i].userlogin, objUsers[i].statut, objUsers[i].pass, objUsers[i].telephone, objUsers[i].club, objUsers[i].adresse);       
         tUsers.push(tAux); 
     }; 
         
@@ -80,11 +80,11 @@ function selectUsersAdmin(response){
     str+='<p><b>Utilisateurs</b> &nbsp; &nbsp;';
     str+='<button id="btnadduser">Ajouter un utilisateur</button> &nbsp; (<a target="_blank" href="help.html#Rôles">?</a>)</p>';    
     str+='<table>';
-    str+='<tr><th>ID User</th><th>Nom</th><th>Login</th><th>Statut</th><th>Mot de passe crypté</th><th>Téléphone</th><th>Club</th></tr>';
+    str+='<tr><th>ID User</th><th>Nom</th><th>Login</th><th>Statut</th><th>Mot de passe crypté</th><th>Téléphone</th><th>Club</th><th>Adresse</th></tr>';
     if ((tUsers!== null) && (tUsers.length>0)){ 
         for (let i in tUsers) { 
             if (i % 6 == 0){
-            str+='<tr><th colspan="7">Sélectionner le l\'utilisateur à éditer</th></tr>';
+            str+='<tr><th colspan="8">Sélectionner le l\'utilisateur à éditer</th></tr>';
             }
             str+='<tr>';               
             str+='<td><button name="user'+tUsers[i][0]+'" onclick="editerThatUser('+tUsers[i][0]+');">'+tUsers[i][0]+'</button></td>';                    
@@ -92,11 +92,11 @@ function selectUsersAdmin(response){
              // statut
             if ((tUsers[i][3] !== null) && (parseInt(tUsers[i][3])>=0)){
                 switch (parseInt(tUsers[i][3])){
-                    case 1 : str+='<b>Administrateur</b>';
+                    case 1 : str+='Lecteur';
                                 break;
                    case 2 : str+='Auteur';
                                 break;
-                   case 3 : str+='Lecteur';
+                   case 3 : str+='<b>Administrateur</b>';
                                 break;
                    default : str+='Visiteur';
                 }    
@@ -105,7 +105,7 @@ function selectUsersAdmin(response){
                 str+='&nbsp;';
             }                     
     
-            str+='<td>'+tUsers[i][4]+'</td><td>'+tUsers[i][5]+'</td><td>'+tUsers[i][6]+'</td>';
+            str+='<td>'+tUsers[i][4]+'</td><td>'+tUsers[i][5]+'</td><td>'+tUsers[i][6]+'</td><td>'+tUsers[i][7]+'</td>';
             str+='</tr>';
         }
     }  
@@ -142,14 +142,16 @@ function newUser(){
         str+='<select name="ustatut" id="ustatut">';
         str+='<option value="">--Sélectionnez au moins un statut--</option>';
             str+='<option value="0">Visiteur</option>';
-            str+='<option value="3">Lecteur</option>';
+            str+='<option value="1">Lecteur</option>';
             str+='<option value="2">Auteur</option>';
-            str+='<option value="1">Administrateur</option>';
+            str+='<option value="3">Administrateur</option>';
         str+='</select>';        
         str+='<br /><label for="upass"><b>Mot de passe</b>: </label> <input type="text" id="upass" size="20" name="upass" value="" />';
         str+='<br /><label for="utelephone"><b>Téléphone</b>: </label> <input type="text" id="utelephone" size="20" name="utelephone" value="" autocomplete="on" />';
         str+='<br /><label for="uclub"><b>Club</b>: </label>'; 
-        str+='<br /><textarea cols="50" id="uclub" rows="3" name="uclub"></textarea>';                
+        str+='<br /><textarea cols="50" id="uclub" rows="3" name="uclub"></textarea>';   
+        str+='<br /><label for="uadresse"><b>Adresse</b>: </label>'; 
+        str+='<br /><textarea cols="50" id="uadresse" rows="3" name="uadresse"></textarea>';                        
         str+='</div>';       
         str+='<input type="hidden" id="userid" name="userid" value="" />';                
         str+='<input type="hidden" id="appel" name="appel" value="'+pageuser+'" />';
@@ -205,7 +207,7 @@ function saisieThatUser(response) {
         str+='<p>Complétez ce formulaire d\'édition</p>';
         // Formulaire de création
         str+='<form name="AddFormUser" action="'+url+'" method="post">';
-        str+='<div class="button"><input type="submit" value="Editer" name="Editer" onclick="return verifSaisieUser(false);" />';
+        str+='<div class="button"><input type="submit" value="Valider" name="Editer" onclick="return verifSaisieUser(false);" />';
         str+=' <input type="reset" value="Réinitialiser" name="Reset" />';
         str+=' &nbsp; &nbsp; <input type="submit" name="Abandonner" value="Abandonner" /></div>';        
 
@@ -217,15 +219,15 @@ function saisieThatUser(response) {
         str+='<option value="">--Sélectionnez au moins un statut--</option>';
         if ((thatuser.statut!==undefined) && (thatuser.statut.length>0)){
             if (thatuser.statut=='0') {str+='<option value="0" selected>Visiteur</option>';} else { str+='<option value="0">Visiteur</option>';}
-            if (thatuser.statut=='3') {str+='<option value="3" selected>Lecteur</option>';} else {str+='<option value="3">Lecteur</option>';}
+            if (thatuser.statut=='1') {str+='<option value="1" selected>Lecteur</option>';} else {str+='<option value="1">Lecteur</option>';}
             if (thatuser.statut=='2') {str+='<option value="2" selected>Auteur</option>';} else {str+='<option value="2">Auteur</option>';}
-            if (thatuser.statut=='1') {str+='<option value="1" selected>Administrateur</option>';} else {str+='<option value="1">Administrateur</option>';}        
+            if (thatuser.statut=='3') {str+='<option value="3" selected>Administrateur</option>';} else {str+='<option value="3">Administrateur</option>';}        
         }
         else{
             str+='<option value="0">Visiteur</option>';
-            str+='<option value="3">Lecteur</option>';
+            str+='<option value="1">Lecteur</option>';
             str+='<option value="2">Auteur</option>';
-            str+='<option value="1">Administrateur</option>';
+            str+='<option value="3">Administrateur</option>';
         }
         str+='</select>';        
         str+='</div>';        
@@ -235,7 +237,6 @@ function saisieThatUser(response) {
         }
         else{
             str+='<br /><label for="upass"><b>Mot de passe</b>: </label> <input type="password" id="upass" size="20" name="upass" value="" />';
-            str+='<input type="hidden" id="uoldpass" name="uoldpass" value="" />';
         }
         str+='<br /><label for="utelephone"><b>Téléphone</b>: </label> <input type="text" id="utelephone" size="20" name="utelephone" value="'+thatuser.telephone+'" autocomplete="on" />';
         str+='<br /><label for="uclub"><b>Club</b>: </label>'; 
@@ -264,7 +265,7 @@ function verifSaisieUser(add=false){
     unom = document.forms["AddFormUser"]["unom"];               
     ulogin = document.forms["AddFormUser"]["ulogin"];    
     ustatut = document.forms["AddFormUser"]["ustatut"];   
-    upass = document.forms["AddFormUser"]["upass"];
+    if (document.forms["AddFormUser"]["upass"] !== undefined) {upass = document.forms["AddFormUser"]["upass"];}
     uoldpass = document.forms["AddFormUser"]["uoldpass"];   
     utelephone = document.forms["AddFormUser"]["utelephone"];      
     uclub = document.forms["AddFormUser"]["uclub"];      
@@ -296,7 +297,7 @@ function verifSaisieUser(add=false){
         return false; 
     }     
     if (!add){
-        if ((upass.value=="") && (uoldpass.length==0)) {
+        if (upass.value=="") {
             alert("Complétez le mot de passe."); 
             upass.focus(); 
             return false;     
@@ -350,11 +351,11 @@ console.debug("Suppression demandée");
 // ---------------------------------
 function getInfoUser(mail){
     if ((mail !== undefined) && (mail.length>0)){
-        console.debug("GetInfoUser");
-        console.debug("Courriel : "+mail);
+        //console.debug("GetInfoUser");
+        //console.debug("Courriel : "+mail);
             var url= url_serveur+'getuser.php?mail='+mail;
             var mydata="";    
-            ajax_GetUser(url, mydata, myCallBack);         
+            ajax_GetUser(url, mydata);         
     }    
 }
 
@@ -367,8 +368,8 @@ function ajax_GetUser(url){
         fetch(url, myInitGet)
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
-            console.debug("Données utilisateurs\n");
-            console.debug(response);                
+            //console.debug("Données utilisateurs\n");
+            //console.debug(response);                
             setUserReserverMoule(response);  // traite la réponse         
         })                
         .catch(error => console.debug("Erreur : "+error));
@@ -417,8 +418,8 @@ function setUserReserverMoule(response){
 // ---------------------------------
 function getInfoUserByMail(mail){
     if ((mail !== undefined) && (mail.length>0)){
-        console.debug("getInfoUserByMail");
-        console.debug("Courriel : "+mail);
+        //console.debug("getInfoUserByMail");
+        //console.debug("Courriel : "+mail);
             var url= url_serveur+'getuser.php?mail='+mail;
             var mydata="";    
             ajax_GetUserByMail(url, mydata);         
@@ -434,8 +435,8 @@ function ajax_GetUserByMail(url){
         fetch(url, myInitGet)
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
-            console.debug("Données utilisateurs\n");
-            console.debug(response);                
+            //console.debug("Données utilisateurs\n");
+            //console.debug(response);                
             saisieUser(response);  // traite la réponse         
         })                
         .catch(error => console.debug("Erreur : "+error));
@@ -465,7 +466,7 @@ function saisieUser(response) {
     
     if ((thatuser !== undefined) && (thatuser !== null) && (thatuser.ok !== undefined) && (thatuser.ok !== null) && (thatuser.ok == 1)
         && (thatuser.user !== undefined) && (thatuser.user !== null)){ 
-        console.debug(thatuser.user);           
+        //console.debug(thatuser.user);           
         let str='';             
         // Edition   
         let url= url_serveur+'adduser.php';               
@@ -476,14 +477,14 @@ function saisieUser(response) {
         str+='<div class="button"><button onclick="return validationUser();">Valider</button></div>';        
         // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
         str+='<div><label for="unom"><b>NOM Prénom</b>: </label><br /><input type="text" id="unom" size="50" name="unom" value="'+thatuser.user.usernom+'" autocomplete="on" />';
-        str+='<br /><i>'+thatuser.user.userlogin+'</i> (Votre login)';
+        str+='<br /><b>Login</b><br /><i>'+thatuser.user.userlogin+'</i> (Votre courriel)';
         str+='<br /><span class="surligne">Courriel et Mot de passe non modifiables</span> (<a target="_blank" href="help.html#Password">?</a>)';
-        str+='<br /><b>Rôle</b>: ';
+        str+='<br /><br /><b>Rôle</b>: ';
         if ((thatuser.user.statut!==undefined) && (thatuser.user.statut.length>0)){
             if (thatuser.user.statut=='0') {str+='Visiteur';}
-            if (thatuser.user.statut=='3') {str+='Lecteur';}
+            if (thatuser.user.statut=='1') {str+='Lecteur';}
             if (thatuser.user.statut=='2') {str+='Auteur';}
-            if (thatuser.user.statut=='1') {str+='Administrateur';}        
+            if (thatuser.user.statut=='3') {str+='Administrateur';}        
         }
         else{
             str+='Visiteur';
@@ -565,5 +566,27 @@ function validationUser(){
     return true; 
 }
 
-
-
+/***************
+// Situé dans Ajax.js
+// ----------------------- 
+function ajax_MajUser(mystrjson){ 
+let url='./php/setuser.php';    
+    if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){        
+        // POST avec fetch()
+        // myInitPost.body: JSON.stringify(mystrjson), // turn the JS object literal into a JSON string
+        myInitPost.body= mystrjson; // mystrjson est déjà une chaîne
+        fetch(url, myInitPost)
+        .then(response => response.text())  // Le retour est aussi une chaîne
+        .then(response => {
+                console.debug("Mise à jour table bdm_user");
+                console.debug(response);
+                response=JSON.parse(response);
+                if (response.ok==1){    // ça s'est ma cuisine interne                    
+                    document.getElementById("consigne").innerHTML=" <span class=\"surligne\">Mise à jour de la table utilisateur effectuée (Utilisateur ID <i>"+response.userid+"</i>).</span>  ";
+                }
+            })
+        .catch(error => console.debug("Erreur : "+error));
+    }
+}
+    
+************/
