@@ -396,11 +396,14 @@ function setUserReserverMoule(response){
         if ((ObjUser.user.userid !== undefined) && (ObjUser.user.userid !== null) && (ObjUser.user.userid > 0)){
             userid=ObjUser.user.userid;
         }
-          if ((ObjUser.user.adresse !== undefined) && (ObjUser.user.adresse !== null) && (ObjUser.user.adresse.length > 0)){
+        if ((ObjUser.user.adresse !== undefined) && (ObjUser.user.adresse !== null) && (ObjUser.user.adresse.length > 0)){
             Adresse=ObjUser.user.adresse;
         }
-        if (Commentaire.length==0){
-            Commentaire="Club\n"+ObjUser.user.club;
+        if ((ObjUser.user.club !== undefined) && (ObjUser.user.club !== null) && (ObjUser.user.club.length > 0)){
+            Club=ObjUser.user.club;
+        }
+        if ((Commentaire === undefined) || (Commentaire.length==0)){
+            Commentaire="A compléter...";
         }
     }
     reserverThatMoules(); 
