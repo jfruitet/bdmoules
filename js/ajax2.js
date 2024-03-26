@@ -274,10 +274,10 @@ function selectThatModeleMoulesAdmin(response, idmodele) {
 // Affiche un formulaire d'édition
 // Utilise le tableau global tMoules de la liste des moules associés à un modèle
 function editMoule(idmodele, idmoule, index){
-    console.debug("ediMoule()");
-    console.debug("idmodele: "+idmodele);
-    console.debug("idmoule: "+idmoule);
-    console.debug("tMmoule: "+tMoules[index]);
+    //console.debug("ediMoule()");
+    //console.debug("idmodele: "+idmodele);
+    //console.debug("idmoule: "+idmoule);
+    //console.debug("tMmoule: "+tMoules[index]);
     
     if ((idmodele !== undefined) && (idmodele>0) && (idmoule !== undefined) && (idmoule>0) 
         && (tMoules[index] !== undefined) && (tMoules[index] !== null) && (tMoules[index].length>0)){

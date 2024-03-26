@@ -569,27 +569,4 @@ function validationUser(){
     return true; 
 }
 
-/***************
-// Situé dans Ajax.js
-// ----------------------- 
-function ajax_MajUser(mystrjson){ 
-let url='./php/setuser.php';    
-    if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){        
-        // POST avec fetch()
-        // myInitPost.body: JSON.stringify(mystrjson), // turn the JS object literal into a JSON string
-        myInitPost.body= mystrjson; // mystrjson est déjà une chaîne
-        fetch(url, myInitPost)
-        .then(response => response.text())  // Le retour est aussi une chaîne
-        .then(response => {
-                console.debug("Mise à jour table bdm_user");
-                console.debug(response);
-                response=JSON.parse(response);
-                if (response.ok==1){    // ça s'est ma cuisine interne                    
-                    document.getElementById("consigne").innerHTML=" <span class=\"surligne\">Mise à jour de la table utilisateur effectuée (Utilisateur ID <i>"+response.userid+"</i>).</span>  ";
-                }
-            })
-        .catch(error => console.debug("Erreur : "+error));
-    }
-}
-    
-************/
+

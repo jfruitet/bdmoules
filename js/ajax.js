@@ -556,12 +556,33 @@ function reserverThatMoules(){
     
     if ((idmodeleglobal !== undefined) && (idmodeleglobal>0) && (tidmoules!==undefined) && (tidmoules.length>0)){ // idmodele=37; tidmoules=[46,47];
         document.getElementById("myFile").innerHTML = ''; // A n'utiliser que si des recommandations sont nécessaires
-        
+        let strmsg='';
+        strmsg+='<p><b>Moules réservés</b></p><ul>';
+        strmsg+='<li>'+modeledescription+'<ol>';
+        for (let i=0; i<tdescription.length; i++){
+            strmsg+='<li>ID:'+tdescription[i][0]+', Inventaire: '+tdescription[i][1]+', Description: '+tdescription[i][2]+', '+tdescription[i][3]+'</li>';
+        }
+        strmsg+='</li></ol></ul>';  
+            
+        switch(adminpage){
+            case 1 : pageretour=pageadmin; break;
+            case 2 : pageretour=pageuser; break;     
+            default : pageretour=pageindex; break;      
+        }  
+                
         let str='';
         // Creer un formulaire de réservation
         str+='<h4>Complétez ce formulaire de réservation</h4>';
-        str+='<form name="RegForm" action="">';
-        str+='<div class="button"><button onclick="return validationReservationMultiple();">Réserver</button>'; 
+        //str+='<form name="RegForm" action="">';
+
+        let url= url_serveur+'reservation_post_jason.php';               
+         // Creer un formulaire d'édition
+        str+='<h5>Edition</h5>';
+        str+='<p>Complétez ce formulaire d\'édition</p>';
+        // Formulaire de création
+        str+='<form name="RegForm" action="'+url+'" method="post">';
+        // str+='<div class="button"><input type="submit" value="Valider" name="Editer" onclick="return verifSaisieUser(false);" />';       
+        str+='<div class="button"><input type="submit" value="Valider" name="Réserver" onclick="return validationReservationMultiple();" />'; 
         str+='&nbsp; &nbsp; <button onclick="return resetForm();">Annuler</button></div>';        
                       
         str+='<div><label for="Nom">NOM Prénom: </label><br /><input type="text" id="Nom" size="50" name="Nom" value="'+Nom+'" autocomplete="on" />';
@@ -572,33 +593,22 @@ function reserverThatMoules(){
         str+='<br /><label for="Club">Club: </label><br /><input type="text" id="Club" size="50" name="Club" value="'+Club+'" autocomplete="on" />';
         str+='<br /><label for="Commentaire">Commentaires: </label>(<i><span class="small">Motivez votre demande...</span></i>)<br /><textarea cols="50" id="Commentaire" rows="3" name="Commentaire" autocomplete="on">'+Commentaire+'</textarea>';
         str+='</div>';
-        str+='<input type="hidden" id="Courriel" name="Courriel" value="'+Courriel+'">';
-        str+='<input type="hidden" id="userid" name="userid" value="'+userid+'">';
-        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'">';
-        /*
-        for (let i=0; i<tidmoules.length; i++){
-            str+='<type="hidden" id="idmoule'+tidmoules[i]+' name="idmoule'+tidmoules[i]+'" value="'+tidmoules[i]+'">';
-        }
-        for (let i=0; i<tdescription.length; i++){
-            str+='<type="hidden" id="description'+tdescription[i]+' name="description'+tdescription[i]+'" value="'+tdescription[i]+'">';
-        }
-        */  
+        str+='<input type="hidden" id="Courriel" name="Courriel" value="'+Courriel+'" />';
+        str+='<input type="hidden" id="userid" name="userid" value="'+userid+'" />';
+        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodeleglobal+'" />';
+        str+='<input type="hidden" id="moules" name="moules" value="'+strmsg+'" />';
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageretour+'" />';
         str+='</form>';
-        
-        str+='<p><b>Moules réservés</b></p><ul>';
-        str+='<li>'+modeledescription+'<ol>';
-        for (let i=0; i<tdescription.length; i++){
-            str+='<li>ID:'+tdescription[i][0]+', Inventaire: '+tdescription[i][1]+', Description: '+tdescription[i][2]+', '+tdescription[i][3]+'</li>';
-        }
-        str+='</li></ol></ul>';        
+      
         document.getElementById("myImage").innerHTML = str;
+        document.getElementById("myImage").innerHTML += strmsg;
     }
 
 }
 
 // ----------------------------------
 function resetForm(){
-// Verifie que les champs du formualaire sont remplis
+// Verifie que les champs du formulaire sont remplis
     document.forms["RegForm"]["Nom"];               
     email = document.forms["RegForm"]["Courriel"];    
     phone = document.forms["RegForm"]["Telephone"];   
@@ -645,7 +655,7 @@ function resetForm(){
 
 // ----------------------------------
 function validationReservationMultiple(){
-// Verifie que les champs du formualaire sont remplis
+// Verifie que les champs du formulaire sont remplis
 
     // Variables globales
     nom = document.forms["RegForm"]["Nom"];               
@@ -710,10 +720,12 @@ function validationReservationMultiple(){
     // Mise à jour de la BD   
     if ((document.forms["RegForm"]["userid"] !== undefined) && (document.forms["RegForm"]["userid"].value>0)){
         let userid = document.forms["RegForm"]["userid"].value;
-        let majUser = '{"userid":'+userid+', "usernom":"'+Nom+'", "userlogin":"'+Courriel+'", "telephone":"'+Telephone+'", "club":"'+Club+'", "adresse":"'+Adresse+'"}';
+        let majUser = '{"userid":'+userid+', "usernom":"'+Nom+'", "userlogin":"'+Courriel+'", "telephone":"'+Telephone+'", "club":"'+encodeURIComponent(Club)+'", "adresse":"'+encodeURIComponent(Adresse)+'"}';
         ajax_MajUser(majUser);  // Mise à jour de la table bdm_user
     }
-    redigeReservationMultiple();
+    if ((oksmtp === undefined) || !oksmtp){
+        redigeReservationMultiple();
+    }   
     return true; 
 }
 
@@ -738,27 +750,17 @@ function redigeReservationMultiple(){
         }
         str+='</ol><br />';
         
-        //console.debug(str);        
-        //let thatbody= 'Nom: '+Nom+'%0A%0ACourriel: '+Courriel+'%0A%0ATéléphone: '+Telephone+'%0A%0AAdresse: '+Adresse+'%0A%0ACommentaire '+Commentaire+'%0A%0A'+strmsg;
-        let thatbody= encodeURIComponent("Demande de réservation de moules effectuée par \nNom: "+Nom+"\nCourriel: "+Courriel+"\nTéléphone: "+Telephone+"\nAdresse: "+Adresse+"\nClub: "+Club+"\nCommentaire: "+Commentaire+"\n\n"+strmsg);
-        //console.debug("Message body\n"+thatbody);
-        document.getElementById("myImage").innerHTML = '<h4>Cliquez sur le lien pour envoyer cette demande de réservation</h4><p>'+str;
-        //document.getElementById("myImage").innerHTML +='<br /><span class="surligne"><a href="mailto:'+courriel_reservation+'?cc='+courriel_webmaster+'&subject='+encodeURIComponent("Réservation Moules")+'&body='+thatbody+'">Envoyer</a></surligne></p>';                      
-        document.getElementById("myImage").innerHTML +='<br /><a href="mailto:'+courriel_reservation+'?cc='+courriel_webmaster+'&subject='+encodeURIComponent("Réservation Moules")+'&body='+thatbody+'">Envoyer</a></p>';                      
-        document.getElementById("myImage").innerHTML +='<td><button name="confirmationres" onclick="sendReservation();">Confirmer</button>';
-        document.getElementById("myImage").innerHTML +='&nbsp; &nbsp; <button id="annulationres" id="annulationres"  onclick="stopReservation();">Annuler</button></p>';                      
-    }           
+        //console.debug(str);   
+  
+            //let thatbody= 'Nom: '+Nom+'%0A%0ACourriel: '+Courriel+'%0A%0ATéléphone: '+Telephone+'%0A%0AAdresse: '+Adresse+'%0A%0ACommentaire '+Commentaire+'%0A%0A'+strmsg;
+            let thatbody= encodeURIComponent("Demande de réservation de moules effectuée par \nNom: "+Nom+"\nCourriel: "+Courriel+"\nTéléphone: "+Telephone+"\nAdresse: "+Adresse+"\nClub: "+Club+"\nCommentaire: "+Commentaire+"\n\n"+strmsg);
+            //console.debug("Message body\n"+thatbody);
+            document.getElementById("myImage").innerHTML = '<h4>Cliquez sur le lien pour envoyer cette demande de réservation</h4><p>'+str;
+            document.getElementById("myImage").innerHTML +='<br /><a href="mailto:'+courriel_reservation+'?cc='+courriel_webmaster+'&subject='+encodeURIComponent("Réservation Moules")+'&body='+thatbody+'">Envoyer</a></p>';                      
+    }                   
 }
 
-// -------------------------------------
-function sendReservation(){
-    console.debug("Send A implanter");
-}
 
-// -------------------------------------
-function stopReservation(){
-    console.debug("Stop A implanter");
-}
 
 // ----------------------- 
 function ajax_MajUser(mystrjson){ 
@@ -781,286 +783,26 @@ let url='./php/setuser.php';
     }
 }
     
-
-
-/**********************************************
- * 
- * VERSION Avec Appel Get ou Post en erreur
- * 
- * ********************************************/
-
-
-
-/*
-// -----------------------
-// Non utilisé
-// Utilise la variable globale tMoules
-function affThatMoules(){
-    //console.debug("Affichage des moules sélectionnés\n");
-    let str='';
-    //str='<table><tr><th>N°</th><th>ID Modèle</th><th>Nom</th><th>Descriptif</th><th>Dimensions</th><th>Catégorie</th><th>ID Moule</th><th>Inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
-    str='<table><tr><th>&nbsp;</th><th>ID Moule</th><th>Inventaire</th><th>Description</th><th>Lieu stockage</th><th>Matière</th><th>Etat</th><th>Longueur</th><th>Poids</th><th>Commentaire</th></tr>';
-    
-    if ((tMoules !== undefined) && (tMoules.length>0)){ 
-        for (let i in tMoules) {
-            // str+='<tr><td colspan="14">'+tMoules[i]+'</td></tr>'; 
-            str+='<tr>';
-            for (let j in tMoules[i]) {  
-                //console.debug(tMoules[i]+"\n");
-                if (j==0) { // checkbox
-                    str+='<td>A Checker '+tMoules[i][j]+'</a></td>';
-                }
-                else
-                if (tMoules[i][j] != null){
-                    str+='<td>'+tMoules[i][j]+'</td>';
-                }
-                else{
-                    str+='<td>&nbsp;</td>';
-                }                
-            }     
-            str+='</tr>';
-        }
-    }  
-    str+='</table>';      
-    return str;        
-}
-*/
-
-/*************************************************
- * 
- * RESERVATION
- * 
- *************************************************/
- 
- /**************************************************************
- * 
- * VALIDATION DE FORMULAIRE
- * 
- * ************************************************************/
-
-/**************************** Version 1 avec post
-function validationReservation()  {                                  
-
-    var nom = document.forms["RegForm"]["Nom"];               
-    var email = document.forms["RegForm"]["Courriel"];    
-    var phone = document.forms["RegForm"]["Telephone"];   
-    var adresse = document.forms["RegForm"]["Adresse"];  
-    var comment = document.forms["RegForm"]["Commentaire"];  
-
-    if (nom.value == "")                                  
-    { 
-        alert("Mettez votre nom."); 
-        nom.focus(); 
-        return false; 
-    }    
-    if (adresse.value == "")                               
-    { 
-        alert("Mettez votre adresse."); 
-        adresse.focus(); 
-        return false; 
-    }        
-    if (email.value == "")                                   
-    { 
-        alert("Mettez une adresse email valide."); 
-        email.focus(); 
-        return false; 
-    }    
-    if (email.value.indexOf("@", 0) < 0)                 
-    { 
-        alert("Mettez une adresse email valide."); 
-        email.focus(); 
-        return false; 
-    }    
-    if (email.value.indexOf(".", 0) < 0)                 
-    { 
-        alert("Mettez une adresse email valide."); 
-        email.focus(); 
-        return false; 
-    }    
-    if (phone.value == "")                           
-    { 
-        alert("Mettez votre numéro de téléphone."); 
-        phone.focus(); 
-        return false; 
-    }    
-    if (comment.value == "")                  
-    { 
-        alert("Complétez le commentaire en précisant l'objet de votre réservation."); 
-        comment.focus(); 
-        return false; 
-    } 
-    
-   // Et hop c'est parti...
-    envoiReservation();
-    return true; 
-}
-
 // ----------------------- 
-function envoiReservation(){
-// envoie le contneu JSON de la demande de réservation au serveur
-    console.debug("envoiReservation()");
-    
-    var mystrjson='';
-
-    var nom = document.forms["RegForm"]["Nom"].value;               
-    var email = document.forms["RegForm"]["Courriel"].value;    
-    var phone = document.forms["RegForm"]["Telephone"].value;   
-    var adresse = document.forms["RegForm"]["Adresse"].value;  
-    var comment = document.forms["RegForm"]["Commentaire"].value; 
-    var idmodele = document.forms["RegForm"]["idmodele"].value;               
-    var idmoule = document.forms["RegForm"]["idmoule"].value;               
-
-    mystrjson+='{"idmodele":"'+idmodele+'", "idmoule":"'+idmoule+'", Nom":"'+nom+'", "Courriel":"'+email+'", "Telephone":"'+phone+'", "Adresse":"'+adresse+'", "Commentaire":"'+comment+'"}';
-    console.debug("JSON:"+mystrjson+"\n");
-        
-    var url= url_serveur+'reservation.php';
-    console.debug("URL: "+ url);
-    ajax_post(url, mystrjson);
-    
- }
- 
-
-
-
-
-//--------------------------------
-function validationReservation()  {                                  
-
-    nom = document.forms["RegForm"]["Nom"];               
-    email = document.forms["RegForm"]["Courriel"];    
-    phone = document.forms["RegForm"]["Telephone"];   
-    adresse = document.forms["RegForm"]["Adresse"];  
-    comment = document.forms["RegForm"]["Commentaire"];  
-    
-    if (nom.value == "")                                  
-    { 
-        alert("Mettez votre nom."); 
-        nom.focus(); 
-        return false; 
-    }    
-    if (adresse.value == "")                               
-    { 
-        alert("Mettez votre adresse."); 
-        adresse.focus(); 
-        return false; 
-    }        
-    if (email.value == "")                                   
-    { 
-        alert("Mettez une adresse email valide."); 
-        email.focus(); 
-        return false; 
-    }    
-    if (email.value.indexOf("@", 0) < 0)                 
-    { 
-        alert("Mettez une adresse email valide."); 
-        email.focus(); 
-        return false; 
-    }    
-    if (email.value.indexOf(".", 0) < 0)                 
-    { 
-        alert("Mettez une adresse email valide."); 
-        email.focus(); 
-        return false; 
-    }    
-    if (phone.value == "")                           
-    { 
-        alert("Mettez votre numéro de téléphone."); 
-        phone.focus(); 
-        return false; 
-    }    
-    if (comment.value == "")                  
-    { 
-        alert("Complétez le commentaire en précisant l'objet de votre réservation."); 
-        comment.focus(); 
-        return false; 
-    } 
-    getInfosMoulesModele();
-    //envoiReservationMailto();
-    return true; 
-}
-
-// -----------------------
-function  getInfosMoulesModele(){
-    let url= '';
-    if ((idmodele!==undefined) && (idmodele>0)){
-        if ((tidmoules!==undefined) && (tidmoules.length>0)){
-            let sidmoules= tidmoules.join();   
-            url= url_serveur+'infomodelemoules.php?idmodele='+idmodele+'&sidmoules='+sidmoules;
-        }
-        else{
-            url= url_serveur+'infomodelemoules.php?idmodele='+idmodele;        
-        }
-        console.debug("URL: "+ url);
-        ajax_GetInfoModeleMoules(url);
-
-        // Récupère quelques infos concerant le modèle et les mooules sélectionnés
-         
-    }
-}
-
-// Requête par GET
-// Lance l'appel Ajax et transmet les données reçues à setModeles
-// Initialise le tableau tModeles
-// -----------------------
-function ajax_GetInfoModeleMoules(url){ 
-    if ((url !== undefined) && (url.length>0)){        
-        // GET avec fetch()
-        fetch(url, myInitGet)
+function ajax_sendReservation(mystrjson){  
+let url='/php/reservation_post_jason.php';  
+    if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){        
+        // POST avec fetch()
+        // myInitPost.body: JSON.stringify(myjson), // turn the JS object literal into a JSON string
+        myInitPost.body= mystrjson; // mystrjson est déjà une chaîne JSON
+        fetch(url, myInitPost)
         .then(response => response.text())  // Le retour est aussi une chaîne
         .then(response => {
-        JSON.parse(response);
-        if ((response.Ok==1) && (response.data!==undefined) && (response.data.length>0)){
-            redigeReservation(response);
-        }         
-                    })  // tout le boulot se fait ici  dans le script  setModeles.js              
+                console.debug(response);
+                response=JSON.parse(response);
+                if (response.ok==1){    // ça s'est ma cuisine interne                    
+                    document.getElementById("consigne").innerHTML="Envoi de la demande de réservation effectuée. ";
+                }
+            })
         .catch(error => console.debug("Erreur : "+error));
     }
 }
-
-
-
-//-----------------------------------------
-function reserverMoule(idmodele, tidmoule){
-    if ((idmodele !== undefined) && (idmodele>0) && (tidmoules!==undefined) && (tidmoules.length>0)){ // idmodele=37; tidmoules=[46,47];
-        let str='';
-        // Creer un formulaire de réservation
-        str+='<h4>Complétez ce formulaire de réservation</h4>';
-        str+='<form name="RegForm" action="" onsubmit="return validationReservation()" method="post" class="w3docs">';
-        str+='<div><label for="Nom">NOM Prénom:</label><input type="text" id="Nom" size="50" name="Nom" autocomplete="on" /></div>';
-        str+='<br /><div><label for="Adresse">Adresse:</label><input type="text" id="Adresse" size="50" name="Adresse" autocomplete="on" /></div>';
-        str+='<br /><div><label for="Courriel" l>Adresse électronique:</label><input type="text" id="Courriel" size="50" name="Courriel" autocomplete="on" /></div>';
-        str+='<br /><div><label for="Telephone">Téléphone: </label><input type="text" id="Telephone" size="50" name="Telephone" autocomplete="on" /></div>';
-        str+='<br /><div><label for="Commentaire">Commentaires: (<i><span class="small">Motivez votre demande...</span></i>) </label><textarea cols="50" id="Commentaire" rows="5" name="Commentaire" autocomplete="on"></textarea></div>';
-        str+='<b>Cochez les moules à réserver</b>';
-        for (let i=0; i<tidmoules.length; i++){
-            str+='<label for="idmoule'+tidmoules[i]+'">Moule ID'+tidmoules[i]+'</label> ';
-            str+='<input type="checkbox" id="idmoule'+tidmoules[i]+'" name="idmoule'+tidmoules[i]+'" value="'+tidmoules[i]+'" checked />';
-        }
-        str+='<div class="buttons"><input type="submit" value="Envoyer" name="Envoyer" /><input type="reset" value="Réinitialiser" name="Reset" /></div>';
-        str+='<input type="hidden" id="idmodele" name="idmodele" value="'+idmodele+'">';
-        
-        str+='</form>';
-        
-        document.getElementById("myImage").innerHTML = str;
-    }
-
-}
-
-
-// ----------------------- 
-function redigeReservation(){
-// 
-    console.debug("redigeReservation()");
     
-    let body='%0A%0ANom: '+nom.value+'%0A%0ACourriel: '+email.value+'%0A%0ATéléphone: '+phone.value+'%0A%0AAdresse: '+adresse.value+'%0A%0ACommentaire '+comment.value;
-    body+='%0A%0A'+JSON.stringify(response);
-    
-    console.debug("body\n");
-    document.getElementById("consigne").innerHTML = '<a href="mailto:bureau-arbl@laposte.net?cc=jean.fruitet@free.fr&subject=Réservation moules&body='+body+'>Envoyer Courriel</a>';
-      
-}      
-
-******************************************/
 
 
 
