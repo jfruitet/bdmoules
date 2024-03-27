@@ -454,6 +454,7 @@ function ajax_GetUserByMail(url){
 
 // ----------------------- 
 function saisieUser(response) {
+    // N'utilise pas l'appel Ajax Post 
     // console.debug("saisieThatUser()");
     // Affichage des infos associées\n"+ response);
     // Traitement de la réponse 
@@ -476,9 +477,12 @@ function saisieUser(response) {
         str+='<h4>Utilisateur</h4>';     
         // Creer un formulaire d'édition
         str+='<p>Complétez votre profil</p>';
-        str+='<form name="FormUser" action="">';
-        str+='<div class="button"><button onclick="return validationUser();">Valider</button></div>';        
-        // idmoule, numero_inventaire, mdescription, mlieu, matiere, etat, longueur, poids, commentaire
+        //str+='<form name="FormUser" action="">';
+        str+='<form name="FormUser" action="'+url+'" method="post">';
+        str+='<div class="button"><input type="submit" value="Valider" name="Valider" onclick="return validationUser();" />'; 
+        str+='&nbsp; &nbsp; <input type="reset" value="Corriger" />'; 
+        str+='&nbsp; &nbsp; <input type="submit" value="Abandonner" name="Abandonner" /></div>';              
+        // str+='<div class="button"><button onclick="return validationUser();">Valider</button></div>';        
         str+='<div><label for="unom"><b>NOM Prénom</b>: </label><br /><input type="text" id="unom" size="50" name="unom" value="'+thatuser.user.usernom+'" autocomplete="on" />';
         str+='<br /><b>Login</b><br /><i>'+thatuser.user.userlogin+'</i> (Votre courriel)';
         str+='<br /><span class="surligne">Courriel et Mot de passe non modifiables</span> (<a target="_blank" href="help.html#Password">?</a>)';
@@ -508,7 +512,7 @@ function saisieUser(response) {
         str+='<input type="hidden" id="ulogin" name="ulogin" value="'+thatuser.user.userlogin+'" />';
         str+='<input type="hidden" id="passmd5" name="passmd5" value="'+thatuser.user.pass+'" />' 
         str+='<input type="hidden" id="statut" name="statut" value="'+thatuser.user.statut+'" />' 
-        str+='<input type="hidden" id="appel" name="appel" value="'+pageuser+'" />';
+        str+='<input type="hidden" id="appel" name="appel" value="'+pageretour+'" />';
         str+='</form>';      
         document.getElementById("scrollleft").style.display = "inline";
         document.getElementById("myImage").innerHTML = str;
@@ -559,13 +563,15 @@ function validationUser(){
     Club = club.value;  
 
     setCookies();
-    
+    /*
+    // Erreur : TypeError: NetworkError when attempting to fetch resource.
     // Mise à jour de la BD   
     if ((document.forms["FormUser"]["userid"] !== undefined) && (document.forms["FormUser"]["userid"].value>0)){
         let userid = document.forms["FormUser"]["userid"].value;
         let majUser = '{"userid":'+userid+', "usernom":"'+Nom+'", "userlogin":"'+Courriel+'", "telephone":"'+Telephone+'", "adresse":"'+Adresse+'", "club":"'+Club+'"}';
         ajax_MajUser(majUser);  // Mise à jour de la table bdm_user
     }
+    */
     return true; 
 }
 

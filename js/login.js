@@ -247,7 +247,8 @@ function saisieLoginAjax(mail='',adminpage=0){
  function verifLoginAjax(usermail, userpass, adminpage=0){
     //console.debug("UserMail: "+usermail+", UsePass: "+userpass+" AdminPage:"+adminpage);
     if ((usermail !== undefined) && (usermail !== '') && (userpass !== undefined) && (userpass !== '')){
-        let url = "./php/checklogin.php";
+        let url=url_serveur+'checklogin.php'; 
+
         myInitPost.body = '{"usermail":"'+usermail+'", "userpass":"'+userpass+'"}';
         fetch(url, myInitPost)
         .then(response => response.text())  // Le retour est aussi une chaîne

@@ -5,7 +5,7 @@
 include ("./include/config.php");
 include ("./include/session.php");
 
-if (!isset($role) || ($role<ADMIN)){
+if (!isset($role) || ($role<LECTEUR)){
     echo '{"Ok":0, "msg":"Vous n\'avez pas accès à cette fonction"}';
     die();    
 }
@@ -46,6 +46,8 @@ if (isset($_SERVER['CONTENT_TYPE']) && (stripos($_SERVER['CONTENT_TYPE'], 'appli
 // [ustatut] => 1 [uoldpass] => 81dc9bdb52d04dc20036dbd8313ed055 [utelephone] => 06 95 28 73 11 
 // [uclub] => ARBL, Association Radiomodéliste des Bords de Loire, 44980 Sainte luce sur Loire [userid] => 1 [appel] => ../administrer.html ) 
 
+//print_r($_POST);
+//exit;
 
 if (!empty($_POST['Abandonner']) && !empty($_POST['appel'])){
     header("Location: ".$_POST['appel']."?msg=Mise à jour abandonnée. ");
@@ -96,25 +98,30 @@ if (!empty($_POST['uadresse'])) {
 if (!empty($userlogin)){
     connexion_db(); 
     
-    if (empty($userid))
-    {
-        // Debug
-        if ($debug){
-            echo "Création d'un nouveau compte, Nom: $usernom, Login: $userlogin, Rôle: $statut, Pass: $pass, Téléphone: $telephone, Club: $club, Adresse: $adresse<br />\n";                
-        }           
-        $action=0;
-        $reponse = mysql_add_user();
+    if ($role==ADMIN){    
+        if (empty($userid)) {
+            // Debug
+            if ($debug){
+                echo "Création d'un nouveau compte, Nom: $usernom, Login: $userlogin, Rôle: $statut, Pass: $pass, Téléphone: $telephone, Club: $club, Adresse: $adresse<br />\n";                
+            }           
+            $action=0;
+            $reponse = mysql_add_user();
+        }
+        else if (!empty($passmd5)){
+            // Debug
+            if ($debug){
+                echo "Mise à jour du compte Id: $userid, Nom: $usernom, Login: $userlogin, Rôle: $statut, Pass: $pass, Téléphone: $telephone, Club: $club, Adresse: $adresse<br />\n";                
+            }    
+            $action=1;       
+            $reponse = mysql_update_user($passmd5);
+        }
     }
-    else if (!empty($passmd5)){
-        // Debug
+    else { // Mise à jour partielle
         if ($debug){
-            echo "Mise à jour du compte Id: $userid, Nom: $usernom, Login: $userlogin, Rôle: $statut, Pass: $pass, Téléphone: $telephone, Club: $club, Adresse: $adresse<br />\n";                
+            echo "Mise à jour patielle du compte Id: $userid, Nom: $usernom, Téléphone: $telephone, Club: $club, Adresse: $adresse<br />\n";                
         }    
-        $action=1;       
-        $reponse = mysql_update_user($passmd5);
-    }
-    else{
-        $reponse = '';
+        $action=2;       
+        $reponse = mysql_update_partiel();
     }
 }
 $mysqli -> close();
@@ -205,7 +212,7 @@ $sql='';
 $reponse='';
 
     if (!empty($userid)){
-        $sql = 'UPDATE `bdm_user` SET `usernom`="'.addslashes($usernom).'", `userlogin`="'.addslashes($userlogin).'", `statut`='.$statut.', `telephone`="'.addslashes($telephone).'", `club`="'.addslashes($club)'", `adresse`="'.addslashes($adresse).'" WHERE `userid`='.$userid.' AND `pass`="'.$passmd5.'";';
+        $sql = 'UPDATE `bdm_user` SET `usernom`="'.addslashes($usernom).'", `userlogin`="'.addslashes($userlogin).'", `statut`='.$statut.', `telephone`="'.addslashes($telephone).'", `club`="'.addslashes($club).'", `adresse`="'.addslashes($adresse).'" WHERE `userid`='.$userid.' AND `pass`="'.$passmd5.'";';
         // Debug
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                
@@ -240,6 +247,37 @@ $reponse='';
     }
     return $reponse;
 }
+
+
+//--------------------------
+function mysql_update_partiel(){ 
+// Pas de mise à jour du courriel ni du mot de passe ni du rôle
+global $debug;
+global $mysqli;
+global $userid;
+global $usernom;
+global $userlogin;
+global $telephone;
+global $club;
+global $adresse;
+
+$sql='';
+$reponse='';
+    if (!empty($userid) && !empty($userlogin)){
+        $sql = 'UPDATE `bdm_user` SET `usernom`="'.addslashes($usernom).'",  `telephone`="'.addslashes($telephone).'", `club`="'.addslashes($club).'", `adresse`="'.addslashes($adresse).'" WHERE `userid`='.$userid.';';
+                
+        // Debug
+        if ($debug){
+            echo "SQL: ".$sql."<br />\n";                
+        }           
+
+        if ($result = $mysqli->query($sql)){         
+            $reponse = '{"ok":1, "userid":'.$userid.'}';  
+        }                    
+    }
+    return $reponse;
+}
+
 
 ?>
 

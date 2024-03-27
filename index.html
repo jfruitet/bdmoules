@@ -63,6 +63,16 @@ Quand vous avez sélectionné un modèle faites sa <b>réservation</b> auprès d
     // Cookies
     checkCookies(); 
     adminpage=0;
+    
+    // Paramètres
+    let msg = ''; 
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.has('msg')){
+        msg = urlParams.get('msg');
+    }
+    document.getElementById("msg").innerHTML = '<span class="surligne">'+msg+'</span> ';        
+    
     if (okadmin || okauteur || oklecteur) {
         boutonProfil(admin, adminpage);
         formlogout();

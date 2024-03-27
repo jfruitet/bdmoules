@@ -583,8 +583,9 @@ function reserverThatMoules(){
         str+='<form name="RegForm" action="'+url+'" method="post">';
         // str+='<div class="button"><input type="submit" value="Valider" name="Editer" onclick="return verifSaisieUser(false);" />';       
         str+='<div class="button"><input type="submit" value="Valider" name="Réserver" onclick="return validationReservationMultiple();" />'; 
-        str+='&nbsp; &nbsp; <button onclick="return resetForm();">Annuler</button></div>';        
-                      
+        str+='&nbsp; &nbsp; <input type="reset" value="Corriger" />'; 
+        // str+='&nbsp; &nbsp; <button onclick="return resetForm();">Annuler</button></div>';        
+        str+='&nbsp; &nbsp; <input type="submit" value="Annuler" name="Annuler" /></div>';              
         str+='<div><label for="Nom">NOM Prénom: </label><br /><input type="text" id="Nom" size="50" name="Nom" value="'+Nom+'" autocomplete="on" />';
         str+='<br /><label for="Adresse">Adresse: </label><br /><input type="text" id="Adresse" size="50" name="Adresse" value="'+Adresse+'" autocomplete="on" />';
         //str+='<br /><label for="Courriel">Adresse électronique:</label><br /><input type="text" id="Courriel" size="50" name="Courriel" value="'+Courriel+'" autocomplete="on" />';
@@ -609,7 +610,7 @@ function reserverThatMoules(){
 // ----------------------------------
 function resetForm(){
 // Verifie que les champs du formulaire sont remplis
-    document.forms["RegForm"]["Nom"];               
+    nom=document.forms["RegForm"]["Nom"];               
     email = document.forms["RegForm"]["Courriel"];    
     phone = document.forms["RegForm"]["Telephone"];   
     club = document.forms["RegForm"]["Club"];
@@ -650,7 +651,7 @@ function resetForm(){
     Commentaire = '';
     setCookies();        
     nom.focus();
-    return true; 
+    return false; 
 }
 
 // ----------------------------------
@@ -717,20 +718,27 @@ function validationReservationMultiple(){
     Club = document.forms["RegForm"]["Club"].value;
     Commentaire = document.forms["RegForm"]["Commentaire"].value;
     setCookies();
-    // Mise à jour de la BD   
+    
+    // Mise à jour de la BD
+    // Déplacé dans   let ./php/reservation_post_jason.php;   
+    // En raison de l'erreur  Firefox avec le message 
+    // Erreur : TypeError: NetworkError when attempting to fetch resource.
+    /*
     if ((document.forms["RegForm"]["userid"] !== undefined) && (document.forms["RegForm"]["userid"].value>0)){
         let userid = document.forms["RegForm"]["userid"].value;
         let majUser = '{"userid":'+userid+', "usernom":"'+Nom+'", "userlogin":"'+Courriel+'", "telephone":"'+Telephone+'", "club":"'+encodeURIComponent(Club)+'", "adresse":"'+encodeURIComponent(Adresse)+'"}';
         ajax_MajUser(majUser);  // Mise à jour de la table bdm_user
     }
+    */
+    
     if ((oksmtp === undefined) || !oksmtp){
-        redigeReservationMultiple();
+        redigeReservationMailTo();
     }   
     return true; 
 }
 
 // ----------------------------------
-function redigeReservationMultiple(){
+function redigeReservationMailTo(){
 // Redige un courriel envoyé par <a href="mailto: etc.
     //console.debug("redigeReservationMultiple()");
     //console.debug("idmodele: "+idmodeleglobal);
@@ -760,11 +768,16 @@ function redigeReservationMultiple(){
     }                   
 }
 
-
+/******************************************
+ * 
+ * Ces appels Ajax sont refusés par Firefox avec le message 
+ * Erreur : TypeError: NetworkError when attempting to fetch resource.
+ * 
+ * ****************************************/
 
 // ----------------------- 
 function ajax_MajUser(mystrjson){ 
-let url='./php/setuser.php';    
+    let url= url_serveur+'setuser.php';    
     if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){        
         // POST avec fetch()
         // myInitPost.body: JSON.stringify(mystrjson), // turn the JS object literal into a JSON string
@@ -783,9 +796,16 @@ let url='./php/setuser.php';
     }
 }
     
+/******************************************
+ * 
+ * Ces appels Ajax sont refusés par Firefox avec le message 
+ * Erreur : TypeError: NetworkError when attempting to fetch resource.
+ * 
+ * ****************************************/
+     
 // ----------------------- 
 function ajax_sendReservation(mystrjson){  
-let url='/php/reservation_post_jason.php';  
+let url=url_serveur+'reservation_post_jason.php'; 
     if ((url !== undefined) && (url.length>0) && (mystrjson !== undefined) && (mystrjson.length>0)){        
         // POST avec fetch()
         // myInitPost.body: JSON.stringify(myjson), // turn the JS object literal into a JSON string
