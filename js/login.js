@@ -172,7 +172,7 @@ function saisieLogin(adminpage=0){
     str+='&nbsp; &nbsp; <label for="userpass">Mot de passe</label> <input type="password" id="userpass" name="userpass" size="10" value="" />';
     str+='<input type="hidden" name="appel" id="appel" value="'+pageretour+'"';
     str+='<div class="button">&nbsp; &nbsp; <input type="submit" name "Envoyer" value="Envoyer" onclick="return verifLogin();" /> &nbsp; &nbsp; <input type="reset" value="Réinitialiser"  />';
-    str+='&nbsp; &nbsp; <input type="submit" name="NewPass" value="Mot de passe oublié" onclick="return newPass();" />'; //<a href="'+url+'">Mot de passe oublié</a>
+    str+='&nbsp; &nbsp; <input type="submit" name="NewPass" value="Mot de passe oublié" onclick="return verifMail();" />'; //<a href="'+url+'">Mot de passe oublié</a>
     str+='</div>';        
     str+='</form>';
     
@@ -181,7 +181,7 @@ function saisieLogin(adminpage=0){
 
 
 // ---------------------------------
-function  newPass(){
+function  verifMail(){
     fusermail=document.forms["formLogin"]["usermail"];               
     if ((fusermail === undefined) || (fusermail.value == ""))                                  
     { 
@@ -216,6 +216,63 @@ function  newPass(){
     return true;                     
  }
  
+// --------------------------------
+function saisieNewPass(usermail){
+// Saisie d'un nouveau mot de passe
+    //console.debug("Saisie du Login");
+    let str='';
+    
+    let url=url_serveur+'newpass.php';
+    if ((usermal !== undefined) && (usermail.length>0)){
+        str+='<p>Saisissez deux fois votre nouveau mot de passe.</p>';
+        
+        str+='<form name="formPass" action="'+url+'" method="post">';
+        str+='&nbsp; &nbsp; <label for="pass">Nouveau mot de passe</label> <input type="password" id="pass" name="pass" size="10" value="" />';
+        str+='&nbsp; &nbsp; <label for="pass2">Ressaisir S.V.P.</label> <input type="password" id="pass2" name="pass2" size="10" value="" />';    
+        str+='<input type="hidden" name="appel" id="appel" value="../index.html"';
+        str+='<input type="hidden" id="usermail" name="usermail" value="'+usermail+'" />';    
+        str+='<div class="button">&nbsp; &nbsp; <input type="submit" name "Envoyer" value="Envoyer" onclick="return verifPass();" /> &nbsp; &nbsp; <input type="reset" value="Réinitialiser"  />';
+        str+='</div>';        
+        str+='</form>';
+    
+        document.getElementById("loginform").innerHTML = str;
+    }        
+}
+
+
+// Valuer de retour : vrai ou faux
+ // -------------------------------
+ function verifPass(){
+    let fusermail=document.forms["formPass"]["usermail"];               
+    let fuserpass=document.forms["formPass"]["pass"];
+    let fuserpass2=document.forms["formPass"]["pass2"];                
+          
+    if (fusermail.value == "")                                  
+    { 
+        alert("Courriel non renseigné."); 
+        return false; 
+    } 
+    
+    if (fuserpass.value == ""){ 
+        alert("Complétez le mot de passe"); 
+        fuserpass.focus(); 
+        return false; 
+    }  
+    else {         
+        if (fuserpass2.value == "") { 
+            alert("Ressaisir ce mot de passe"); 
+            fuserpass2.focus(); 
+            return false; 
+        }  
+        else if (fuserpass1.value !== fuserpass2.value) {
+            alert("Mots de passes différents"); 
+            fuserpass2.focus(); 
+            return false;         
+        }
+    }        
+    return true;                     
+ }
+
 
 /********************************************
  * Version utilisant un appel Ajax Post

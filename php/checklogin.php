@@ -79,8 +79,9 @@ if (isset($data) && (!empty($data)))
     
                 // Message
                 $message = 'Bonjour  '.$usernom.",\r\n";
-                $message .= 'Vous avez demandé un renouvellement de votre mot de passe sur la plateforme de réservation de moule de l\'ARBL.<br />'."\n";
+                $message .= '<br />Vous avez demandé un renouvellement de votre mot de passe sur la plateforme de réservation de moule de l\'ARBL.'."\n";
                 $message .= '<br />Cliquez sur le lien <a href="http://localhost/bdmoules/php/saisienewpass.php?id='.md5($usernom).'&courriel='.$mydata['usermail'].'&secondes='.time().'">Créer un nouveau mot de passe</a>.<br />'."\n";
+                $message .= '<br /><br />--<br />'.MAIL_WEBMASTER."\n";   
    
     
             // Header
