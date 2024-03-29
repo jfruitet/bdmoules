@@ -2,6 +2,10 @@
 define("DATAPATH_IMAGES", "../images/"); // Les images des modèles sont placées dans ce dossier.
 define("DATAPATH_VIGNETTES", "../images/vignettes/"); // Les vignettes des modèles sont placées dans ce dossier.
 
+
+$url_site = '.';
+$url_serveur = $url_site.'/php/';     // Les scripts PHP du serveur
+
 define("ADMIN",3);
 define("AUTEUR",2);
 define("LECTEUR",1);

@@ -135,13 +135,6 @@ function getUserAutorisation(adminpage=0){
 function saisieProfil(){
     //console.debug("Saisie du profil");    
     //console.debug("Courriel: ",admin);
-    /*
-    switch(adminpage){
-        case 1 : pageretour=pageadmin; break;
-        case 2 : pageretour=pageuser; break;     
-        default : pageretour=pageindex; break;      
-    }
-    */
     if ((admin !== undefined) && (admin !== null) && (admin.length > 0)){
         getInfoUserByMail(admin);    
     }
@@ -171,17 +164,34 @@ function saisieLogin(adminpage=0){
     admin=''; // toute saisie annule les autorisations antérieures
     let str='';
     
+    let url_check=url_serveur+'checklogin.php';
     str+='<p>Saisissez votre identifiant d\'utilisateur (votre <i>courriel</i>).</p>';
         
-    str+='<form name="formLogin" action="./php/checklogin.php" method="post" onsubmit="return verifLogin();">';
+    str+='<form name="formLogin" action="'+url_check+'" method="post">';
     str+='<label for="usermail">Courriel</label> <input type="text" id="usermail" name="usermail" value="" />';
     str+='&nbsp; &nbsp; <label for="userpass">Mot de passe</label> <input type="password" id="userpass" name="userpass" size="10" value="" />';
     str+='<input type="hidden" name="appel" id="appel" value="'+pageretour+'"';
-    str+='<div class="button">&nbsp; &nbsp; <input type="submit" value="Envoyer" onclick="return verifLogin();" /> &nbsp; &nbsp; <input type="reset" value="Réinitialiser"  /></div>';        
+    str+='<div class="button">&nbsp; &nbsp; <input type="submit" name "Envoyer" value="Envoyer" onclick="return verifLogin();" /> &nbsp; &nbsp; <input type="reset" value="Réinitialiser"  />';
+    str+='&nbsp; &nbsp; <input type="submit" name="NewPass" value="Mot de passe oublié" onclick="return newPass();" />'; //<a href="'+url+'">Mot de passe oublié</a>
+    str+='</div>';        
     str+='</form>';
+    
     document.getElementById("loginform").innerHTML = str;
- 
 }
+
+
+// ---------------------------------
+function  newPass(){
+    fusermail=document.forms["formLogin"]["usermail"];               
+    if ((fusermail === undefined) || (fusermail.value == ""))                                  
+    { 
+        alert("Complétez le courriel."); 
+        fusermail.focus(); 
+        return false; 
+    }  
+    return true;
+}
+
 
 // Valuer de retour : vrai ou faux
  // -------------------------------
@@ -194,13 +204,15 @@ function saisieLogin(adminpage=0){
         alert("Complétez le courriel."); 
         fusermail.focus(); 
         return false; 
-    }    
+    }  
+    
     if (fuserpass.value == "")                               
     { 
         alert("Complétez le mot de passe"); 
         fuserpass.focus(); 
         return false; 
-    }        
+    }   
+        
     return true;                     
  }
  

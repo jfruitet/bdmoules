@@ -39,9 +39,8 @@ function getModelesMoulesAdmin() {
     //console.debug("Chargement des modeles et de leurs moules");
     if ((admin!==undefined) && (admin!==null) && (admin.length>0)) {
             //var url= url_serveur+'getmodelesmoulesadmin.php';
-            var url= url_serveur+'getmodelesmoules.php';
-            var mydata="";    
-            ajax_GetModelesMoulesAdmin(url, mydata);         
+            var url= url_serveur+'getmodelesmoules.php';   
+            ajax_GetModelesMoulesAdmin(url);         
     }
 }
 
