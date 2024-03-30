@@ -19,4 +19,4 @@ let pageuser='../users.html';
 let courriel_reservation='jean.fruitet@laposte.net';  // Version de test
 let courriel_webmaster= 'jean.fruitet@free.fr';
 
-let oksmtp = true; // le serveur SMTP ets correctement configuré
+let oksmtp = true; // le serveur SMTP est correctement activé
