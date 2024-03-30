@@ -12,7 +12,7 @@
 function formlogout(){
     //console.debug("Bouton Logout");
     let str='';
-    str+='<p>&nbsp; <button class="button" id="btnlogout" onclick="return logout('+adminpage+');">Déconnexion</button></p>';
+    str+='<button class="button" id="btnlogout" onclick="return logout('+adminpage+');">Déconnexion</button>';
     document.getElementById("logout").innerHTML = str;
 }
  

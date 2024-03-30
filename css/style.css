@@ -49,7 +49,7 @@ p,ul,li,td {
 }
 
 a:link {
-    color: blue;
+    color: #33cc55;
     background-color: transparent; 
     text-decoration: underline;
 }
@@ -90,4 +90,8 @@ th:nth-child(even),td:nth-child(even) {
   float: right;
 }
 
-
+.box {
+  display: flex;
+  flex-wrap: wrap;  
+  align-items: flex-start;
+}

@@ -44,12 +44,11 @@
 }
 
 .menu {
-  background-color: navy;
+  background-color: #133255;;
   color: yellow;
-  border: 2px solid orange;
+  border: 2px solid white;
   margin: 2px;
   padding: 2px;
-  width:100%;
 }
 
 .corpstexte {
