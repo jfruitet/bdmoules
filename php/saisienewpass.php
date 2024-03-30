@@ -6,7 +6,7 @@
  
 // Session activée 
 include ("./include/config.php");
-include ("./include/session.php");
+//include ("./include/session.php");
 include ("./include/mysql.php");
 
 
@@ -68,17 +68,17 @@ else if (!empty($usermail) && !empty($id)) {    // Vérification de l'identité 
     if (!empty($usernom)){
                 if ($id == md5($usernom)){  // On a correctement identifié l'émetteur
                      affiche_entete();
-                     affiche_saisie($usermail);
+                     affiche_saisie($usermail, $usernom);
                      affiche_script();
                      affiche_bas_de_page();
                      exit;
                 } 
     } 
-    else{
-        affiche_entete();
-        echo '<p><span id="msg">Utilisateur inconnu...</span></p>'; 
-        affiche_bas_de_page();            
-    }        
+ 
+    affiche_entete();
+    echo '<p><span id="msg">Utilisateur inconnu...</span></p>'; 
+    affiche_bas_de_page();            
+           
 }            
 
 
@@ -130,17 +130,18 @@ echo '<!DOCTYPE html>
 }
 
 // -----------------------
-function affiche_saisie($usermail){   
-$url='./newpass.php';
+function affiche_saisie($usermail, $usernom){   
+$url='newpass.php';
 if (!empty($usermail)){
+    echo '<p>Bonjour '.$usernom.' &lt;'.$usermail.'&gt;.</p>'."\n";
     echo '<p>Saisissez deux fois votre nouveau mot de passe.</p>'."\n";        
-    echo '<form name="formPass" action="'.$url.'" method="post" onSubmit="return verifPass();">'."\n";
-    echo '<br /> <label for="pass">Nouveau mot de passe</label> <input type="password" id="pass" name="pass" size="10" value="" />'."\n";
-    echo '<br /> <label for="pass2">Ressaisir S.V.P.</label> <input type="password" id="pass2" name="pass2" size="10" value="" />'."\n";    
+    echo '<form name="formPass" action="'.$url.'" method="post">'."\n"; 
+    echo '<label for="pass">Nouveau mot de passe</label> <input type="password" id="pass" name="pass" size="10" value="" />'."\n";
+    echo ' &nbsp; &nbsp; &nbsp; <label for="pass2">Ressaisir S.V.P.</label> <input type="password" id="pass2" name="pass2" size="10" value="" />'."\n";    
     echo '<input type="hidden" name="appel" id="appel" value="../index.html" />'."\n";
     echo '<input type="hidden" id="usermail" name="usermail" value="'.$usermail.'" />'."\n";    
-    echo '<br /><input type="submit" name "Envoyer" value="Envoyer" />'."\n";
-    echo '&nbsp; &nbsp; <input type="reset" value="Réinitialiser"  />'."\n";
+    echo '&nbsp; &nbsp; &nbsp; <button onclick="return verifPass();">Envoyer</button>'."\n";
+    echo '&nbsp; &nbsp; &nbsp; <input type="reset" value="Réinitialiser"  />'."\n";
     echo '</form>'."\n";
     }
     else{
@@ -150,12 +151,7 @@ if (!empty($usermail)){
 
 // ---------------------------
 function affiche_script(){       
-echo '<div class="left">
-<p><span id="consigne"><span></p>
-</div>
-<script src="../js/config.js"></script>
-<script src="../js/login.js"></script>
-<script src="../js/myscript.js"></script>
+echo '
 <script>       
 
  // --------------------
@@ -175,14 +171,14 @@ echo '<div class="left">
         fuserpass.focus(); 
         return false; 
     }  
-          
+    else      
     if (fuserpass2.value == "") { 
         alert("Ressaisir ce mot de passe"); 
         fuserpass2.focus(); 
         return false; 
     }  
-    
-    if ((fuserpass.value !== "") && (fuserpass2.value !== "") && (fuserpass2.value !== fuserpass.value) {
+    else
+    if (fuserpass2.value !== fuserpass.value) {
         alert("Mots de passes différents"); 
         fuserpass2.focus(); 
         return false;                 

@@ -98,7 +98,7 @@ if (isset($data) && !empty($data)) {
                     // Message
                     $message = 'Bonjour '.$user['usernom'].",\r\n";
                     $message .= '<br />Votre mot de passe sur la plateforme de réservation de moule de l\'ARBL a été modifié.<br />'."\n";
-                    $message .= '<br /><br /><a target=\"_blank\" href=\"http://localhost/bdmoules/\">BDMoules</a>'."\n";    
+                    $message .= '<br /><br /><a target="_blank" href="http://localhost/bdmoules/">BDMoules</a>'."\n";    
                     $message .= '<br /><br />--<br />'.MAIL_WEBMASTER."\n";   
     
                     $headers = 'From: '.MAIL_WEBMASTER. "\r\n" . 
@@ -121,7 +121,12 @@ if (isset($data) && !empty($data)) {
         // http://www.sintesisdigital.com.mx/dashboard/docs/send-mail.html
         // Après avoir configuré Google Mail pour la double authentification 
         // En utilisant un mot de passe sépcifique 
-                    $success = mail($to, $subject, $message, $headers);  
+                    $success = mail($to, $subject, $message, $headers); 
+                    if ($success){
+                        if ($debug){
+                            echo "Message envoyé.<br />";
+                        }                   
+                    } 
                 }
             } 
         }  
@@ -182,7 +187,9 @@ $sql='';
         if ($debug){
             echo "SQL: ".$sql."<br />\n";                
         }           
-        return ($mysqli->query($sql));
+        if ($mysqli->query($sql)){
+            return true;
+        }    
     }
     return false;
 }
