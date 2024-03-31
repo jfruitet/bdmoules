@@ -60,12 +60,14 @@ On distingue dans la version définitive
 - les administrateurs, qui gérent les connexions et les ajouts / suppressions de modèles, moules, photos et utilisateurs.
 
 ### Connexion
-Les fonctions de connexion sont désormais sur l'utilisation de sessions et de cookies.
+L'authentification des connexions utilise des identification de session et des cookies.
 
 La table des utilisateurs *bdm_user* stocke les informations permettant la connexion.
 
-Les utilisateurs peuvent créer un compte avec le rôle *lecteur* en fournissant une adresss mail. Cette adresse n'est pas modifiable en ligne. 
+Lors d'une première connexion un compte utilisateur est créé avec le courriel comme login et le rôle *lecteur*. Cette adresse courriel n'est pas modifiable en ligne. 
 En cas d'erreur seul l'administrateur de la base de données peut intervenier sur la table *bdm_user*.
+
+Par contre en passant par l'onglet "**Profil**" un utilisateur connecté peut modifier son profil (Nom Prénom, adresse, téléphone, club).
 
 ### Mots de passe
 Les mots de passe enregistrés dans la table *bdm_user* sont cryptés. En cas de perte il n'est donc pas possible de les restituer.
