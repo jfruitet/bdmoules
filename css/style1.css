@@ -44,11 +44,34 @@
 }
 
 .menu {
-  background-color: #133255;;
+  background-color: #133255;
   color: yellow;
   border: 2px solid white;
   margin: 2px;
   padding: 2px;
+}
+
+a.men:link {
+    color: white;
+    background-color: transparent; 
+    text-decoration: none;
+    font-weight: bold;
+}
+
+a.men:visited {
+    color: white;
+}
+
+a.men:active {
+    color: yellow;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+a.men:hover {
+    color: red;
+    text-decoration: none;
+    font-weight: bold;
 }
 
 .corpstexte {
